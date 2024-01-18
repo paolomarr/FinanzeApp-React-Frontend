@@ -1,11 +1,10 @@
 import React from "react";
 import { Form, FormGroup, Input, Label, Button, Container } from "reactstrap";
 import { Navigate } from "react-router-dom";
-import { useState, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import authenticate from "../queries/authenticate";
 
-const LoginForm = ({props}) => {
+const LoginForm = () => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   

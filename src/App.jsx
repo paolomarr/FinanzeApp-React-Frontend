@@ -1,33 +1,36 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { Container } from "reactstrap";
+import React, { useRef } from "react";
 import Header from "./components/Header";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import MovimentiList from "./components/MovimentiList";
 import LoginForm from "./components/LoginForm";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-      cacheTime: Infinity,
-    },
-  },
-});
 
-// import Home from "./components/Home";
+const routeMap = [
+  { path: "/", title: "Movement list", element: <MovimentiList /> },
+  { path: "/login", title: "Login", element: <LoginForm /> },
+];
 
 function App() {
+  const pageTitle = useRef(routeMap[0].title);
+  let location = useLocation();
+  for (const route of routeMap) {
+    if(location.pathname === route.path){
+      pageTitle.current = route.title;
+      break;
+    }
+  }
   return (
-    <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <Header />
-          <Routes>
-            <Route path="/" element={<MovimentiList />} />
-            <Route path="/login" element={<LoginForm />} />
-          </Routes>
-        </QueryClientProvider>
-        {/* <Home /> */}
-    </BrowserRouter>
+    <>
+      <Header title={pageTitle.current}/>
+      <Container >
+        <Routes>
+          {routeMap.map((route, key) => {
+            return <Route key={key} path={route.path} element={route.element} />  
+          })}
+        </Routes>
+      </Container>
+    </>    
   );
 }
 

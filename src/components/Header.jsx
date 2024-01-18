@@ -1,6 +1,6 @@
 import React from "react";
 
-function Header() {
+function Header({title}) {
   return (
     <div className="text-center">
       <img
@@ -10,11 +10,7 @@ function Header() {
         className="img-thumbnail"
         style={{ marginTop: "20px" }}
       />
-      <hr />
-      <h5>
-        <i>presents</i>
-      </h5>
-      <h1>App with React + Django</h1>
+      <h1>{title}</h1>
     </div>
   );
 }

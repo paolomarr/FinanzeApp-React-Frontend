@@ -11,7 +11,7 @@ const fetchMovements = async ({ queryKey }) => {
   });
 
   if (!apiRes.ok) {
-    if(apiRes.status === 403){ // unauthenticated
+    if(apiRes.status >= 400){ // unauthenticated
       throw new Error("forbidden", {cause: apiRes.status});
     }else{
       throw new Error("unknown", {cause: `${path} list could not be fetched`});
