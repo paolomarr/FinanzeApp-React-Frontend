@@ -1,15 +1,14 @@
 import { API_URL } from "../constants";
+import authenticatedFecth from "./authenticatedFetch";
 
 const fetchMovements = async ({ queryKey }) => {
   const path = queryKey[0];
-  const authToken = sessionStorage.getItem("authToken"); // fetch will fail if this is not set
-  const apiRes = await fetch(`${API_URL}${path}`, {
-    mode: "cors",
-    headers: {
-      'Authorization': authToken ? `Token ${authToken}` : "None",
-    }
-  });
-
+  let query = "";
+  if(queryKey.length>1){
+    query = new URLSearchParams(queryKey[1]);
+  }
+  const apiRes = await authenticatedFecth(`${API_URL}${path}?${query.toString()}`);
+  
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated
       throw new Error("forbidden", {cause: apiRes.status});

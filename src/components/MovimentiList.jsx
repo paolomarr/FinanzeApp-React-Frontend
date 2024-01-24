@@ -11,6 +11,7 @@ function MovimentiListTableHeader({fields}) {
     return (
       <thead>
         <tr>
+          <th></th>
           {fields.map((field) => (
             <th key={`movementTableHeader_${field.column}`}>{field.name}</th>
           ))}
@@ -23,7 +24,7 @@ const MovimentiListItem = ({movement, fields, edit}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
           {/* <Button color="secondary" outline> */}
-            <FontAwesomeIcon icon={faPenToSquare} border onClick={edit}/>
+            <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
           {/* </Button> */}
         {fields.map((field) => {
           if (field.format !== undefined) {
