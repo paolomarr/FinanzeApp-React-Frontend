@@ -23,9 +23,9 @@ function MovimentiListTableHeader({fields}) {
 const MovimentiListItem = ({movement, fields, edit}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
-          {/* <Button color="secondary" outline> */}
+          <td>
             <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
-          {/* </Button> */}
+          </td>
         {fields.map((field) => {
           if (field.format !== undefined) {
             const val = field.format(movement[field.column]);
