@@ -6,6 +6,7 @@ import { API_URL } from "../constants";
 
 const MovementForm = (props) => {
     const movement = props.movement;
+    typeof movement.date == 'string' ? movement.date = new Date(movement.date) : null;
     const catresults = useQuery(["categories"], fetchCategories);
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
@@ -17,8 +18,8 @@ const MovementForm = (props) => {
       date: new Date(),
       abs_amount: 0,
       description: "",
-      category: 0,
-      subcategory: 0,
+      category: -1,
+      subcategory: -1,
     });
     const updateNewMovement = (update) => {
       setNewmovement({...newmovement, ...update});
@@ -92,6 +93,8 @@ const MovementForm = (props) => {
             placeholder="Description" 
             type="text" 
             className={`${errors?.description? "is-invalid" : ""}`}
+            value={newmovement.description}
+            onChange={(e) => updateNewMovement({description: e.target.value})}
             required
             />
         </FormGroup>
@@ -102,7 +105,8 @@ const MovementForm = (props) => {
             name="category" 
             type="select" 
             className={`${errors?.category? "is-invalid" : ""}`}
-            onChange={(e) => updateNewMovement({category: e.target.value})}>
+            onChange={(e) => updateNewMovement({category: e.target.value})}
+            value={newmovement.category.id}>
             <option value="-1">Select category</option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
