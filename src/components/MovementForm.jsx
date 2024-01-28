@@ -6,7 +6,11 @@ import { API_URL } from "../constants";
 
 const MovementForm = (props) => {
     const movement = props.movement;
-    typeof movement.date == 'string' ? movement.date = new Date(movement.date) : null;
+    if(movement?.date){
+      if(typeof movement.date == 'string'){
+        movement.date = new Date(movement.date);
+      }
+    }
     const catresults = useQuery(["categories"], fetchCategories);
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
