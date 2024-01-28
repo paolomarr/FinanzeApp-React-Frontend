@@ -57,7 +57,13 @@ const MovimentiList = () => {
     });
     const toggleModal = () => setShowModal({show: !showModal.show, movement: showModal.movement});
 
-    const results = useQuery(["movements"], fetchMovements);
+    const results = useQuery({
+      queryKey: ["movements"],
+      queryFn: fetchMovements,
+      retry: (failureCount, error) => {
+        if(error.message === "forbidden") return false;
+        else return 3;
+      }});
     const movements = results?.data;
     const fields = [
       // {column:"id", name: "id"},
