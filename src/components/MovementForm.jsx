@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
 import { API_URL } from "../constants";
+import authenticatedFecth from "../queries/authenticatedFetch";
 
 const MovementForm = (props) => {
     const movement = props.movement;
@@ -32,31 +33,39 @@ const MovementForm = (props) => {
       e.preventDefault();
       setShowSuccess(false); setShowFail(false); setErrors({});
       let method = "";
+      let url = `${API_URL}movements`;
       if(newmovement.id){ // update existing -> PUT
         method = "PUT";
+        url += `/${newmovement.id}`;
       }else{ // new movemente -> POST
         method = "POST";
       }
-      console.log(`Sending data to ${API_URL}movement (${method})`);
-      // fetch(`${API_URL}movement`, {
-      //   method: method,
-      //   data: new URLSearchParams(newmovement)
-      // }).then((response) => {
-      //   if(response.ok){
-      //     if(response.data.errors){
-      //       setErrors(response.data.errors);
-      //     }else{
-      //       setShowSuccess(true);
-      //     }
-      //   }else{
-      //     setShowFail(true);
-      //   }
-      // });
+      authenticatedFecth(url, {
+        method: method,
+        body: JSON.stringify(newmovement)
+      }, {
+        "Content-Type": "application/json"
+      }).then((response) => {
+        if(response.ok){
+          response.json().then((data) => {
+            if(data.errors){
+              setErrors(response.data.errors);
+            }else{
+              setShowSuccess(true);
+            }
+          });
+        }else{
+          setShowFail(true);
+          response.json().then((json) => {
+            setErrors(json);
+          });
+        }
+      });
     };
 
     return (
       <>
-      <Form id={props.id} onSubmit={(e) => submitForm(e)}>
+      <Form id={props.id} onSubmit={(e) => submitForm(e)} className="mb-2">
         {movement ? 
           <Input type="hidden" name="id" value={movement?.id} /> : null
         }
@@ -142,7 +151,7 @@ const MovementForm = (props) => {
         </div>
       </Form>
       <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>Data has been saved!</Alert>
-      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>Data has been saved!</Alert>
+      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>An error occurred while saving data.</Alert>
       </>
     );
 };
