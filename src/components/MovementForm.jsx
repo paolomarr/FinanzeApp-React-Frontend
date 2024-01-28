@@ -124,7 +124,8 @@ const MovementForm = (props) => {
             name="subcategory" 
             type="select" 
             className={`${errors?.subcategory? "is-invalid" : ""}`}
-            onChange={(e) => updateNewMovement({subcategory: e.target.value})}>
+            onChange={(e) => updateNewMovement({subcategory: e.target.value})}
+            value={newmovement.subcategory.id}>
             <option value="-1">Select subcategory</option>
             {subcategories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
