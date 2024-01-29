@@ -29,15 +29,15 @@ const MovementForm = (props) => {
     const updateNewMovement = (update) => {
       setNewmovement({...newmovement, ...update});
     }
-    const submitForm = (e) => {
+    const submitForm = (e, exit) => {
       e.preventDefault();
       setShowSuccess(false); setShowFail(false); setErrors({});
       let method = "";
-      let url = `${API_URL}movements`;
+      let url = `${API_URL}movements/`;
       if(newmovement.id){ // update existing -> PUT
         method = "PUT";
-        url += `/${newmovement.id}`;
-      }else{ // new movemente -> POST
+        url += `${newmovement.id}`;
+      }else{ // new movement -> POST
         method = "POST";
       }
       authenticatedFecth(url, {
@@ -52,6 +52,12 @@ const MovementForm = (props) => {
               setErrors(response.data.errors);
             }else{
               setShowSuccess(true);
+              if(props.data_submitted){
+                props.data_submitted(true);
+              }
+              if(exit){
+                props.cancel();
+              }
             }
           });
         }else{
@@ -142,11 +148,11 @@ const MovementForm = (props) => {
           </Input>
         </FormGroup>
         <div className="text-center">
-          <Button color="secondary" onClick={(e) => {e.preventDefault(); props.cancel()}}>
-            Cancel
-          </Button>{' '}
-          <Button color="primary" onClick={(e) => submitForm(e)}>
+          <Button color="secondary" onClick={(e) => submitForm(e, true)}>
             Save
+          </Button>{' '}
+          <Button color="primary" onClick={(e) => submitForm(e, false)}>
+            Save and add more
           </Button>
         </div>
       </Form>

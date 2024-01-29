@@ -55,7 +55,6 @@ const MovimentiList = () => {
       movement: null,
       show: false
     });
-    const toggleModal = () => setShowModal({show: !showModal.show, movement: showModal.movement});
 
     const results = useQuery({
       queryKey: ["movements"],
@@ -64,7 +63,16 @@ const MovimentiList = () => {
         if(error.message === "forbidden") return false;
         else return 3;
       }});
-    const movements = results?.data;
+    
+    const toggleModal = (data_updated) => {
+      const show = !showModal.show
+      setShowModal({show: show, movement: showModal.movement});
+      if(!show && data_updated){
+        console.log("Data updated, refreshing...");
+        results.refetch();
+      }
+    };
+    const movements = results.data;
     const fields = [
       // {column:"id", name: "id"},
       // {column:"user", name: "User"},
