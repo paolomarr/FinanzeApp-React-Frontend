@@ -2,12 +2,12 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Container } from "reactstrap";
 import React, { useRef } from "react";
 import Header from "./components/Header";
-import MovimentiList from "./components/MovimentiList";
+import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 
 
 const routeMap = [
-  { path: "/", title: "Movement list", element: <MovimentiList /> },
+  { path: "/", title: "Movement list", element: <Home /> },
   { path: "/login", title: "Login", element: <LoginForm /> },
 ];
 

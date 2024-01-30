@@ -1,8 +1,5 @@
 import { Table } from "reactstrap";
 import { useState } from "react";
-import { useQuery} from "@tanstack/react-query";
-import fetchMovements from "../queries/fetchMovements";
-import { Navigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
@@ -50,29 +47,23 @@ const NewMovementButton = ({onClick}) => {
     )
 }
 
-const MovimentiList = () => {
+const MovimentiList = (props) => {
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
     });
 
-    const results = useQuery({
-      queryKey: ["movements"],
-      queryFn: fetchMovements,
-      retry: (failureCount, error) => {
-        if(error.message === "forbidden") return false;
-        else return 3;
-      }});
+    const refresh = props.refresh;
+    const movements = props.movements;
     
     const toggleModal = (data_updated) => {
       const show = !showModal.show
       setShowModal({show: show, movement: showModal.movement});
       if(!show && data_updated){
         console.log("Data updated, refreshing...");
-        results.refetch();
+        refresh();
       }
     };
-    const movements = results.data;
     const fields = [
       // {column:"id", name: "id"},
       // {column:"user", name: "User"},
@@ -101,25 +92,7 @@ const MovimentiList = () => {
       },
     ];
     
-    if (results.isLoading) {
-      return (
-        <div className="loading-pane">
-          <h2 className="loader">🌀</h2>
-        </div>
-      );
-    }
-    if (results.isError) {
-        switch (results.error.message) {
-            case "forbidden":
-                console.log("Unable to fetch: unauthenticated");
-                return (
-                    <Navigate to="/login" />
-                )
-            default:
-                console.log("Unable to fetch: unknown error");
-                break;
-        }
-    }
+    
     return (
       <>
         <MovementModal showModal={showModal} toggleModal={toggleModal} title="Insert new movement" />
