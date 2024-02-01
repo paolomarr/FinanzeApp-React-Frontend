@@ -1,10 +1,21 @@
 import MovimentiList from "./MovimentiList";
 import MovementsHistory from "./MovimentiHistory";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import { Navigate } from "react-router-dom";
+import { Temporal } from "@js-temporal/polyfill";
 
 const Home = () => {
+    const printTemporalDate = ((temporalZonedDateTime) => {
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      return temporalZonedDateTime.toLocaleString('it-IT', options);
+    });
+
+    const today = Temporal.Now.zonedDateTimeISO();
+    const threeMonthsAgo = Temporal.Now.zonedDateTimeISO().subtract({months: 1});
+    const [dateRange] = useState([threeMonthsAgo, today]);
+
     const results = useQuery({
       queryKey: ["movements"],
       queryFn: fetchMovements,
@@ -33,6 +44,7 @@ const Home = () => {
     }
     return (
         <>
+            <h3 className="text-center">From {printTemporalDate(dateRange[0])} to {printTemporalDate(dateRange[1])}</h3>
             <MovementsHistory data={results.data} />
             <MovimentiList movements={results.data.movements} refresh={results.refetch}/>
         </>
