@@ -26,8 +26,30 @@ const MovementForm = (props) => {
       category: -1,
       subcategory: -1,
     });
+    const [deleteConfirmState, setDeleteConfirmState] = useState(0);
     const updateNewMovement = (update) => {
       setNewmovement({...newmovement, ...update});
+    }
+    const submitDelete = (e) => {
+      e.preventDefault();
+      if(deleteConfirmState==0){
+        setDeleteConfirmState(1);
+        return;
+      }
+      setDeleteConfirmState(2);
+      setShowSuccess(false); setShowFail(false); setErrors({});
+      const method = "DELETE";
+      const url = `${API_URL}movements/${newmovement.id}`;
+      authenticatedFecth(url, {
+        method: method,
+      }).then((response) => {
+        setDeleteConfirmState(0);
+        if(response.ok){
+          setShowSuccess(true);
+        }else{
+          setShowFail(true);
+        }
+      });
     }
     const submitForm = (e, exit) => {
       e.preventDefault();
@@ -73,7 +95,7 @@ const MovementForm = (props) => {
       <>
       <Form id={props.id} onSubmit={(e) => submitForm(e)} className="mb-2">
         {movement ? 
-          <Input type="hidden" name="id" value={movement?.id} /> : null
+          <Input type="hidden" name="id" value={movement.id} /> : null
         }
         <FormGroup>
           <Label for="date">
@@ -148,12 +170,19 @@ const MovementForm = (props) => {
           </Input>
         </FormGroup>
         <div className="text-center">
+          { movement ? 
+          <Button color="danger" onClick={(e) => submitDelete(e)}>
+            { deleteConfirmState==0 ? "Delete" : deleteConfirmState == 1 ? "Are you sure?" : "Deleting..." }
+          </Button> : null
+          }{' '}
           <Button color="secondary" onClick={(e) => submitForm(e, true)}>
             Save
           </Button>{' '}
+          { !movement ? 
           <Button color="primary" onClick={(e) => submitForm(e, false)}>
             Save and add more
-          </Button>
+          </Button> : null
+          }
         </div>
       </Form>
       <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>Data has been saved!</Alert>

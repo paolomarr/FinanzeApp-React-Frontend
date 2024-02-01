@@ -52,7 +52,7 @@ const MovimentiList = (props) => {
       movement: null,
       show: false
     });
-
+    
     const refresh = props.refresh;
     const movements = props.movements;
     
@@ -95,7 +95,6 @@ const MovimentiList = (props) => {
     
     return (
       <>
-        <MovementModal showModal={showModal} toggleModal={toggleModal} title="Insert new movement" />
         <Table>
           <MovimentiListTableHeader fields={fields} />
           <tbody>
@@ -113,6 +112,7 @@ const MovimentiList = (props) => {
           </tbody>
         </Table>
         <NewMovementButton onClick={() => setShowModal({show:true, movement: null})} />
+        <MovementModal showModal={showModal} toggleModal={toggleModal} title={showModal.movement ? "Update movement data" : "Insert new movement"} />
       </>
     );
 }
