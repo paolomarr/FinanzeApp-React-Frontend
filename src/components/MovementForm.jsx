@@ -46,6 +46,9 @@ const MovementForm = (props) => {
         setDeleteConfirmState(0);
         if(response.ok){
           setShowSuccess(true);
+          if(props.data_submitted){
+            props.data_submitted(true);
+          }
         }else{
           setShowFail(true);
         }
