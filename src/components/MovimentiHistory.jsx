@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 
 
 const MovementsHistory = (props) => {
@@ -21,14 +21,18 @@ const MovementsHistory = (props) => {
     return (
         <ResponsiveContainer width="100%" height={400}>
             <LineChart data={data}>
-                <Line type="stepAfter" dataKey="cumulative" stroke="#8884d8" />
+                <Line type="stepAfter" dataKey="cumulative" stroke="#8884d8" dot={false} />
                 <XAxis 
                     type='number' 
                     dataKey="date"  
                     domain={timeRange} 
                     tickFormatter={tick => (new Date(tick)).toLocaleDateString()}
                     tickCount="10" />
-                <YAxis domain={["auto", "auto"]}/>
+                <YAxis domain={["auto", "auto"]}/> 
+                <Tooltip 
+                    active={true} 
+                    formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
+                    labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
             </LineChart>
         </ResponsiveContainer>
     )
