@@ -4,17 +4,19 @@ import React, { useRef } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
+import { t } from "@lingui/macro";
+// import { useLingui } from "@lingui/react";
 
-
-const routeMap = [
-  { path: "/", title: "Movement list", element: <Home /> },
-  { path: "/login", title: "Login", element: <LoginForm /> },
+const getRouteMap = () => [
+  { path: "/", title: t`Movement list`, element: <Home /> },
+  { path: "/login", title: t`Login`, element: <LoginForm /> },
 ];
 
 function App() {
-  const pageTitle = useRef(routeMap[0].title);
+  // const {_} = useLingui();
+  const pageTitle = useRef(getRouteMap()[0].title);
   let location = useLocation();
-  for (const route of routeMap) {
+  for (const route of getRouteMap()) {
     if(location.pathname === route.path){
       pageTitle.current = route.title;
       break;
@@ -25,7 +27,7 @@ function App() {
       <Header title={pageTitle.current}/>
       <Container >
         <Routes>
-          {routeMap.map((route, key) => {
+          {getRouteMap().map((route, key) => {
             return <Route key={key} path={route.path} element={route.element} />  
           })}
         </Routes>

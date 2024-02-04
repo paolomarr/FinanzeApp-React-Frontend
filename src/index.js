@@ -8,6 +8,16 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
+import { i18n } from "@lingui/core";
+import { I18nProvider } from "@lingui/react";
+import { messages } from "./locales/en/messages.js";
+import { messages as itMessages } from "./locales/it/messages.js";
+
+i18n.load({
+  "en": messages,
+  "it": itMessages
+});
+i18n.activate("it");
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,11 +31,13 @@ const queryClient = new QueryClient({
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </BrowserRouter>
+    <I18nProvider i18n={i18n}>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </I18nProvider>
   </React.StrictMode>
 );
 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
+import { t } from "@lingui/macro";
 
 function MovimentiListTableHeader({fields}) {
     return (
@@ -69,23 +70,23 @@ const MovimentiList = (props) => {
       // {column:"user", name: "User"},
       {
         column: "date",
-        name: "Date",
+        name: t`Date`,
         format: (date) => {
           return new Date(date).toLocaleDateString();
         },
       },
-      { column: "description", name: "Description" },
-      { column: "abs_amount", name: "Abs. amount", format: (val) => val.toFixed(2) },
+      { column: "description", name: t`Description` },
+      { column: "abs_amount", name: t`Abs. amount`, format: (val) => val.toFixed(2) },
       {
         column: "category",
-        name: "Category",
+        name: t`Category`,
         format: (item) => {
           return item.category;
         },
       },
       {
         column: "subcategory",
-        name: "Subcategory",
+        name: t`Subcategory`,
         format: (item) => {
           return item.subcategory;
         },
@@ -95,7 +96,7 @@ const MovimentiList = (props) => {
     
     return (
       <>
-        <Table>
+        <Table responsive={true} size="sm">
           <MovimentiListTableHeader fields={fields} />
           <tbody>
             {!movements || movements.length <= 0 ? (
