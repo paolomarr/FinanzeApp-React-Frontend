@@ -5,7 +5,7 @@ import { faPenToSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
 import { t } from "@lingui/macro";
 
-function MovimentiListTableHeader({fields}) {
+function MovementsListTableHeader({fields}) {
     return (
       <thead>
         <tr>
@@ -18,7 +18,7 @@ function MovimentiListTableHeader({fields}) {
     );
 }
 
-const MovimentiListItem = ({movement, fields, edit}) => {
+const MovementsListItem = ({movement, fields, edit}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
           <td>
@@ -48,7 +48,7 @@ const NewMovementButton = ({onClick}) => {
     )
 }
 
-const MovimentiList = (props) => {
+const MovementsList = (props) => {
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
@@ -97,7 +97,7 @@ const MovimentiList = (props) => {
     return (
       <>
         <Table responsive={true} size="sm">
-          <MovimentiListTableHeader fields={fields} />
+          <MovementsListTableHeader fields={fields} />
           <tbody>
             {!movements || movements.length <= 0 ? (
               <tr>
@@ -107,7 +107,7 @@ const MovimentiList = (props) => {
               </tr>
             ) : (
               movements.map((movement) => (
-                <MovimentiListItem key={movement.id} movement={movement} fields={fields} edit={() => setShowModal({show:true, movement: movement})} />
+                <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => setShowModal({show:true, movement: movement})} />
               ))
             )}
           </tbody>
@@ -118,4 +118,4 @@ const MovimentiList = (props) => {
     );
 }
 
-export default MovimentiList
+export default MovementsList

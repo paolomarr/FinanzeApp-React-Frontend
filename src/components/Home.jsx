@@ -1,5 +1,5 @@
-import MovimentiList from "./MovimentiList";
-import MovementsHistory from "./MovimentiHistory";
+import MovementsList from "./MovementsList";
+import MovementsHistory from "./MovementsHistory";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
@@ -49,8 +49,8 @@ const Home = () => {
     return (
         <>
             <h3 className="text-center">{t({id: "date.from", message: "From"})} {printTemporalDate(dateRange[0])} {t({id: "date.to", message: "to"})} {printTemporalDate(dateRange[1])}</h3>
-            <MovementsHistory data={results.data} />
-            <MovimentiList movements={results.data.movements} refresh={results.refetch}/>
+            <MovementsHistory data={results.data}/>
+            <MovementsList movements={results.data.movements} refresh={results.refetch}/>
         </>
     )
 }
