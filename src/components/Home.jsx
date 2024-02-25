@@ -76,7 +76,7 @@ const Home = () => {
       <>
         <h3 className="text-center">{t({id: "date.from", message: "From"})} {printDate(dataSlice.minDate)} {t({id: "date.to", message: "to"})} {printDate(dataSlice.maxDate)}</h3>
         <TimeSpanSlider min={new Date(results.data.minDate)} max={new Date(results.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
-        <MovementsHistory data={results.data} slice={[dataSlice.minIdx, dataSlice.maxIdx]}/>
+        <MovementsHistory data={results.data} slice={[dataSlice.minDate, dataSlice.maxDate]}/>
         <MovementsList movements={results.data.movements.slice(-dataSlice.maxIdx, -dataSlice.minIdx)} refresh={results.refetch}/>
       </>
     )
