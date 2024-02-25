@@ -4,9 +4,10 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import { Navigate } from "react-router-dom";
-import { Temporal } from "@js-temporal/polyfill";
 import { useLingui } from "@lingui/react";
 import { t } from "@lingui/macro"
+import TimeSpanSlider from "./TimeSpanSlider";
+import { sub } from "date-fns";
 
 const Home = () => {
     const {i18n} = useLingui()
@@ -17,8 +18,12 @@ const Home = () => {
     });
 
     const today = new Date();
-    const threeMonthsAgo = Temporal.Now.zonedDateTimeISO().subtract({months: 1});
-    const [dateRange, setDateRange] = useState([new Date(threeMonthsAgo.epochMilliseconds), today]);
+    const [dataSlice, setDataSlice] = useState({
+      minIdx: 0,
+      maxIdx: 1,
+      minDate: today,
+      maxDate: today
+    });
 
     const results = useQuery({
       queryKey: ["movements", "all"],
@@ -27,11 +32,11 @@ const Home = () => {
         if(error.message === "forbidden") return false;
         else return 3;
       },
-      onSuccess: (data) => {
-        const from = new Date(data.minDate);
-        const to = new Date(data.maxDate);
-        setDateRange([from, to]);
-      }});
+      // onSuccess: (data) => {
+      //   const from = new Date(data.minDate);
+      //   const to = new Date(data.maxDate);
+      // }
+    });
     if (results.isLoading) {
       return (
         <div className="loading-pane">
@@ -51,12 +56,29 @@ const Home = () => {
                 break;
         }
     }
+    const onSliderChange = (changeResult) => {
+      if(dataSlice.minDate == changeResult.minValue && dataSlice.maxDate == changeResult.maxValue){
+        return;
+      }
+      let newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
+      if(results.data?.movements){
+        const minPercent = (changeResult.minValue - changeResult.min) / (changeResult.max - changeResult.min);
+        const maxPercent = (changeResult.maxValue - changeResult.min) / (changeResult.max - changeResult.min);
+        const movements = results.data.movements;
+        const startIdx = parseInt(minPercent * movements.length);
+        const endIdx = parseInt(maxPercent * movements.length);
+        newDataSlice.minIdx = startIdx;
+        newDataSlice.maxIdx = endIdx;
+      }
+      setDataSlice(newDataSlice);
+    };
     return (
-        <>
-            <h3 className="text-center">{t({id: "date.from", message: "From"})} {printDate(dateRange[0])} {t({id: "date.to", message: "to"})} {printDate(dateRange[1])}</h3>
-            <MovementsHistory data={results.data}/>
-            <MovementsList movements={results.data.movements} refresh={results.refetch}/>
-        </>
+      <>
+        <h3 className="text-center">{t({id: "date.from", message: "From"})} {printDate(dataSlice.minDate)} {t({id: "date.to", message: "to"})} {printDate(dataSlice.maxDate)}</h3>
+        <TimeSpanSlider min={new Date(results.data.minDate)} max={new Date(results.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
+        <MovementsHistory data={results.data} slice={[dataSlice.minIdx, dataSlice.maxIdx]}/>
+        <MovementsList movements={results.data.movements.slice(-dataSlice.maxIdx, -dataSlice.minIdx)} refresh={results.refetch}/>
+      </>
     )
 }
 
