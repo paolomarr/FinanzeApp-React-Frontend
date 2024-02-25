@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 import MultiRangeSlider from "multi-range-slider-react";
-import { sub } from 'date-fns' 
+import { sub, format, eachMonthOfInterval, eachWeekOfInterval, eachDayOfInterval, intervalToDuration } from 'date-fns' 
 
 
 const MovementsHistory = (props) => {
@@ -11,10 +11,31 @@ const MovementsHistory = (props) => {
     const initialMin = new Date(rawdata.minDate);
     const initialMax = new Date(rawdata.maxDate);
 
-    const [timeRange] = useState([initialMin, initialMax]);
-    const [step] = useState((initialMax - initialMin)/100);
-    const [selectedInterval] = useState([initialStart, initialEnd]);
+    const nSteps = 100;
+    const [step] = useState((initialMax - initialMin)/nSteps);
 
+    const initialInterval = {start: initialMin, end: initialMax};
+    const initialDuration = intervalToDuration(initialInterval);
+    let eachFunction = null;
+    let formatPattern = "P";
+    if(initialDuration.years > 0){
+      eachFunction = eachMonthOfInterval;
+      formatPattern = "MMM yyyy";
+    }else if(initialDuration.months > 0){
+      eachFunction = eachWeekOfInterval;
+      formatPattern = "DD MMM yyyy";
+    }else{
+      eachFunction = eachDayOfInterval;
+      formatPattern = "DD MMM";
+    }
+    let _labels = eachFunction(initialInterval).map((date)=>{return format(date, formatPattern);});
+    let labels;
+    const multiples = parseInt(_labels.length/10);
+    if(multiples>1){ // 20 or more
+      labels = _labels.filter((label, index)=> index % multiples == 0 );
+    }else{
+      labels = _labels;
+    }
     const baselineData = rawdata.baseline?? null;
 
     let data;
@@ -35,29 +56,24 @@ const MovementsHistory = (props) => {
       const endIdx = parseInt(maxPercent * data.length);
       return data.slice(startIdx, endIdx);
     }
-    const initialResult = {
-      min: timeRange[0], max: timeRange[1], minValue: selectedInterval[0], maxValue: selectedInterval[1]
-    };
-    const initialShownData = slicedData(initialResult);
-    const [shownData, setShownData] = useState(initialShownData);
+    const [currentChange, setCurrentChange] = useState({min: initialMin, max: initialMax, minValue: initialStart, maxValue: initialEnd});
 
     const handleInput = (changeResult) => {
-    //   setSelectedTimeInterval([new Date(changeResult.minValue), new Date(changeResult.maxValue)]);
-      setShownData(slicedData(changeResult));
-      // console.log(changeResult);
+      if(changeResult.minValue != currentChange.minValue || changeResult.maxValue != currentChange.maxValue)
+        setCurrentChange(changeResult);
     };
     
     
     return (
       <>
         <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={shownData}>
+            <LineChart data={slicedData(currentChange)}>
                 <Line type="stepAfter" dataKey="cumulative" stroke="#8884d8" dot={false} />
                 <XAxis 
                     type='number' 
                     dataKey="date"  
-                    // domain={selectedInterval} 
-                    domain={["auto", "auto"]} 
+                    domain={[currentChange.minValue, currentChange.maxValue]} 
+                    // domain={["auto", "auto"]} 
                     tickFormatter={tick => (new Date(tick)).toLocaleDateString()}
                     tickCount="10" />
                 <YAxis domain={["auto", "auto"]}/> 
@@ -65,19 +81,21 @@ const MovementsHistory = (props) => {
                     active={true} 
                     formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
                     labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
-                {/* <Brush dataKey="date" /> */}
             </LineChart>
         </ResponsiveContainer>
         <MultiRangeSlider 
-            min={timeRange[0]}
-            max={timeRange[1]}
+            min={initialMin}
+            max={initialMax}
             step={step}
-            minValue={selectedInterval[0]}
-            maxValue={selectedInterval[1]}
+            minValue={currentChange.minValue}
+            maxValue={currentChange.maxValue}
+            minCaption={format(new Date(currentChange.minValue), "P")}
+            maxCaption={format(new Date(currentChange.maxValue), "P")}
             ruler={false}
             onInput={(e)=>{
               handleInput(e);
             }}
+            labels={labels}
         />
       </>
     )
