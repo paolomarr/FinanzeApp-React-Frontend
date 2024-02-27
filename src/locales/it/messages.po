@@ -13,26 +13,30 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/MovimentiList.jsx:79
+#: src/components/MovementsList.jsx:79
 msgid "Abs. amount"
 msgstr "Importo"
 
-#: src/components/MovimentiList.jsx:82
+#: src/components/MovementsList.jsx:82
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/MovimentiList.jsx:73
+#: src/components/MovementsList.jsx:73
 msgid "Date"
 msgstr "Data"
 
-#: src/components/MovimentiList.jsx:78
+#: src/components/MovementsList.jsx:78
 msgid "Description"
 msgstr "Descrizione"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:51
+#: src/components/Home.jsx:141
 msgid "date.from"
 msgstr "dal"
+
+#: src/components/Home.jsx:69
+msgid "Incomes"
+msgstr "Entrate"
 
 #: src/App.jsx:12
 msgid "Login"
@@ -42,11 +46,23 @@ msgstr "Accedi"
 msgid "Movement list"
 msgstr "Lista movimenti"
 
-#: src/components/MovimentiList.jsx:89
+#: src/components/Home.jsx:68
+msgid "movements in"
+msgstr "movimenti in"
+
+#: src/components/Home.jsx:69
+msgid "Outcomes"
+msgstr "Uscite"
+
+#: src/components/Home.jsx:69
+msgid "Saving rate"
+msgstr "Saving rate"
+
+#: src/components/MovementsList.jsx:89
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:51
+#: src/components/Home.jsx:141
 msgid "date.to"
 msgstr "al"

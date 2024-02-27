@@ -8,7 +8,8 @@ import { useLingui } from "@lingui/react";
 import { t } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
 import { sub } from "date-fns";
-import { intervalToDuration, min, max, formatDuration } from "date-fns";
+import { intervalToDuration, min, max } from "date-fns";
+import { formatDuration } from "../_lib/format_locale"
 
 const generateChartData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -26,7 +27,7 @@ const generateChartData = (data, slice) => {
     savingRate: function() {return this.outcomes != 0 ? (this.incomes-this.outcomes)/this.outcomes : 0},
     duration: function(keys) {
       const fulldur = intervalToDuration({start:this.minDate, end: this.maxDate});
-      if(keys && keys.length>0){
+      if(fulldur && keys && keys.length>0){
         const ret = {};
         keys.forEach(element => {
           fulldur[element] ? ret[element] = fulldur[element] : null;
