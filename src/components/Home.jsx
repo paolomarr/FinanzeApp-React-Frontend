@@ -54,6 +54,8 @@ const generateChartData = (data, slice) => {
       if(mDate < plotStats.minDate) continue;
       if(mDate > plotStats.maxDate) continue;
       plotStats.data.push({"date": (mDate).getTime(), "cumulative": cumulative});
+      if(movement.category.direction>0)   plotStats.incomes += movement.abs_amount;
+      else plotStats.outcomes += movement.abs_amount;
     }
   }
   return plotStats;
@@ -62,8 +64,9 @@ const MovementStats = ({stats}) => {
   return (
     <>
     { stats && stats !== undefined ?
-    <div className="movement-stats justify-content-center">
+    <div className="movement-stats text-center">
       <p>{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(["years", "months", "days"]))}</p>
+      <p>{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)} - {t`Incomes`}: {parseFloat(stats.incomes).toFixed(2)} - <b>{t`Saving rate`}: {parseFloat(stats.savingRate()*100).toFixed(1)}</b></p>
     </div> : null}
     </>
   )
