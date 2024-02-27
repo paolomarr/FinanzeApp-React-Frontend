@@ -8,7 +8,7 @@ import { useLingui } from "@lingui/react";
 import { t } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
 import { sub } from "date-fns";
-import { intervalToDuration, min, max } from "date-fns";
+import { intervalToDuration, min, max, formatDuration } from "date-fns";
 
 const generateChartData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -24,7 +24,17 @@ const generateChartData = (data, slice) => {
     incomes: 0,
     outcomes: 0,
     savingRate: function() {return this.outcomes != 0 ? (this.incomes-this.outcomes)/this.outcomes : 0},
-    nDays: function() {return intervalToDuration({start:this.minDate, end: this.maxDate}).days}
+    duration: function(keys) {
+      const fulldur = intervalToDuration({start:this.minDate, end: this.maxDate});
+      if(keys && keys.length>0){
+        const ret = {};
+        keys.forEach(element => {
+          fulldur[element] ? ret[element] = fulldur[element] : null;
+        });
+        return ret;
+      }
+      return fulldur;
+    }
   }
   if(baselineData){
     let maxIdx = data.movements.length - 1;
@@ -52,8 +62,8 @@ const MovementStats = ({stats}) => {
   return (
     <>
     { stats && stats !== undefined ?
-    <div className="movement-stats">
-      <p>{stats.nMovements()} {t`movements in`} {stats.nDays()} {t`days`}</p>
+    <div className="movement-stats justify-content-center">
+      <p>{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(["years", "months", "days"]))}</p>
     </div> : null}
     </>
   )
