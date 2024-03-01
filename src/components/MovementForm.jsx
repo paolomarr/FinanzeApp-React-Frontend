@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
 import { API_URL } from "../constants";
+import { t } from "@lingui/macro";
 import authenticatedFecth from "../queries/authenticatedFetch";
 
 const MovementForm = (props) => {
@@ -102,7 +103,7 @@ const MovementForm = (props) => {
         }
         <FormGroup>
           <Label for="date">
-            Date
+            {t`Date`}
           </Label>
           <input
             id="date"
@@ -117,7 +118,7 @@ const MovementForm = (props) => {
         </FormGroup>
         <FormGroup>
             <Label for="amount">
-                Amount
+                {t`Amount`}
             </Label>
             <Input
                 id="amount"
@@ -130,7 +131,7 @@ const MovementForm = (props) => {
                 />
         </FormGroup>
         <FormGroup>
-          <Label for="description">Description</Label>
+          <Label for="description">{t`Description`}</Label>
           <Input 
             id="description" 
             name="description" 
@@ -143,7 +144,7 @@ const MovementForm = (props) => {
             />
         </FormGroup>
         <FormGroup>
-          <Label for="category">Category</Label>
+          <Label for="category">{t`Category`}</Label>
           <Input 
             id="category" 
             name="category" 
@@ -151,14 +152,14 @@ const MovementForm = (props) => {
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
             value={newmovement.category.id}>
-            <option value="-1">Select category</option>
+            <option value="-1">{t`Select`}</option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
           </Input>
         </FormGroup>
         <FormGroup>
-          <Label for="category">Subcategory</Label>
+          <Label for="category">{t`Subcategory`}</Label>
           <Input 
             id="subcategory" 
             name="subcategory" 
@@ -166,7 +167,7 @@ const MovementForm = (props) => {
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
             value={newmovement.subcategory.id}>
-            <option value="-1">Select subcategory</option>
+            <option value="-1">{t`Select`}</option>
             {subcategories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
@@ -175,21 +176,21 @@ const MovementForm = (props) => {
         <div className="text-center">
           { movement ? 
           <Button color="danger" onClick={(e) => submitDelete(e)}>
-            { deleteConfirmState==0 ? "Delete" : deleteConfirmState == 1 ? "Are you sure?" : "Deleting..." }
+            { deleteConfirmState==0 ? t`Delete` : deleteConfirmState == 1 ? t`Are you sure?` : t`Deleting...` }
           </Button> : null
           }{' '}
           <Button color="secondary" onClick={(e) => submitForm(e, true)}>
-            Save
+            {t`Save`}
           </Button>{' '}
           { !movement ? 
           <Button color="primary" onClick={(e) => submitForm(e, false)}>
-            Save and add more
+            {t`Save and add more`}
           </Button> : null
           }
         </div>
       </Form>
-      <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>Data has been saved!</Alert>
-      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>An error occurred while saving data.</Alert>
+      <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>t`Data has been saved!`</Alert>
+      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>t`An error occurred while saving data.`</Alert>
       </>
     );
 };

@@ -17,26 +17,49 @@ msgstr ""
 msgid "Abs. amount"
 msgstr "Importo"
 
+#: src/components/MovementForm.jsx:121
+msgid "Amount"
+msgstr "Import"
+
+#: src/components/MovementForm.jsx:179
+msgid "Are you sure?"
+msgstr "Confermi?"
+
+#: src/components/MovementForm.jsx:147
 #: src/components/MovementsList.jsx:82
 msgid "Category"
 msgstr "Categoria"
 
+#: src/components/MovementForm.jsx:106
 #: src/components/MovementsList.jsx:73
 msgid "Date"
 msgstr "Data"
 
+#: src/components/MovementForm.jsx:179
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/components/MovementForm.jsx:179
+msgid "Deleting..."
+msgstr "Eliminazione in corso..."
+
+#: src/components/MovementForm.jsx:134
 #: src/components/MovementsList.jsx:78
 msgid "Description"
 msgstr "Descrizione"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:141
+#: src/components/Home.jsx:142
 msgid "date.from"
 msgstr "dal"
 
-#: src/components/Home.jsx:69
+#: src/components/Home.jsx:70
 msgid "Incomes"
 msgstr "Entrate"
+
+#: src/components/MovementsList.jsx:116
+msgid "Insert new movement"
+msgstr "Inserisci un nuovo movimento"
 
 #: src/App.jsx:12
 msgid "Login"
@@ -46,23 +69,41 @@ msgstr "Accedi"
 msgid "Movement list"
 msgstr "Lista movimenti"
 
-#: src/components/Home.jsx:68
+#: src/components/Home.jsx:69
 msgid "movements in"
 msgstr "movimenti in"
 
-#: src/components/Home.jsx:69
+#: src/components/Home.jsx:70
 msgid "Outcomes"
 msgstr "Uscite"
 
-#: src/components/Home.jsx:69
+#: src/components/MovementForm.jsx:183
+msgid "Save"
+msgstr "Salva"
+
+#: src/components/MovementForm.jsx:187
+msgid "Save and add more"
+msgstr "Salva e continua"
+
+#: src/components/Home.jsx:70
 msgid "Saving rate"
 msgstr "Saving rate"
 
+#: src/components/MovementForm.jsx:155
+#: src/components/MovementForm.jsx:170
+msgid "Select"
+msgstr "Seleziona"
+
+#: src/components/MovementForm.jsx:162
 #: src/components/MovementsList.jsx:89
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:141
+#: src/components/Home.jsx:142
 msgid "date.to"
 msgstr "al"
+
+#: src/components/MovementsList.jsx:116
+msgid "Update movement data"
+msgstr "Modifica movimento"
