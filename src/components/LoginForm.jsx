@@ -16,8 +16,8 @@ const LoginForm = () => {
         const results = await authenticate(username, password, null);
         results.json().then((jres) => {
             sessionStorage.setItem("authToken", jres.token); 
+            setUser(username);
         });
-        setUser(username)
     } catch (error) {
       setError(error);
     }
