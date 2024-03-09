@@ -49,11 +49,12 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
               maxValue={currentChange.maxValue}
               minCaption={format(currentChange.minValue, "P")}
               maxCaption={format(currentChange.maxValue, "P")}
-              ruler={false}
+              ruler={true}
               onInput={(e)=>{
                 handleInput(e);
               }}
               labels={labels}
+              style={{border: 'none', boxShadow: 'none'}}
             />
 };
 
