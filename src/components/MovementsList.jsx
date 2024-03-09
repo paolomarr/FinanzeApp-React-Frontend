@@ -1,19 +1,32 @@
 import { Table } from "reactstrap";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPenToSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons"
+import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
 import { t } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 
-function MovementsListTableHeader({fields}) {
+function MovementsListTableHeader({fields, sort, onSort}) {
     return (
       <thead>
         <tr>
           <th></th>
-          {fields.map((field) => (
-            <th key={`movementTableHeader_${field.column}`}>{field.name}</th>
-          ))}
+          {fields.map((field) => {
+            let style = {color: "#cccccc",};
+            let icon = faCaretDown;
+            if(sort && sort.field === field.column){
+              style={};
+              if(sort.direction === 1){
+                icon = faCaretUp;
+              }
+            }
+            return (
+              <th key={`movementTableHeader_${field.column}`}>{field.name}{' '}
+                <FontAwesomeIcon onClick={() => onSort? onSort(field.column) : null} icon={icon} style={style} />
+              </th>
+            )
+            })
+          }
         </tr>
       </thead>
     );
@@ -54,7 +67,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
       movement: null,
       show: false
     });
-    const [sort] = useState({
+    const [sort, setSort] = useState({
       field: "date",
       direction: -1
     });
@@ -69,6 +82,14 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
       }
       return 0;
     }
+    const switchSorting = (field) => {
+      const currentField = sort.field;
+      if(currentField === field){
+        setSort({field: field, direction: -sort.direction});
+      }else{ // keep current direction, select new field
+        setSort({...sort, field: field});
+      }
+    };
     
     const toggleModal = (data_updated) => {
       const show = !showModal.show
@@ -110,7 +131,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
     return (
       <>
         <Table responsive={true} size="sm">
-          <MovementsListTableHeader fields={fields} />
+          <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
           <tbody>
             {!movements || movements.length <= 0 ? (
               <tr>
