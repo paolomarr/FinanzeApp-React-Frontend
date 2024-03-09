@@ -5,7 +5,6 @@ import Header from "./components/Header";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import { t } from "@lingui/macro";
-// import { useLingui } from "@lingui/react";
 
 const getRouteMap = () => [
   { path: "/", title: t`Movement list`, element: <Home /> },
@@ -13,7 +12,6 @@ const getRouteMap = () => [
 ];
 
 function App() {
-  // const {_} = useLingui();
   const pageTitle = useRef(getRouteMap()[0].title);
   let location = useLocation();
   for (const route of getRouteMap()) {

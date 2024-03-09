@@ -3,7 +3,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'rec
 const MovementsHistory = ({data}) => {
     return (
       <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data?.data?? []}>
+          <LineChart data={data?.chartData?? []}>
               <Line type="stepAfter" dataKey="cumulative" stroke="#8884d8" dot={false} />
               <XAxis 
                   type='number' 

@@ -17,7 +17,7 @@ i18n.load({
   "en": messages,
   "it": itMessages
 });
-i18n.activate("it");
+i18n.activate(navigator.language);
 
 const queryClient = new QueryClient({
   defaultOptions: {

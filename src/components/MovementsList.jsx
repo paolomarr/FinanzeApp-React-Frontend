@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
 import { t } from "@lingui/macro";
+import { format } from "../_lib/format_locale";
 
 function MovementsListTableHeader({fields}) {
     return (
@@ -53,7 +54,21 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
       movement: null,
       show: false
     });
-    
+    const [sort] = useState({
+      field: "date",
+      direction: -1
+    });
+    const compareMovements = (movA, movB) => {
+      const reverseFactor = -sort.direction;
+      const valA = movA[sort.field];
+      const valB = movB[sort.field];
+      if(valA < valB){
+        return reverseFactor;
+      }else if(valB < valA){
+        return -reverseFactor;
+      }
+      return 0;
+    }
     
     const toggleModal = (data_updated) => {
       const show = !showModal.show
@@ -70,7 +85,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
         column: "date",
         name: t`Date`,
         format: (date) => {
-          return new Date(date).toLocaleDateString();
+          return format(new Date(date));
         },
       },
       { column: "description", name: t`Description` },
@@ -104,7 +119,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
                 </td>
               </tr>
             ) : (
-              movements.map((movement) => (
+              movements.toSorted(compareMovements).map((movement) => (
                 <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => setShowModal({show:true, movement: movement})} />
               ))
             )}
