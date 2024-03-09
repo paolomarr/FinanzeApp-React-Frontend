@@ -50,9 +50,8 @@ const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
   </Button>;
 };
 
-const MovementForm = (props) => {
+const MovementForm = ({movement, cancel, data_submitted}) => {
     
-    const movement = props.movement;
     if(movement?.date){
       if(typeof movement.date == 'string'){
         movement.date = new Date(movement.date);
@@ -92,8 +91,8 @@ const MovementForm = (props) => {
         setDeleteConfirmState(DeleteState.deleted);
         if(response.ok){
           setShowSuccess(true);
-          if(props.data_submitted){
-            props.data_submitted(true);
+          if(data_submitted){
+            data_submitted(true);
           }
         }else{
           setShowFail(true);
@@ -114,9 +113,10 @@ const MovementForm = (props) => {
           newmovement.subcategory = null;
         }
       }
+      const body = JSON.stringify(newmovement);
       authenticatedFecth(url, {
         method: method,
-        body: JSON.stringify(newmovement)
+        body: body
       }, {
         "Content-Type": "application/json"
       }).then((response) => {
@@ -126,11 +126,11 @@ const MovementForm = (props) => {
               setErrors(response.data.errors);
             }else{
               setShowSuccess(true);
-              if(props.data_submitted){
-                props.data_submitted(true);
+              if(data_submitted){
+                data_submitted(true);
               }
-              if(exit){
-                props.cancel();
+              if(exit && cancel){
+                cancel();
               }
             }
           });
@@ -145,7 +145,7 @@ const MovementForm = (props) => {
 
     return (
       <>
-      <Form id={props.id} onSubmit={(e) => submitForm(e)} className="mb-2">
+      <Form id="movementForm" onSubmit={(e) => submitForm(e)} className="mb-2">
         {movement ? 
           <Input type="hidden" name="id" value={movement.id} /> : null
         }
@@ -196,10 +196,10 @@ const MovementForm = (props) => {
             type="select" 
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
-            value={newmovement.category.id}>
+            value={newmovement.category}>
             <option value="-1"></option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
-              return <option key={cat.id} value={cat}>{cat.category}</option>
+              return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
           </Input>
         </FormGroup>
@@ -211,10 +211,10 @@ const MovementForm = (props) => {
             type="select" 
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
-            value={newmovement.subcategory.id}>
+            value={newmovement.subcategory}>
             <option value="-1">{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {
-              return <option key={cat.id} value={cat}>{cat.subcategory}</option>
+              return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
           </Input>
         </FormGroup>

@@ -48,14 +48,12 @@ const NewMovementButton = ({onClick}) => {
     )
 }
 
-const MovementsList = (props) => {
+const MovementsList = ({movements, categories, subcategories, refresh}) => {
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
     });
     
-    const refresh = props.refresh;
-    const movements = props.movements;
     
     const toggleModal = (data_updated) => {
       const show = !showModal.show
@@ -81,14 +79,14 @@ const MovementsList = (props) => {
         column: "category",
         name: t`Category`,
         format: (item) => {
-          return item.category;
+          return categories?.find((cat)=> cat.id==item )?.category ?? item;
         },
       },
       {
         column: "subcategory",
         name: t`Subcategory`,
         format: (item) => {
-          return item.subcategory;
+          return subcategories?.find((subcat)=> subcat.id==item )?.subcategory ?? item;
         },
       },
     ];

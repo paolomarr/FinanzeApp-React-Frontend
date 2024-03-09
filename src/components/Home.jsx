@@ -49,14 +49,17 @@ const generateChartData = (data, slice) => {
     for(let i=maxIdx; i>0; i--){
       const movement = data.movements[i];
       const mDate = new Date(movement.date);
-      cumulative += movement.abs_amount * movement.category.direction;
+      cumulative += movement.amount
       plotStats.maxCumulative = Math.max(cumulative, plotStats.maxCumulative);
       plotStats.minCumulative = Math.min(cumulative, plotStats.minCumulative);
       if(mDate < plotStats.minDate) continue;
       if(mDate > plotStats.maxDate) continue;
       plotStats.data.push({"date": (mDate).getTime(), "cumulative": cumulative});
-      if(movement.category.direction>0)   plotStats.incomes += movement.abs_amount;
-      else plotStats.outcomes += movement.abs_amount;
+      if(movement.amount>0){   
+        plotStats.incomes += movement.amount;
+      }else {
+        plotStats.outcomes += movement.amount;
+      }
     }
   }
   return plotStats;
@@ -89,7 +92,23 @@ const Home = () => {
     });
     const [chartData, setChartData] = useState(null);
 
-    const results = useQuery({
+    const categoryResults = useQuery({
+      queryKey: ["categories"],
+      queryFn: fetchMovements,
+      retry: (failureCount, error) => {
+        if(error.message === "forbidden") return false;
+        else return 3;
+      }, 
+    });
+    const subcategoryResults = useQuery({
+      queryKey: ["subcategories"],
+      queryFn: fetchMovements,
+      retry: (failureCount, error) => {
+        if(error.message === "forbidden") return false;
+        else return 3;
+      }, 
+    });
+    const movementResults = useQuery({
       queryKey: ["movements", "all"],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
@@ -100,15 +119,15 @@ const Home = () => {
         setChartData(generateChartData(data));
       }
     });
-    if (results.isLoading) {
+    if (movementResults.isLoading) {
       return (
         <div className="loading-pane">
           <h2 className="loader">🌀</h2>
         </div>
       );
     }
-    if (results.isError) {
-        switch (results.error.message) {
+    if (movementResults.isError) {
+        switch (movementResults.error.message) {
             case "forbidden":
                 console.log("Unable to fetch: unauthenticated");
                 return (
@@ -124,17 +143,17 @@ const Home = () => {
         return;
       }
       let newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
-      if(results.data?.movements){
+      if(movementResults.data?.movements){
         const minPercent = (changeResult.minValue - changeResult.min) / (changeResult.max - changeResult.min);
         const maxPercent = (changeResult.maxValue - changeResult.min) / (changeResult.max - changeResult.min);
-        const movements = results.data.movements;
+        const movements = movementResults.data.movements;
         const startIdx = parseInt(minPercent * movements.length);
         const endIdx = parseInt(maxPercent * movements.length);
         newDataSlice.minIdx = startIdx;
         newDataSlice.maxIdx = endIdx;
       }
       setDataSlice(newDataSlice);
-      setChartData(generateChartData(results.data, newDataSlice));
+      setChartData(generateChartData(movementResults.data, newDataSlice));
     };
     return (
       <>
@@ -142,9 +161,13 @@ const Home = () => {
           {t({id: "date.from", message: "From"})} {printDate(dataSlice.minDate)} {t({id: "date.to", message: "to"})} {printDate(dataSlice.maxDate)}
         </h3>
         <MovementStats stats={chartData}></MovementStats>
-        <TimeSpanSlider min={new Date(results.data.minDate)} max={new Date(results.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
+        <TimeSpanSlider min={new Date(movementResults.data.minDate)} max={new Date(movementResults.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
         <MovementsHistory data={chartData}/>
-        <MovementsList movements={results.data.movements.slice(-dataSlice.maxIdx, -dataSlice.minIdx)} refresh={results.refetch}/>
+        <MovementsList 
+          movements={movementResults.data.movements.slice(-dataSlice.maxIdx, -dataSlice.minIdx)}
+          categories={categoryResults.data}
+          subcategories={subcategoryResults.data}
+          refresh={movementResults.refetch}/>
       </>
     )
 }
