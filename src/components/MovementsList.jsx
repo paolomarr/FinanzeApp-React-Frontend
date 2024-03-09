@@ -110,7 +110,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
         },
       },
       { column: "description", name: t`Description` },
-      { column: "abs_amount", name: t`Abs. amount`, format: (val) => val.toFixed(2) },
+      { column: "amount", name: t`Amount`, format: (val) => val.toFixed(2) + "€" },
       {
         column: "category",
         name: t`Category`,
