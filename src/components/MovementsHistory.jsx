@@ -1,4 +1,5 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+import { format } from '../_lib/format_locale';
 
 const MovementsHistory = ({data}) => {
     return (
@@ -10,7 +11,7 @@ const MovementsHistory = ({data}) => {
                   dataKey="date"  
                   domain={[data?.minDate, data?.maxDate]} 
                   // domain={["auto", "auto"]} 
-                  tickFormatter={tick => (new Date(tick)).toLocaleDateString()}
+                  tickFormatter={tick => (format(new Date(tick)))}
                   tickCount="10" />
               <YAxis domain={["auto", "auto"]}/> 
               <Tooltip 
