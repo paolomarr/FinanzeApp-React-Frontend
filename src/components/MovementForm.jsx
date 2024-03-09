@@ -3,10 +3,55 @@ import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
 import { API_URL } from "../constants";
-import { t } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
 import authenticatedFecth from "../queries/authenticatedFetch";
 
+const DeleteState = {
+  start: 0,
+  confirm: 1,
+  deleting: 2,
+  deleted: 3
+};
+const FormDeleteButton = ({movement, deleteConfirmState, onclick}) => {
+  if(!movement){
+    return null;
+  }
+  let deleteLabel;
+  let className="";
+  switch (deleteConfirmState) {
+    case DeleteState.start:
+      deleteLabel = t`Delete`;
+      break;
+    case DeleteState.confirm:
+      deleteLabel = t`Are you sure`;
+      break;
+    case DeleteState.deleting:
+      deleteLabel = t`Deleting` + "...";
+      break;
+    case DeleteState.deleted:
+      deleteLabel = t`Deleted`;
+      className="disabled";
+      break;
+  }
+  return (
+    <Button color="danger" onClick={onclick} className={className}>{deleteLabel}</Button>
+  )
+};
+const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
+  let className = "";
+  if(deleteConfirmState >= DeleteState.deleting){
+    className = "disabled";
+  }
+  const buttonLabel = addMore ? t`Save and add more` : t`Save`;
+  const color = addMore ? "primary" : "secondary";
+  
+  return <Button className={className} color={color} onClick={onclick}>
+    {buttonLabel}
+  </Button>;
+};
+
 const MovementForm = (props) => {
+    
     const movement = props.movement;
     if(movement?.date){
       if(typeof movement.date == 'string'){
@@ -33,18 +78,18 @@ const MovementForm = (props) => {
     }
     const submitDelete = (e) => {
       e.preventDefault();
-      if(deleteConfirmState==0){
-        setDeleteConfirmState(1);
+      if(deleteConfirmState==DeleteState.start){
+        setDeleteConfirmState(DeleteState.confirm);
         return;
       }
-      setDeleteConfirmState(2);
+      setDeleteConfirmState(DeleteState.deleting);
       setShowSuccess(false); setShowFail(false); setErrors({});
       const method = "DELETE";
       const url = `${API_URL}movements/${newmovement.id}`;
       authenticatedFecth(url, {
         method: method,
       }).then((response) => {
-        setDeleteConfirmState(0);
+        setDeleteConfirmState(DeleteState.deleted);
         if(response.ok){
           setShowSuccess(true);
           if(props.data_submitted){
@@ -65,6 +110,9 @@ const MovementForm = (props) => {
         url += `${newmovement.id}`;
       }else{ // new movement -> POST
         method = "POST";
+        if(newmovement.subcategory == "-1"){
+          newmovement.subcategory = null;
+        }
       }
       authenticatedFecth(url, {
         method: method,
@@ -108,7 +156,6 @@ const MovementForm = (props) => {
           <input
             id="date"
             name="date"
-            placeholder="Date"
             type="datetime-local"
             className={`form-control ${errors?.date? "is-invalid" : ""}`}
             value={newmovement.date.toISOString().replace(/\.\d+Z$/,"")}
@@ -123,7 +170,6 @@ const MovementForm = (props) => {
             <Input
                 id="amount"
                 name="abs_amount"
-                placeholder="Amount"
                 type="number"
                 className={`${errors?.abs_amount? "is-invalid" : ""}`}
                 value={newmovement.abs_amount}
@@ -131,11 +177,10 @@ const MovementForm = (props) => {
                 />
         </FormGroup>
         <FormGroup>
-          <Label for="description">{t`Description`}</Label>
+          <Label for="description"><Trans>Description</Trans></Label>
           <Input 
             id="description" 
             name="description" 
-            placeholder="Description" 
             type="text" 
             className={`${errors?.description? "is-invalid" : ""}`}
             value={newmovement.description}
@@ -144,7 +189,7 @@ const MovementForm = (props) => {
             />
         </FormGroup>
         <FormGroup>
-          <Label for="category">{t`Category`}</Label>
+          <Label for="category"><Trans>Category</Trans></Label>
           <Input 
             id="category" 
             name="category" 
@@ -152,14 +197,14 @@ const MovementForm = (props) => {
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
             value={newmovement.category.id}>
-            <option value="-1">{t`Select`}</option>
+            <option value="-1"></option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
-              return <option key={cat.id} value={cat.id}>{cat.category}</option>
+              return <option key={cat.id} value={cat}>{cat.category}</option>
             }))}
           </Input>
         </FormGroup>
         <FormGroup>
-          <Label for="category">{t`Subcategory`}</Label>
+          <Label for="category"><Trans>Subcategory</Trans></Label>
           <Input 
             id="subcategory" 
             name="subcategory" 
@@ -167,30 +212,27 @@ const MovementForm = (props) => {
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
             value={newmovement.subcategory.id}>
-            <option value="-1">{t`Select`}</option>
+            <option value="-1">{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {
-              return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
+              return <option key={cat.id} value={cat}>{cat.subcategory}</option>
             })}
           </Input>
         </FormGroup>
         <div className="text-center">
-          { movement ? 
-          <Button color="danger" onClick={(e) => submitDelete(e)}>
-            { deleteConfirmState==0 ? t`Delete` : deleteConfirmState == 1 ? t`Are you sure?` : t`Deleting...` }
-          </Button> : null
-          }{' '}
-          <Button color="secondary" onClick={(e) => submitForm(e, true)}>
-            {t`Save`}
-          </Button>{' '}
-          { !movement ? 
-          <Button color="primary" onClick={(e) => submitForm(e, false)}>
-            {t`Save and add more`}
-          </Button> : null
-          }
+          <FormDeleteButton movement={movement} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitDelete(e)}></FormDeleteButton>{' '}
+          <FormSaveButton deleteConfirmState={deleteConfirmState} onclick={(e)=>submitForm(e,true)}></FormSaveButton>{' '}
+          { !movement ? <FormSaveButton addMore={true} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitForm(e,false)}></FormSaveButton> : null }
         </div>
       </Form>
-      <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>t`Data has been saved!`</Alert>
-      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>t`An error occurred while saving data.`</Alert>
+      <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>
+        { deleteConfirmState < DeleteState.deleting ?
+          <Trans>Data has been saved</Trans> :
+          <Trans>Deleted</Trans>
+        }{"."}
+      </Alert>
+      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>
+        <Trans>An error occurred while saving data.</Trans>
+      </Alert>
       </>
     );
 };

@@ -17,33 +17,60 @@ msgstr ""
 msgid "Abs. amount"
 msgstr "Abs. amount"
 
-#: src/components/MovementForm.jsx:121
+#: src/components/MovementForm.jsx:174
+#: src/components/MovementForm.jsx:179
 msgid "Amount"
 msgstr "Amount"
 
-#: src/components/MovementForm.jsx:179
-msgid "Are you sure?"
-msgstr "Are you sure?"
+#: src/components/MovementForm.jsx:239
+msgid "An error occurred while saving data."
+msgstr "An error occurred while saving data."
 
-#: src/components/MovementForm.jsx:147
+#: src/components/MovementForm.jsx:27
+msgid "Are you sure"
+msgstr "Are you sure"
+
+#: src/components/MovementForm.jsx:179
+#~ msgid "Are you sure?"
+#~ msgstr "Are you sure?"
+
+#: src/components/MovementForm.jsx:206
 #: src/components/MovementsList.jsx:82
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementForm.jsx:106
+#: src/components/MovementForm.jsx:234
+msgid "Data has been saved"
+msgstr "Data has been saved"
+
+#: src/components/MovementForm.jsx:193
+#~ msgid "Data has been saved!"
+#~ msgstr "Data has been saved!"
+
+#: src/components/MovementForm.jsx:159
+#: src/components/MovementForm.jsx:164
 #: src/components/MovementsList.jsx:73
 msgid "Date"
 msgstr "Date"
 
-#: src/components/MovementForm.jsx:179
+#: src/components/MovementForm.jsx:24
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/MovementForm.jsx:179
-msgid "Deleting..."
-msgstr "Deleting..."
+#: src/components/MovementForm.jsx:33
+#: src/components/MovementForm.jsx:235
+msgid "Deleted"
+msgstr "Deleted"
 
-#: src/components/MovementForm.jsx:134
+#: src/components/MovementForm.jsx:30
+msgid "Deleting"
+msgstr "Deleting"
+
+#: src/components/MovementForm.jsx:179
+#~ msgid "Deleting..."
+#~ msgstr "Deleting..."
+
+#: src/components/MovementForm.jsx:190
 #: src/components/MovementsList.jsx:78
 msgid "Description"
 msgstr "Description"
@@ -77,15 +104,19 @@ msgstr "Movement list"
 msgid "movements in"
 msgstr "movements in"
 
+#: src/components/MovementForm.jsx:220
+msgid "optional"
+msgstr "optional"
+
 #: src/components/Home.jsx:70
 msgid "Outcomes"
 msgstr "Outcomes"
 
-#: src/components/MovementForm.jsx:183
+#: src/components/MovementForm.jsx:46
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MovementForm.jsx:187
+#: src/components/MovementForm.jsx:56
 msgid "Save and add more"
 msgstr "Save and add more"
 
@@ -95,8 +126,8 @@ msgstr "Saving rate"
 
 #: src/components/MovementForm.jsx:155
 #: src/components/MovementForm.jsx:170
-msgid "Select"
-msgstr "Select"
+#~ msgid "Select"
+#~ msgstr "Select"
 
 #: src/components/MovementForm.jsx:155
 #~ msgid "Select category"
@@ -106,7 +137,7 @@ msgstr "Select"
 #~ msgid "Select subcategory"
 #~ msgstr "Select subcategory"
 
-#: src/components/MovementForm.jsx:162
+#: src/components/MovementForm.jsx:220
 #: src/components/MovementsList.jsx:89
 msgid "Subcategory"
 msgstr "Subcategory"

@@ -11,8 +11,7 @@ const authenticate = async (user, password) => {
       body: fd,
       // credentials: "include",
       // redirect: "manual"
-  })
-      .then((response) => {
+  }).then((response) => {
       if(response.ok){
           return response;
       }else{
