@@ -1,9 +1,9 @@
-import { Table } from "reactstrap";
+import { Table, ButtonGroup, Button, Form, Row, Col, Label, Input } from "reactstrap";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
-import { t } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 
 function MovementsListTableHeader({fields, sort, onSort}) {
@@ -60,7 +60,45 @@ const NewMovementButton = ({onClick}) => {
           <FontAwesomeIcon icon={faCirclePlus} size="3x"/>
         </button>
     )
-}
+};
+
+const PaginationControls = ({pagination, setPagination, total}) => {
+  const numPages = total / pagination.size;
+  const pages = [];
+  for (let index = 0; index < numPages; index++) {
+    pages.push(index+1);
+  }
+  return (
+    <div className="pagination_controls">
+      <Form>
+        <Row className="row-cols-lg-auto g-3 align-items-end">
+          <Col>
+            <Label
+              for="itemsPerPage"
+            >
+              <Trans>Show</Trans>
+            </Label>
+            <Input
+              id="itemsPerPage"
+              type="select"
+              onChange={(e) => setPagination({...pagination, size:e.target.value})}
+            >
+            {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
+            </Input>
+          </Col>
+          <Col>
+            <ButtonGroup>
+              {pages.map((page) => {
+                const btn_color = page == pagination.page+1 ? "primary" : "secondary";
+                return <Button color={btn_color} key={page-1} onClick={()=>setPagination({...pagination, page:page-1})}>{page}</Button>
+              })}
+            </ButtonGroup>
+          </Col>
+        </Row>
+      </Form>
+    </div>
+  )
+};
 
 const MovementsList = ({movements, categories, subcategories, refresh}) => {
     const [showModal, setShowModal] = useState({
@@ -70,6 +108,10 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
     const [sort, setSort] = useState({
       field: "date",
       direction: -1
+    });
+    const [pagination, setPagination] = useState({
+      size: 50,
+      page: 0
     });
     const compareMovements = (movA, movB) => {
       const reverseFactor = -sort.direction;
@@ -130,6 +172,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
     
     return (
       <>
+        <PaginationControls setPagination={setPagination} pagination={pagination} total={movements.length}></PaginationControls>
         <Table responsive={true} size="sm">
           <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
           <tbody>
@@ -140,9 +183,16 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
                 </td>
               </tr>
             ) : (
-              movements.toSorted(compareMovements).map((movement) => (
+              movements.toSorted(compareMovements).map((movement, index) => {
+                const start = pagination.page * pagination.size;
+                const end = start + pagination.size;
+                if(index<start || index>=end){
+                  return null;
+                }
+                return (
                 <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => setShowModal({show:true, movement: movement})} />
-              ))
+                )}
+                )
             )}
           </tbody>
         </Table>
