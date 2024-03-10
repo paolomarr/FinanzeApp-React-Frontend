@@ -29,8 +29,10 @@ const generateSlicedData = (data, slice) => {
       const fulldur = intervalToDuration({start:this.minDate, end: this.maxDate});
       if(fulldur && keys && keys.length>0){
         const ret = {};
-        keys.forEach(element => {
-          fulldur[element] ? ret[element] = fulldur[element] : null;
+        keys.forEach(key => {
+          if(fulldur[key]){
+            ret[key] = fulldur[key];
+          }
         });
         return ret;
       }

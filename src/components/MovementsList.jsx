@@ -82,6 +82,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
               id="itemsPerPage"
               type="select"
               onChange={(e) => setPagination({...pagination, size:e.target.value})}
+              value={pagination.size}
             >
             {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
             </Input>

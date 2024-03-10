@@ -32,6 +32,8 @@ const FormDeleteButton = ({movement, deleteConfirmState, onclick}) => {
       deleteLabel = t`Deleted`;
       className="disabled";
       break;
+    default:
+      break;
   }
   return (
     <Button color="danger" onClick={onclick} className={className}>{deleteLabel}</Button>
@@ -77,7 +79,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
     }
     const submitDelete = (e) => {
       e.preventDefault();
-      if(deleteConfirmState==DeleteState.start){
+      if(deleteConfirmState === DeleteState.start){
         setDeleteConfirmState(DeleteState.confirm);
         return;
       }
@@ -109,7 +111,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
         url += `${newmovement.id}`;
       }else{ // new movement -> POST
         method = "POST";
-        if(newmovement.subcategory == "-1"){
+        if(newmovement.subcategory === "-1"){
           newmovement.subcategory = null;
         }
       }
