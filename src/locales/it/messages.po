@@ -13,111 +13,114 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.from"
-msgstr "dal"
-
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.to"
-msgstr "al"
-
 #: src/components/MovementsList.jsx:79
-msgid "Abs. amount"
-msgstr "Importo"
+#~ msgid "Abs. amount"
+#~ msgstr "Importo"
 
-#: src/components/MovementForm.jsx:174
-#: src/components/MovementForm.jsx:179
+#: src/components/MovementForm.jsx:170
+#: src/components/MovementsList.jsx:156
 msgid "Amount"
 msgstr "Importo"
 
-#: src/components/MovementForm.jsx:239
+#: src/components/MovementForm.jsx:236
 msgid "An error occurred while saving data."
 msgstr "Si è verificato un errore durante il salvataggio"
 
-#: src/components/MovementForm.jsx:27
+#: src/components/MovementForm.jsx:26
 msgid "Are you sure"
 msgstr "Confermi"
 
-#: src/components/MovementForm.jsx:206
-#: src/components/MovementsList.jsx:82
+#: src/components/MovementForm.jsx:194
+#: src/components/MovementsList.jsx:159
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/MovementForm.jsx:234
+#: src/components/MovementForm.jsx:231
 msgid "Data has been saved"
 msgstr "Dati salvati"
 
-#: src/components/MovementForm.jsx:159
-#: src/components/MovementForm.jsx:164
-#: src/components/MovementsList.jsx:73
+#: src/components/MovementForm.jsx:156
+#: src/components/MovementsList.jsx:150
 msgid "Date"
 msgstr "Data"
 
-#: src/components/MovementForm.jsx:24
+#: src/components/MovementForm.jsx:23
 msgid "Delete"
 msgstr "Elimina"
 
-#: src/components/MovementForm.jsx:33
-#: src/components/MovementForm.jsx:235
+#: src/components/MovementForm.jsx:32
+#: src/components/MovementForm.jsx:232
 msgid "Deleted"
 msgstr "Eliminato"
 
-#: src/components/MovementForm.jsx:30
+#: src/components/MovementForm.jsx:29
 msgid "Deleting"
 msgstr "Eliminazione in corso"
 
-#: src/components/MovementForm.jsx:190
-#: src/components/MovementsList.jsx:78
+#: src/components/MovementForm.jsx:182
+#: src/components/MovementsList.jsx:155
 msgid "Description"
 msgstr "Descrizione"
 
-#: src/components/Home.jsx:70
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:169
+msgid "date.from"
+msgstr "dal"
+
+#: src/components/Home.jsx:80
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/MovementsList.jsx:116
+#: src/components/MovementsList.jsx:201
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
-#: src/App.jsx:12
+#: src/App.jsx:11
 msgid "Login"
 msgstr "Accedi"
 
-#: src/App.jsx:11
+#: src/App.jsx:10
 msgid "Movement list"
 msgstr "Lista movimenti"
 
-#: src/components/Home.jsx:69
+#: src/components/Home.jsx:76
 msgid "movements in"
 msgstr "movimenti in"
 
-#: src/components/MovementForm.jsx:220
+#: src/components/MovementForm.jsx:217
 msgid "optional"
 msgstr "facoltativo"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:79
 msgid "Outcomes"
 msgstr "Uscite"
 
-#: src/components/MovementForm.jsx:46
+#: src/components/MovementForm.jsx:47
 msgid "Save"
 msgstr "Salva"
 
-#: src/components/MovementForm.jsx:56
+#: src/components/MovementForm.jsx:47
 msgid "Save and add more"
 msgstr "Salva e continua"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:81
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementForm.jsx:220
-#: src/components/MovementsList.jsx:89
+#: src/components/MovementsList.jsx:79
+msgid "Show"
+msgstr "Visualizzati"
+
+#: src/components/MovementForm.jsx:209
+#: src/components/MovementsList.jsx:166
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
-#: src/components/MovementsList.jsx:116
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:169
+msgid "date.to"
+msgstr "al"
+
+#: src/components/MovementsList.jsx:201
 msgid "Update movement data"
 msgstr "Modifica movimento"

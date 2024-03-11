@@ -13,144 +13,147 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.from"
-msgstr "From"
-
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.to"
-msgstr "to"
-
 #: src/components/MovementsList.jsx:79
-msgid "Abs. amount"
-msgstr "Abs. amount"
+#~ msgid "Abs. amount"
+#~ msgstr "Abs. amount"
 
-#: src/components/MovementForm.jsx:174
-#: src/components/MovementForm.jsx:179
+#: src/components/MovementForm.jsx:170
+#: src/components/MovementsList.jsx:156
 msgid "Amount"
 msgstr "Amount"
 
-#: src/components/MovementForm.jsx:239
+#: src/components/MovementForm.jsx:236
 msgid "An error occurred while saving data."
 msgstr "An error occurred while saving data."
 
-#: src/components/MovementForm.jsx:27
+#: src/components/MovementForm.jsx:26
 msgid "Are you sure"
 msgstr "Are you sure"
 
 #: src/components/MovementForm.jsx:179
-msgid "Are you sure?"
-msgstr "Are you sure?"
+#~ msgid "Are you sure?"
+#~ msgstr "Are you sure?"
 
-#: src/components/MovementForm.jsx:206
-#: src/components/MovementsList.jsx:82
+#: src/components/MovementForm.jsx:194
+#: src/components/MovementsList.jsx:159
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementForm.jsx:234
+#: src/components/MovementForm.jsx:231
 msgid "Data has been saved"
 msgstr "Data has been saved"
 
 #: src/components/MovementForm.jsx:193
-msgid "Data has been saved!"
-msgstr "Data has been saved!"
+#~ msgid "Data has been saved!"
+#~ msgstr "Data has been saved!"
 
-#: src/components/MovementForm.jsx:159
-#: src/components/MovementForm.jsx:164
-#: src/components/MovementsList.jsx:73
+#: src/components/MovementForm.jsx:156
+#: src/components/MovementsList.jsx:150
 msgid "Date"
 msgstr "Date"
 
-#: src/components/MovementForm.jsx:24
+#: src/components/MovementForm.jsx:23
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/MovementForm.jsx:33
-#: src/components/MovementForm.jsx:235
+#: src/components/MovementForm.jsx:32
+#: src/components/MovementForm.jsx:232
 msgid "Deleted"
 msgstr "Deleted"
 
-#: src/components/MovementForm.jsx:30
+#: src/components/MovementForm.jsx:29
 msgid "Deleting"
 msgstr "Deleting"
 
 #: src/components/MovementForm.jsx:179
-msgid "Deleting..."
-msgstr "Deleting..."
+#~ msgid "Deleting..."
+#~ msgstr "Deleting..."
 
-#: src/components/MovementForm.jsx:190
-#: src/components/MovementsList.jsx:78
+#: src/components/MovementForm.jsx:182
+#: src/components/MovementsList.jsx:155
 msgid "Description"
 msgstr "Description"
 
-#: src/components/Home.jsx:51
-msgid "From"
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:169
+msgid "date.from"
 msgstr "From"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:51
+#~ msgid "From"
+#~ msgstr "From"
+
+#: src/components/Home.jsx:80
 msgid "Incomes"
 msgstr "Incomes"
 
-#: src/components/MovementsList.jsx:116
+#: src/components/MovementsList.jsx:201
 msgid "Insert new movement"
 msgstr "Insert new movement"
 
-#: src/App.jsx:12
+#: src/App.jsx:11
 msgid "Login"
 msgstr "Login"
 
-#: src/App.jsx:11
+#: src/App.jsx:10
 msgid "Movement list"
 msgstr "Movement list"
 
-#: src/components/Home.jsx:69
+#: src/components/Home.jsx:76
 msgid "movements in"
 msgstr "movements in"
 
-#: src/components/MovementForm.jsx:220
+#: src/components/MovementForm.jsx:217
 msgid "optional"
 msgstr "optional"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:79
 msgid "Outcomes"
 msgstr "Outcomes"
 
-#: src/components/MovementForm.jsx:46
+#: src/components/MovementForm.jsx:47
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MovementForm.jsx:56
+#: src/components/MovementForm.jsx:47
 msgid "Save and add more"
 msgstr "Save and add more"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:81
 msgid "Saving rate"
 msgstr "Saving rate"
 
 #: src/components/MovementForm.jsx:155
 #: src/components/MovementForm.jsx:170
-msgid "Select"
-msgstr "Select"
+#~ msgid "Select"
+#~ msgstr "Select"
 
 #: src/components/MovementForm.jsx:155
-msgid "Select category"
-msgstr "Select category"
+#~ msgid "Select category"
+#~ msgstr "Select category"
 
 #: src/components/MovementForm.jsx:170
-msgid "Select subcategory"
-msgstr "Select subcategory"
+#~ msgid "Select subcategory"
+#~ msgstr "Select subcategory"
 
-#: src/components/MovementForm.jsx:220
-#: src/components/MovementsList.jsx:89
+#: src/components/MovementsList.jsx:79
+msgid "Show"
+msgstr "Show"
+
+#: src/components/MovementForm.jsx:209
+#: src/components/MovementsList.jsx:166
 msgid "Subcategory"
 msgstr "Subcategory"
 
-#: src/components/Home.jsx:51
-msgid "to"
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:169
+msgid "date.to"
 msgstr "to"
 
-#: src/components/MovementsList.jsx:116
+#: src/components/Home.jsx:51
+#~ msgid "to"
+#~ msgstr "to"
+
+#: src/components/MovementsList.jsx:201
 msgid "Update movement data"
 msgstr "Update movement data"
