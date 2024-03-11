@@ -1,1 +1,1 @@
-export const API_URL = "http://localhost:8003/movimenti/api/";
+export const API_URL = process.env.REACT_APP_API_URL;

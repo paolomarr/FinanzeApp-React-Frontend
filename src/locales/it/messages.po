@@ -13,6 +13,16 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:142
+msgid "date.from"
+msgstr "dal"
+
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:142
+msgid "date.to"
+msgstr "al"
+
 #: src/components/MovementsList.jsx:79
 msgid "Abs. amount"
 msgstr "Importo"
@@ -63,11 +73,6 @@ msgstr "Eliminazione in corso"
 msgid "Description"
 msgstr "Descrizione"
 
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.from"
-msgstr "dal"
-
 #: src/components/Home.jsx:70
 msgid "Incomes"
 msgstr "Entrate"
@@ -112,11 +117,6 @@ msgstr "Saving rate"
 #: src/components/MovementsList.jsx:89
 msgid "Subcategory"
 msgstr "Sottocategoria"
-
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:142
-msgid "date.to"
-msgstr "al"
 
 #: src/components/MovementsList.jsx:116
 msgid "Update movement data"
