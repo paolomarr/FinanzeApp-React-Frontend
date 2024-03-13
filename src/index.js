@@ -13,11 +13,18 @@ import { I18nProvider } from "@lingui/react";
 import { messages } from "./locales/en/messages.js";
 import { messages as itMessages } from "./locales/it/messages.js";
 
+// Detect the user's preferred language
+const userLanguages = navigator.languages;
+const preferredLanguage = userLanguages[0]; // Get the first language in the array
+
+// Extract the language part (e.g., "en" from "en-GB")
+const initialLocale = preferredLanguage.split('-')[0];
+
 i18n.load({
   "en": messages,
   "it": itMessages
 });
-i18n.activate(navigator.language);
+i18n.activate(initialLocale);
 
 const queryClient = new QueryClient({
   defaultOptions: {
