@@ -39,14 +39,13 @@ const MovementsListItem = ({movement, fields, edit}) => {
             <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
           </td>
         {fields.map((field) => {
+          const key = `${field.column}_${movement.id}`;
           if (field.format !== undefined) {
             const val = field.format(movement[field.column]);
-            const key = `${field.column}_${val.id}`;
-            return <td key={key}>{val}</td>;
+            return <td key={key}>{val??""}</td>;
           } else {
-            const key = `${field.column}_${movement.id}`;
             const val = movement[field.column];
-            return <td key={key}>{val}</td>;
+            return <td key={key}>{val??""}</td>;
           }
         })}
       </tr>
