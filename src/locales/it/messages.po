@@ -17,12 +17,12 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Importo"
 
-#: src/components/MovementForm.jsx:170
-#: src/components/MovementsList.jsx:156
+#: src/components/MovementForm.jsx:167
+#: src/components/MovementsList.jsx:190
 msgid "Amount"
 msgstr "Importo"
 
-#: src/components/MovementForm.jsx:236
+#: src/components/MovementForm.jsx:237
 msgid "An error occurred while saving data."
 msgstr "Si è verificato un errore durante il salvataggio"
 
@@ -30,17 +30,17 @@ msgstr "Si è verificato un errore durante il salvataggio"
 msgid "Are you sure"
 msgstr "Confermi"
 
-#: src/components/MovementForm.jsx:194
-#: src/components/MovementsList.jsx:159
+#: src/components/MovementForm.jsx:193
+#: src/components/MovementsList.jsx:193
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/MovementForm.jsx:231
+#: src/components/MovementForm.jsx:232
 msgid "Data has been saved"
 msgstr "Dati salvati"
 
-#: src/components/MovementForm.jsx:156
-#: src/components/MovementsList.jsx:150
+#: src/components/MovementForm.jsx:153
+#: src/components/MovementsList.jsx:184
 msgid "Date"
 msgstr "Data"
 
@@ -49,7 +49,7 @@ msgid "Delete"
 msgstr "Elimina"
 
 #: src/components/MovementForm.jsx:32
-#: src/components/MovementForm.jsx:232
+#: src/components/MovementForm.jsx:233
 msgid "Deleted"
 msgstr "Eliminato"
 
@@ -57,8 +57,8 @@ msgstr "Eliminato"
 msgid "Deleting"
 msgstr "Eliminazione in corso"
 
-#: src/components/MovementForm.jsx:182
-#: src/components/MovementsList.jsx:155
+#: src/components/MovementForm.jsx:180
+#: src/components/MovementsList.jsx:189
 msgid "Description"
 msgstr "Descrizione"
 
@@ -71,15 +71,19 @@ msgstr "dal"
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/MovementsList.jsx:201
+#: src/components/MovementsList.jsx:235
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
-#: src/App.jsx:11
+#: src/App.jsx:12
 msgid "Login"
 msgstr "Accedi"
 
-#: src/App.jsx:10
+#: src/App.jsx:13
+msgid "Logout"
+msgstr "Esci"
+
+#: src/App.jsx:11
 msgid "Movement list"
 msgstr "Lista movimenti"
 
@@ -95,6 +99,11 @@ msgstr "facoltativo"
 msgid "Outcomes"
 msgstr "Uscite"
 
+#: src/components/LoginForm.jsx:58
+#: src/components/LoginForm.jsx:63
+msgid "Password"
+msgstr "Password"
+
 #: src/components/MovementForm.jsx:47
 msgid "Save"
 msgstr "Salva"
@@ -107,20 +116,30 @@ msgstr "Salva e continua"
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:79
+#: src/components/MovementsList.jsx:96
 msgid "Show"
 msgstr "Visualizzati"
 
 #: src/components/MovementForm.jsx:209
-#: src/components/MovementsList.jsx:166
+#: src/components/MovementsList.jsx:200
 msgid "Subcategory"
 msgstr "Sottocategoria"
+
+#. js-lingui-explicit-id
+#: src/components/LoginForm.jsx:67
+msgid "login_form_submit"
+msgstr "Accedi"
 
 #. js-lingui-explicit-id
 #: src/components/Home.jsx:169
 msgid "date.to"
 msgstr "al"
 
-#: src/components/MovementsList.jsx:201
+#: src/components/MovementsList.jsx:235
 msgid "Update movement data"
 msgstr "Modifica movimento"
+
+#: src/components/LoginForm.jsx:47
+#: src/components/LoginForm.jsx:52
+msgid "Username"
+msgstr "Nome utente"
