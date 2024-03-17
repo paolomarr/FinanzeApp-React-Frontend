@@ -2,6 +2,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Container } from "reactstrap";
 import React, { useRef } from "react";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import { t } from "@lingui/macro";
@@ -30,6 +31,7 @@ function App() {
           })}
         </Routes>
       </Container>
+      <Footer />
     </>    
   );
 }
