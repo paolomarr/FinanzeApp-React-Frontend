@@ -9,6 +9,7 @@ import TimeSpanSlider from "./TimeSpanSlider";
 import { sub } from "date-fns";
 import { intervalToDuration, min, max } from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
+import { useLingui } from "@lingui/react";
 
 const generateSlicedData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -68,12 +69,13 @@ const generateSlicedData = (data, slice) => {
   return plotStats;
 };
 const MovementStats = ({stats}) => {
+  const {i18n} = useLingui();
   return (
     <>
     { stats && stats !== undefined ?
       <div className="movement-stats">
         <div className="text-center row justify-content-center my-2">
-          <div className="col-12">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(["years", "months", "days"]))}</div>
+          <div className="col-12">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(["years", "months", "days"]), i18n)}</div>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
           <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)}€</div>
@@ -86,7 +88,7 @@ const MovementStats = ({stats}) => {
   )
 };
 const Home = () => {
-    // const {i18n} = useLingui()
+    const {i18n} = useLingui();
     // const printDate = ((date) => {
     //   return i18n.date(date);
     // });
@@ -166,7 +168,7 @@ const Home = () => {
     return (
       <>
         <h3 className="text-center">
-          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate)} {t({id: "date.to", message: "to"})} {format(dataSlice.maxDate)}
+          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate, i18n)} {t({id: "date.to", message: "to"})} {format(dataSlice.maxDate, i18n)}
         </h3>
         <MovementStats stats={chartData}></MovementStats>
         <TimeSpanSlider min={new Date(movementResults.data.minDate)} max={new Date(movementResults.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 

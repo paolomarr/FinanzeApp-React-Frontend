@@ -5,6 +5,7 @@ import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp, faAnglesLeft, faAn
 import MovementModal from "./MovementModal"
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
+import { useLingui } from "@lingui/react";
 
 function MovementsListTableHeader({fields, sort, onSort}) {
     return (
@@ -136,6 +137,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
 };
 
 const MovementsList = ({movements, categories, subcategories, refresh}) => {
+    const {i18n} = useLingui();
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
@@ -183,7 +185,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
         column: "date",
         name: t`Date`,
         format: (date) => {
-          return format(new Date(date));
+          return format(new Date(date), i18n);
         },
       },
       { column: "description", name: t`Description` },
