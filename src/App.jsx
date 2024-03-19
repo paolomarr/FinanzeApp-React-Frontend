@@ -1,11 +1,13 @@
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Container } from "reactstrap";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import { t } from "@lingui/macro";
+import UserContext from './contexts/UserContext.jsx';
+
 
 const getRouteMap = () => [
   { path: "/", title: t`Movement list`, element: <Home /> },
@@ -17,6 +19,8 @@ function App() {
   const pageTitle = useRef(getRouteMap()[0].title);
   let location = useLocation();
   const navigate = useNavigate();
+  const loggedUser = useState(null);
+
   for (const route of getRouteMap()) {
     if(location.pathname === route.path){
       pageTitle.current = route.title;
@@ -24,7 +28,7 @@ function App() {
     }
   }
   return (
-    <>
+    <UserContext.Provider value={loggedUser}>
       <Container >
         <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
         <Routes>
@@ -34,7 +38,7 @@ function App() {
         </Routes>
       </Container>
       <Footer />
-    </>    
+    </UserContext.Provider>    
   );
 }
 

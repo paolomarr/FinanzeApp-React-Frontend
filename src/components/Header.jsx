@@ -5,6 +5,8 @@ import { faUser, faBars } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
 import { languages } from "../constants";
+import { useContext } from "react";
+import UserContext from "../contexts/UserContext";
 
 function Header({title, onLogout}) {
   const { i18n } = useLingui();
@@ -12,6 +14,7 @@ function Header({title, onLogout}) {
     localStorage.setItem("user_locale", locale);
     i18n.activate(locale);
   };
+  const loggedUser = useContext(UserContext);
   return (
     <>
       <div className="d-flex justify-content-between align-items-center p-2">
@@ -29,20 +32,21 @@ function Header({title, onLogout}) {
           // style={{ marginTop: "20px" }}
         />
         </NavbarBrand>
-        <UncontrolledDropdown>
-          <DropdownToggle caret={false}>
-            <FontAwesomeIcon icon={faUser} />
-          </DropdownToggle>
-          <DropdownMenu>
-            {/* <DropdownItem header>Header</DropdownItem> */}
-            <DropdownItem onClick={()=>onLogout()}>Logout</DropdownItem>
-            <DropdownItem disabled={true}><Trans>Profile</Trans></DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem header><Trans>Languages</Trans></DropdownItem>
-            { languages.map((loc)=> {return <DropdownItem className={loc.locale === i18n.locale ? "fw-bold" : ""} key={loc.locale} onClick={() => setLanguage(loc.locale)}>{loc.name}</DropdownItem>} )
-              }
-          </DropdownMenu>
-        </UncontrolledDropdown>
+        { loggedUser ?
+          <UncontrolledDropdown>
+            <DropdownToggle caret={false}>
+              <FontAwesomeIcon icon={faUser} />
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem header>{loggedUser}</DropdownItem>
+              <DropdownItem onClick={()=>onLogout()}>Logout</DropdownItem>
+              <DropdownItem disabled={true}><Trans>Profile</Trans></DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem header><Trans>Languages</Trans></DropdownItem>
+              { languages.map((loc)=> {return <DropdownItem className={loc.locale === i18n.locale ? "fw-bold" : ""} key={loc.locale} onClick={() => setLanguage(loc.locale)}>{loc.name}</DropdownItem>} )
+                }
+            </DropdownMenu>
+          </UncontrolledDropdown> : null }
       </div>
       <div className="text-center">
         <h1>{title}</h1>

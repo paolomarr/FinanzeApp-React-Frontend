@@ -5,10 +5,12 @@ import { useState } from "react";
 import authenticate from "../queries/authenticate";
 import { msg, Trans } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
+import UserContext from "../contexts/UserContext";
+import { useContext } from "react";
 
 const LoginForm = ({logout}) => {
   const { _ } = useLingui();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useContext(UserContext);
   const [error, setError] = useState(null);
   
   const handleSubmit = async (event) => {
