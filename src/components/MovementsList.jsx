@@ -10,7 +10,7 @@ import { useLingui } from "@lingui/react";
 function MovementsListTableHeader({fields, sort, onSort}) {
     return (
       <thead>
-        <tr>
+        <tr className="align-top">
           <th></th>
           {fields.map((field) => {
             let style = {color: "#cccccc",};
