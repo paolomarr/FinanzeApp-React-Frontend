@@ -10,6 +10,8 @@ import { sub } from "date-fns";
 import { intervalToDuration, min, max } from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 const generateSlicedData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -131,8 +133,9 @@ const Home = () => {
     });
     if (movementResults.isLoading) {
       return (
-        <div className="loading-pane">
-          <h2 className="loader">🌀</h2>
+        <div className="loading-pane justify-content-center text-center">
+          {/* <h2 className="loader">🌀</h2> */}
+          <FontAwesomeIcon icon={faSpinner} spinPulse size="2xl"/>
         </div>
       );
     }
