@@ -1,10 +1,11 @@
 import { Table, ButtonGroup, Button, Form, Row, Col, Label, Input } from "reactstrap";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons"
+import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
 import MovementModal from "./MovementModal"
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
+import { useLingui } from "@lingui/react";
 
 function MovementsListTableHeader({fields, sort, onSort}) {
     return (
@@ -39,14 +40,13 @@ const MovementsListItem = ({movement, fields, edit}) => {
             <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
           </td>
         {fields.map((field) => {
+          const key = `${field.column}_${movement.id}`;
           if (field.format !== undefined) {
             const val = field.format(movement[field.column]);
-            const key = `${field.column}_${val.id}`;
-            return <td key={key}>{val}</td>;
+            return <td key={key}>{val??""}</td>;
           } else {
-            const key = `${field.column}_${movement.id}`;
             const val = movement[field.column];
-            return <td key={key}>{val}</td>;
+            return <td key={key}>{val??""}</td>;
           }
         })}
       </tr>
@@ -63,16 +63,34 @@ const NewMovementButton = ({onClick}) => {
 };
 
 const PaginationControls = ({pagination, setPagination, total}) => {
-  const numPages = total / pagination.size;
+  const numPages = Math.ceil(total / pagination.size);
   const pages = [];
   for (let index = 0; index < numPages; index++) {
-    pages.push(index+1);
+    pages.push(index);
   }
+  const pageCarouselWidth = 3;
+  const pageCarousel = {
+    halfWidth: Math.floor(pageCarouselWidth/2),
+    minIdx: 1,
+    maxIdx: numPages-1,
+    start: function() {
+      let ret = Math.min(pagination.page-this.halfWidth, this.maxIdx-pageCarouselWidth);
+      return Math.max(this.minIdx, ret);
+    },
+    end: function() {
+      return Math.min(this.maxIdx, this.start()+pageCarouselWidth);
+    }
+  };
+  const pageButtonColor = (page) => {
+    const btn_color = page == pagination.page ? "primary" : "secondary";
+    return btn_color;
+  };
+  
   return (
     <div className="pagination_controls">
       <Form>
         <Row className="row-cols-lg-auto g-3 align-items-end">
-          <Col>
+          <Col xs={3}>
             <Label
               for="itemsPerPage"
             >
@@ -87,13 +105,30 @@ const PaginationControls = ({pagination, setPagination, total}) => {
             {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
             </Input>
           </Col>
-          <Col>
+          <Col xs={9}>
+            { numPages > pageCarouselWidth ?
+            <>
+            <ButtonGroup id="paginationScrollBack">
+                <Button color={pageButtonColor(0)} onClick={()=>setPagination({...pagination, page:0})}>{1}</Button>
+                <Button color="secondary"  onClick={()=>setPagination({...pagination, page:Math.max(0, pagination.page-pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesLeft} /></Button>
+              </ButtonGroup>{' '}
+              <ButtonGroup>
+                {pages.slice(pageCarousel.start(), pageCarousel.end()).map((page) => {
+                  return <Button color={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
+                })}
+              </ButtonGroup>{' '}
+              <ButtonGroup id="paginationScrollForward">
+                <Button color="secondary" onClick={()=>setPagination({...pagination, page: Math.min(numPages-1, pagination.page+pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesRight} /></Button>
+                <Button color={pageButtonColor(numPages-1)} onClick={()=>setPagination({...pagination, page:numPages-1})}>{numPages}</Button>
+              </ButtonGroup>
+            </>
+            : 
             <ButtonGroup>
               {pages.map((page) => {
-                const btn_color = page == pagination.page+1 ? "primary" : "secondary";
-                return <Button color={btn_color} key={page-1} onClick={()=>setPagination({...pagination, page:page-1})}>{page}</Button>
+                return <Button color={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
               })}
             </ButtonGroup>
+            }
           </Col>
         </Row>
       </Form>
@@ -102,6 +137,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
 };
 
 const MovementsList = ({movements, categories, subcategories, refresh}) => {
+    const {i18n} = useLingui();
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
@@ -149,7 +185,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
         column: "date",
         name: t`Date`,
         format: (date) => {
-          return format(new Date(date));
+          return format(new Date(date), i18n);
         },
       },
       { column: "description", name: t`Description` },

@@ -70,8 +70,8 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
       date: new Date(),
       abs_amount: 0,
       description: "",
-      category: -1,
-      subcategory: -1,
+      category: null,
+      subcategory: null,
     });
     const [deleteConfirmState, setDeleteConfirmState] = useState(0);
     const updateNewMovement = (update) => {
@@ -111,9 +111,6 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
         url += `${newmovement.id}`;
       }else{ // new movement -> POST
         method = "POST";
-        if(newmovement.subcategory === "-1"){
-          newmovement.subcategory = null;
-        }
       }
       const body = JSON.stringify(newmovement);
       authenticatedFecth(url, {
@@ -125,7 +122,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
         if(response.ok){
           response.json().then((data) => {
             if(data.errors){
-              setErrors(response.data.errors);
+              setErrors(response.data);
             }else{
               setShowSuccess(true);
               if(data_submitted){
@@ -177,6 +174,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
                 value={newmovement.abs_amount}
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
+          <FormFeedback>{errors?.abs_amount?? ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="description"><Trans>Description</Trans></Label>
@@ -189,6 +187,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
             onChange={(e) => updateNewMovement({description: e.target.value})}
             required
             />
+          <FormFeedback>{errors?.description?? ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="category"><Trans>Category</Trans></Label>
@@ -204,6 +203,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
           </Input>
+          <FormFeedback>{errors?.category?? ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="category"><Trans>Subcategory</Trans></Label>
@@ -214,11 +214,12 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
             value={newmovement.subcategory}>
-            <option value="-1">{"("}<Trans>optional</Trans>{")"}</option>
+            <option value={null}>{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
           </Input>
+          <FormFeedback>{errors?.subcategory?? ""}</FormFeedback>
         </FormGroup>
         <div className="text-center">
           <FormDeleteButton movement={movement} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitDelete(e)}></FormDeleteButton>{' '}

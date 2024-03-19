@@ -1,7 +1,9 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
 import { format } from '../_lib/format_locale';
+import { useLingui } from '@lingui/react';
 
 const MovementsHistory = ({data}) => {
+    const {i18n} = useLingui();
     return (
       <ResponsiveContainer width="100%" height={400}>
           <LineChart data={data?.chartData?? []}>
@@ -11,7 +13,7 @@ const MovementsHistory = ({data}) => {
                   dataKey="date"  
                   domain={[data?.minDate, data?.maxDate]} 
                   // domain={["auto", "auto"]} 
-                  tickFormatter={tick => (format(new Date(tick)))}
+                  tickFormatter={tick => (format(new Date(tick), i18n))}
                   tickCount="10" />
               <YAxis domain={["auto", "auto"]}/> 
               <Tooltip 

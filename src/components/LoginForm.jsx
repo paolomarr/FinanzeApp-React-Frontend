@@ -3,8 +3,11 @@ import { Form, FormGroup, Input, Label, Button, Container, Row, Col } from "reac
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import authenticate from "../queries/authenticate";
+import { msg, Trans } from "@lingui/macro";
+import { useLingui } from "@lingui/react";
 
-const LoginForm = () => {
+const LoginForm = ({logout}) => {
+  const { _ } = useLingui();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   
@@ -22,37 +25,46 @@ const LoginForm = () => {
       setError(error);
     }
   };
+  if(logout){
+    sessionStorage.removeItem("authToken");
+    // setUser(null);
+    // setError(null);
+  }
 
   return (
     <Container>
-      {error && <p>{error.message}</p>}
       {user && <Navigate to="/" replace={true} />}
+      <Row className="justify-content-center">
+        <Col className="col-md-6 col-lg-4">
+        {error && <p>{error.message}</p>}
+        </Col>
+      </Row>
       <Row className="justify-content-center">
         <Col className="col-md-6 col-lg-4">
           <Form onSubmit={(event) => handleSubmit(event)}>
             <FormGroup>
               <Label for="username" hidden>
-                Username
+                <Trans>Username</Trans>
               </Label>
               <Input
                 id="username"
                 name="username"
-                placeholder="Username"
+                placeholder={_(msg`Username`)}
                 type="username"
               />
             </FormGroup>
             <FormGroup>
               <Label for="password" hidden>
-                Password
+                <Trans>Password</Trans>
               </Label>
               <Input
                 id="password"
                 name="password"
-                placeholder="Password"
+                placeholder={_(msg`Password`)}
                 type="password"
               />
             </FormGroup>
-            <Button>Submit</Button>
+            <Button><Trans id="login_form_submit">Submit</Trans></Button>
           </Form>
         </Col>
       </Row>

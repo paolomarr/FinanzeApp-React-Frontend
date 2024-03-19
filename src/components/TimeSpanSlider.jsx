@@ -38,7 +38,9 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
     const handleInput = (changeResult) => {
       if(changeResult.minValue != currentChange.minValue || changeResult.maxValue != currentChange.maxValue)
         setCurrentChange(changeResult);
-        onChange? onChange(changeResult) : null;
+        if(onChange){
+          onChange(changeResult);
+        }
     };
 
     return <MultiRangeSlider 

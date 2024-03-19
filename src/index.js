@@ -10,14 +10,29 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
-import { messages } from "./locales/en/messages.js";
-import { messages as itMessages } from "./locales/it/messages.js";
+import { languages } from './constants/index.js';
 
-i18n.load({
-  "en": messages,
-  "it": itMessages
-});
-i18n.activate(navigator.language);
+// Detect the user's preferred language
+const userLanguages = navigator.languages;
+const preferredLanguage = userLanguages[0]; // Get the first language in the array
+
+// Extract the language part (e.g., "en" from "en-GB")
+const preferredLocale = preferredLanguage.split('-')[0];
+const storedLocale = localStorage.getItem("user_locale");
+let locales = {};
+languages.map((lang) => {
+  const locale = lang.locale;
+  const messages = lang.messages;
+  locales[locale] = messages;
+})
+i18n.load(locales);
+let initialLocale = "en";
+if(storedLocale){
+  initialLocale = storedLocale;
+}else if(preferredLocale in locales){
+  initialLocale = preferredLocale;
+}
+i18n.activate(initialLocale);
 
 const queryClient = new QueryClient({
   defaultOptions: {
