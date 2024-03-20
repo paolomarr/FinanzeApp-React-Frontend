@@ -10,7 +10,7 @@ const durationItems = () => {
         {unit: "seconds", localised: msg`seconds`},
     ]
 };
-const _formatDuration = (duration, fields) => {
+export function formatDuration(duration, i18n, fields) {
     let got_first = false;
     let output_components = [];
     if(!fields){ // default to a date-only format
@@ -21,11 +21,12 @@ const _formatDuration = (duration, fields) => {
             continue;
         }
         const val = duration[item.unit];
+        const translated = i18n._(item.localised);
         if(got_first){
-            output_components.push(`${val ?? 0} ${item.localised.message}`);
+            output_components.push(`${val ?? 0} ${translated}`);
         }else if(val > 0){
             got_first = true;
-            output_components.push(`${val} ${item.localised.message}`);
+            output_components.push(`${val} ${translated}`);
         }
     }
     // loop backward to "trim" 0-values from tail
@@ -45,7 +46,3 @@ export function format(date, i18n, options) {
     // return _format(date, formatString, {locale: locale,  ...options});
     return i18n.date(date, options);
 }
-export function formatDuration(duration) {
-    return _formatDuration(duration);
-}
-

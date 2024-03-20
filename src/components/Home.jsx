@@ -77,7 +77,7 @@ const MovementStats = ({stats}) => {
     { stats && stats !== undefined ?
       <div className="movement-stats">
         <div className="text-center row justify-content-center my-2">
-          <div className="col-12">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(["years", "months", "days"]), i18n)}</div>
+          <div className="col-12">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
           <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)}€</div>
