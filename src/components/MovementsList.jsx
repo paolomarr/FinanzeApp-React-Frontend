@@ -1,8 +1,7 @@
 import { Table, ButtonGroup, Button, Form, Row, Col, Label, Input } from "reactstrap";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPenToSquare, faCirclePlus, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
-import MovementModal from "./MovementModal"
+import { faPenToSquare, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
@@ -36,7 +35,7 @@ function MovementsListTableHeader({fields, sort, onSort}) {
 const MovementsListItem = ({movement, fields, edit}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
-          <td>
+          <td className="list-item-edit">
             <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
           </td>
         {fields.map((field) => {
@@ -51,15 +50,6 @@ const MovementsListItem = ({movement, fields, edit}) => {
         })}
       </tr>
     );
-};
-
-const NewMovementButton = ({onClick}) => {
-    return (
-        <button onClick={onClick} 
-          style={{position: "fixed", right: "2%", bottom: "2%", border: "unset", background: "unset"}}>
-          <FontAwesomeIcon icon={faCirclePlus} size="3x"/>
-        </button>
-    )
 };
 
 const PaginationControls = ({pagination, setPagination, total}) => {
@@ -136,12 +126,8 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, refresh}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit}) => {
     const {i18n} = useLingui();
-    const [showModal, setShowModal] = useState({
-      movement: null,
-      show: false
-    });
     const [sort, setSort] = useState({
       field: "date",
       direction: -1
@@ -170,14 +156,7 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
       }
     };
     
-    const toggleModal = (data_updated) => {
-      const show = !showModal.show
-      setShowModal({show: show, movement: showModal.movement});
-      if(!show && data_updated){
-        console.log("Data updated, refreshing...");
-        refresh();
-      }
-    };
+    
     const fields = [
       // {column:"id", name: "id"},
       // {column:"user", name: "User"},
@@ -227,14 +206,12 @@ const MovementsList = ({movements, categories, subcategories, refresh}) => {
                   return null;
                 }
                 return (
-                <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => setShowModal({show:true, movement: movement})} />
+                <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => onEdit(movement)} />
                 )}
                 )
             )}
           </tbody>
         </Table>
-        <NewMovementButton onClick={() => setShowModal({show:true, movement: null})} />
-        <MovementModal showModal={showModal} toggleModal={toggleModal} title={showModal.movement ? t`Update movement data` : t`Insert new movement`} />
       </>
     );
 }

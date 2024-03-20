@@ -23,7 +23,7 @@ const FormDeleteButton = ({movement, deleteConfirmState, onclick}) => {
       deleteLabel = t`Delete`;
       break;
     case DeleteState.confirm:
-      deleteLabel = t`Are you sure`;
+      deleteLabel = t`Are you sure` + "?";
       break;
     case DeleteState.deleting:
       deleteLabel = t`Deleting` + "...";

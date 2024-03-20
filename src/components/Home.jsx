@@ -12,6 +12,8 @@ import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import FixedBottomRightButton from "./FixedBottomRightButton";
+import MovementModal from "./MovementModal"
 
 const generateSlicedData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -103,7 +105,18 @@ const Home = () => {
       maxDate: today
     });
     const [chartData, setChartData] = useState(null);
-
+    const [showModal, setShowModal] = useState({
+      movement: null,
+      show: false
+    });
+    const toggleModal = (data_updated) => {
+      const show = !showModal.show
+      setShowModal({show: show, movement: showModal.movement});
+      if(!show && data_updated){
+        console.log("Data updated, refreshing...");
+        movementResults.refetch();
+      }
+    };
     const categoryResults = useQuery({
       queryKey: ["categories"],
       queryFn: fetchMovements,
@@ -168,6 +181,7 @@ const Home = () => {
       setDataSlice(newDataSlice);
       setChartData(generateSlicedData(movementResults.data, newDataSlice));
     };
+    
     return (
       <>
         <h3 className="text-center">
@@ -180,7 +194,9 @@ const Home = () => {
           movements={chartData?.listData ?? []}
           categories={categoryResults.data}
           subcategories={subcategoryResults.data}
-          refresh={movementResults.refetch}/>
+          onEdit={(movement) => setShowModal({show: true, movement: movement})}/>
+        <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
+        <MovementModal showModal={showModal} toggleModal={toggleModal} title={showModal.movement ? t`Update movement data` : t`Insert new movement`} />
       </>
     )
 }
