@@ -97,13 +97,7 @@ const Home = () => {
     //   return i18n.date(date);
     // });
 
-    const today = new Date();
-    const [dataSlice, setDataSlice] = useState({
-      minIdx: 0,
-      maxIdx: 1,
-      minDate: today,
-      maxDate: today
-    });
+    const [dataSlice, setDataSlice] = useState(null);
     const [chartData, setChartData] = useState(null);
     const [showModal, setShowModal] = useState({
       movement: null,
@@ -141,7 +135,7 @@ const Home = () => {
         else return 3;
       },
       onSuccess: (data) => {
-        setChartData(generateSlicedData(data));
+        setChartData(generateSlicedData(data, dataSlice));
       }
     });
     if (movementResults.isLoading) {
@@ -165,7 +159,7 @@ const Home = () => {
         }
     }
     const onSliderChange = (changeResult) => {
-      if(dataSlice.minDate == changeResult.minValue && dataSlice.maxDate == changeResult.maxValue){
+      if(dataSlice?.minDate == changeResult.minValue && dataSlice?.maxDate == changeResult.maxValue){
         return;
       }
       let newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
@@ -185,7 +179,8 @@ const Home = () => {
     return (
       <>
         <h3 className="text-center">
-          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate, i18n)} {t({id: "date.to", message: "to"})} {format(dataSlice.maxDate, i18n)}
+          {t({id: "date.from", message: "From"})} {format(dataSlice?.minDate ?? movementResults.data.minDate, i18n)} 
+          {t({id: "date.to", message: "to"})} {format(dataSlice?.maxDate ?? movementResults.data.maxDate, i18n)}
         </h3>
         <MovementStats stats={chartData}></MovementStats>
         <TimeSpanSlider min={new Date(movementResults.data.minDate)} max={new Date(movementResults.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
