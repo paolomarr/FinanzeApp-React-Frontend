@@ -4,16 +4,17 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import { Navigate } from "react-router-dom";
-import { t } from "@lingui/macro"
+import { t, Trans } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
-import { sub } from "date-fns";
+import { add, sub } from "date-fns";
 import { intervalToDuration, min, max } from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faWandSparkles } from "@fortawesome/free-solid-svg-icons";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 
 const generateSlicedData = (data, slice) => {
   const baselineData = data.baseline?? null;
@@ -72,14 +73,30 @@ const generateSlicedData = (data, slice) => {
   }
   return plotStats;
 };
-const MovementStats = ({stats}) => {
+const MovementStats = ({stats, onSetRange}) => {
   const {i18n} = useLingui();
+  const today = new Date();
+  const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
+  const past_year_end = add(past_year_start, {years:1})
   return (
     <>
     { stats && stats !== undefined ?
       <div className="movement-stats">
         <div className="text-center row justify-content-center my-2">
-          <div className="col-12">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
+          <div className="col-12 col-xs-auto">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
+          <div className="col-12 col-xs-auto">
+            <UncontrolledDropdown>
+              <DropdownToggle caret={false}>
+                <FontAwesomeIcon icon={faWandSparkles}/>
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:3}), max: today})}><Trans>Last 3 months</Trans></DropdownItem>
+                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:6}), max: today})}><Trans>Last 6 months</Trans></DropdownItem>
+                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:12}), max: today})}><Trans>Last year</Trans></DropdownItem>
+                <DropdownItem onClick={() => onSetRange({min: past_year_start, max: past_year_end})}><Trans>Past year</Trans></DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+          </div>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
           <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)}€</div>
@@ -176,14 +193,24 @@ const Home = () => {
       setChartData(generateSlicedData(movementResults.data, newDataSlice));
     };
     
+    const rangeAvail = {
+      min: dataSlice?.minDate ?? movementResults.data.minDate,
+      max: dataSlice?.maxDate ?? movementResults.data.maxDate,
+    }
     return (
       <>
         <h3 className="text-center">
-          {t({id: "date.from", message: "From"})} {format(dataSlice?.minDate ?? movementResults.data.minDate, i18n)} 
-          {t({id: "date.to", message: "to"})} {format(dataSlice?.maxDate ?? movementResults.data.maxDate, i18n)}
+          {t({id: "date.from", message: "From"})} {format(rangeAvail.min, i18n)} 
+          {t({id: "date.to", message: "to"})} {format(rangeAvail.max, i18n)}
         </h3>
-        <MovementStats stats={chartData}></MovementStats>
-        <TimeSpanSlider min={new Date(movementResults.data.minDate)} max={new Date(movementResults.data.maxDate)} start={sub(new Date(), {months:3})} end={new Date()} steps={100} onChange={onSliderChange} /> 
+        <MovementStats stats={chartData} onSetRange={(range) => onSliderChange({min: rangeAvail.min, max: rangeAvail.min, minValue: range.min, maxValue: range.max})}></MovementStats>
+        <TimeSpanSlider 
+          min={new Date(movementResults.data.minDate)} 
+          max={new Date(movementResults.data.maxDate)} 
+          start={dataSlice?.minDate ?? sub(new Date(), {months:3})} 
+          end={dataSlice?.maxDate ?? new Date()} 
+          steps={100} 
+          onChange={onSliderChange} /> 
         <MovementsHistory data={chartData}/>
         <MovementsList 
           movements={chartData?.listData ?? []}

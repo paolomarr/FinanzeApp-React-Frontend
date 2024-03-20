@@ -35,24 +35,22 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
     }else{
       labels = _labels;
     }
-    const [currentChange, setCurrentChange] = useState({min: min, max: max, minValue: start, maxValue: end});
+    // const [, setCurrentChange] = useState({min: min, max: max, minValue: start, maxValue: end});
 
     const handleInput = (changeResult) => {
-      if(changeResult.minValue != currentChange.minValue || changeResult.maxValue != currentChange.maxValue)
-        setCurrentChange(changeResult);
-        if(onChange){
-          onChange(changeResult);
-        }
+      if(onChange){
+        onChange(changeResult);
+      }
     };
 
     return <MultiRangeSlider 
               min={min}
               max={max}
               step={step}
-              minValue={currentChange.minValue}
-              maxValue={currentChange.maxValue}
-              minCaption={format(currentChange.minValue, i18n)}
-              maxCaption={format(currentChange.maxValue, i18n)}
+              minValue={start}
+              maxValue={end}
+              minCaption={format(start, i18n)}
+              maxCaption={format(end, i18n)}
               ruler={true}
               onInput={(e)=>{
                 handleInput(e);
