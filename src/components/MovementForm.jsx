@@ -124,6 +124,13 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
             if(data.errors){
               setErrors(response.data);
             }else{
+              // reset some fields
+              setNewmovement({...newmovement, 
+                abs_amount: 0,
+                description:"",
+                category: null,
+                subcategory: null,
+              });
               setShowSuccess(true);
               if(data_submitted){
                 data_submitted(true);
@@ -198,7 +205,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
             value={newmovement.category}>
-            <option value="-1"></option>
+            <option value={null}></option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
@@ -206,7 +213,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
           <FormFeedback>{errors?.category?? ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
-          <Label for="category"><Trans>Subcategory</Trans></Label>
+          <Label for="subcategory"><Trans>Subcategory</Trans></Label>
           <Input 
             id="subcategory" 
             name="subcategory" 
