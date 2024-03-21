@@ -16,18 +16,19 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
     const initialInterval = {start: min, end: max};
     const initialDuration = intervalToDuration(initialInterval);
     let eachFunction = null;
-    // let formatPattern = "P";
+    let dateFormatOptions = {year: "numeric", month: "2-digit", day: "2-digit"};
     if(initialDuration.years > 0){
       eachFunction = eachMonthOfInterval;
-      // formatPattern = "MMM yyyy";
+      if(isMobile){
+        dateFormatOptions.year = "2-digit";
+        dateFormatOptions.day = undefined;
+      }
     }else if(initialDuration.months > 0){
       eachFunction = eachWeekOfInterval;
-      // formatPattern = "dd MMM yyyy";
     }else{
       eachFunction = eachDayOfInterval;
-      // formatPattern = "dd MMM";
     }
-    const _labels = eachFunction(initialInterval).map((date)=>{return format(date, i18n);});
+    const _labels = eachFunction(initialInterval).map((date)=>{return format(date, i18n, dateFormatOptions);});
     let labels;
     const multiples = parseInt(_labels.length/nLabels);
     if(multiples>1){ // 2 * nLabels or more

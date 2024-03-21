@@ -39,10 +39,5 @@ export function formatDuration(duration, i18n, fields) {
     return output_components.join(", ");
 }
 export function format(date, i18n, options) {
-    // if(!formatString){
-    //     formatString = "P";
-    // }
-    // const locale = i18n.locale;
-    // return _format(date, formatString, {locale: locale,  ...options});
     return i18n.date(date, options);
 }
