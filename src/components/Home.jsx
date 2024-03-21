@@ -11,7 +11,7 @@ import { intervalToDuration, min, max } from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner, faWandSparkles } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faBolt } from "@fortawesome/free-solid-svg-icons";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
@@ -82,21 +82,19 @@ const MovementStats = ({stats, onSetRange}) => {
     <>
     { stats && stats !== undefined ?
       <div className="movement-stats">
-        <div className="text-center row justify-content-center my-2">
-          <div className="col-12 col-xs-auto">{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
-          <div className="col-12 col-xs-auto">
-            <UncontrolledDropdown>
-              <DropdownToggle caret={false}>
-                <FontAwesomeIcon icon={faWandSparkles}/>
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:3}), max: today})}><Trans>Last 3 months</Trans></DropdownItem>
-                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:6}), max: today})}><Trans>Last 6 months</Trans></DropdownItem>
-                <DropdownItem onClick={() => onSetRange({min: sub(today, {months:12}), max: today})}><Trans>Last year</Trans></DropdownItem>
-                <DropdownItem onClick={() => onSetRange({min: past_year_start, max: past_year_end})}><Trans>Past year</Trans></DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
+        <div className="d-flex flex-row align-items-center justify-content-center my-2">
+          <div>{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
+          <UncontrolledDropdown className="px-1">
+            <DropdownToggle caret={false} color="">
+              <FontAwesomeIcon icon={faBolt} size="lg" className="text-secondary"/>
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:3}), max: today})}><Trans>Last 3 months</Trans></DropdownItem>
+              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:6}), max: today})}><Trans>Last 6 months</Trans></DropdownItem>
+              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:12}), max: today})}><Trans>Last year</Trans></DropdownItem>
+              <DropdownItem onClick={() => onSetRange({min: past_year_start, max: past_year_end})}><Trans>Past year</Trans></DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
           <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)}€</div>
