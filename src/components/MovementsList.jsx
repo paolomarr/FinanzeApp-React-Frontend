@@ -79,7 +79,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   return (
     <div className="pagination_controls">
       <Form>
-        <Row className="row-cols-lg-auto g-3 align-items-end">
+        <Row className="row-cols-lg-auto g-3 align-items-end justify-content-md-end">
           <Col xs={3}>
             <Label
               for="itemsPerPage"
@@ -136,6 +136,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
       size: 50,
       page: 0
     });
+    const [movementFilter, setMovementFilter] = useState("");
     const compareMovements = (movA, movB) => {
       const reverseFactor = -sort.direction;
       const valA = movA[sort.field];
@@ -146,7 +147,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
         return -reverseFactor;
       }
       return 0;
-    }
+    };
     const switchSorting = (field) => {
       const currentField = sort.field;
       if(currentField === field){
@@ -155,7 +156,17 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
         setSort({...sort, field: field});
       }
     };
-    
+    const movementsFilterFunction = (movement) => {
+      if(!movementFilter || movementFilter.length === 0) return true;
+      const cat_name = categories.find((cat) => cat.id === movement.category)?.category ?? "";
+      const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory ?? "";
+      let ret = false;
+      ret |= movement.description.indexOf(movementFilter) >= 0;
+      ret |= cat_name.indexOf(movementFilter) >= 0;
+      ret |= subcat_name.indexOf(movementFilter) >= 0;
+      ret |= movement.amount.toString().indexOf(movementFilter.replace(",", ".")) >= 0;
+      return ret;
+    };
     
     const fields = [
       // {column:"id", name: "id"},
@@ -188,7 +199,14 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
     
     return (
       <>
-        <PaginationControls setPagination={setPagination} pagination={pagination} total={movements.length}></PaginationControls>
+        <Row className="align-items-end">
+          <Col xs={12} md={6}>
+            <Input type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value)} />
+          </Col>
+          <Col xs={12} md={6}>
+            <PaginationControls setPagination={setPagination} pagination={pagination} total={movements.length}></PaginationControls>
+          </Col>
+        </Row>
         <Table responsive={true} size="sm">
           <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
           <tbody>
@@ -199,7 +217,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
                 </td>
               </tr>
             ) : (
-              movements.toSorted(compareMovements).map((movement, index) => {
+              movements.filter(movementsFilterFunction).toSorted(compareMovements).map((movement, index) => {
                 const start = pagination.page * pagination.size;
                 const end = start + pagination.size;
                 if(index<start || index>=end){
