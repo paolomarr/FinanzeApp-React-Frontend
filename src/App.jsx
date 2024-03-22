@@ -29,8 +29,8 @@ function App() {
   }
   return (
     <UserContext.Provider value={loggedUser}>
+      <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
       <Container >
-        <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
         <Routes>
           {getRouteMap().map((route, key) => {
             return <Route key={key} path={route.path} element={route.element} />  
