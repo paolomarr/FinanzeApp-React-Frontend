@@ -1,5 +1,18 @@
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Cell, LabelList } from 'recharts';
 
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="label">{`${label}`}</p>
+        <p>{`${parseFloat(payload[0].value).toFixed(2)} (${parseFloat(payload[0].payload.percent).toFixed(2)*100}%)`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
 const MovementsStats = ({data}) => {
     let localData = [];
     if(data) {
@@ -38,7 +51,7 @@ const MovementsStats = ({data}) => {
           <BarChart data={localData} layout='horizontal'>
             <YAxis />
             <XAxis type='category' dataKey="category" tick={false} />
-            <Tooltip/>
+            <Tooltip content={<CustomTooltip />}/>
             <Bar dataKey={"sum"}>
               {
                 localData.map((entry, index) => (
