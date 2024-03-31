@@ -15,13 +15,15 @@ import { faSpinner, faBolt } from "@fortawesome/free-solid-svg-icons";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import MovementsStats from "./MovementStats";
 
-const generateSlicedData = (data, slice) => {
+const generateSlicedData = (data, slice, categories) => {
   const baselineData = data.baseline?? null;
   const minDate = data.minDate;
   const maxDate = data.maxDate;
   const plotStats = {
     chartData: [],
+    categories: {},
     listData: [],
     nMovements: function() { return this.chartData.length }, // no arrow function when using 'this'
     minDate: minDate,
@@ -69,11 +71,19 @@ const generateSlicedData = (data, slice) => {
       }else {
         plotStats.outcomes += movement.abs_amount;
       }
+      const cat = categories.find((cat)=> cat.id === movement.category);
+      if(cat){
+        if(cat.category in plotStats.categories){
+          plotStats.categories[cat.category].sum += movement.abs_amount
+        }else{
+          plotStats.categories[cat.category] = {...cat, "sum": movement.abs_amount};
+        }
+      }
     }
   }
   return plotStats;
 };
-const MovementStats = ({stats, onSetRange}) => {
+const MovementSummary = ({stats, onSetRange}) => {
   const {i18n} = useLingui();
   const today = new Date();
   const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
@@ -149,8 +159,9 @@ const Home = () => {
         if(error.message === "forbidden") return false;
         else return 3;
       },
+      enabled: !!categoryResults.data && !!subcategoryResults.data,
       onSuccess: (data) => {
-        setChartData(generateSlicedData(data, dataSlice));
+        setChartData(generateSlicedData(data, dataSlice, categoryResults.data));
       }
     });
     if (movementResults.isLoading) {
@@ -188,7 +199,7 @@ const Home = () => {
         newDataSlice.maxIdx = endIdx;
       }
       setDataSlice(newDataSlice);
-      setChartData(generateSlicedData(movementResults.data, newDataSlice));
+      setChartData(generateSlicedData(movementResults.data, newDataSlice, categoryResults.data));
     };
     
     const rangeAvail = {
@@ -201,7 +212,7 @@ const Home = () => {
           {t({id: "date.from", message: "From"})} {format(rangeAvail.min, i18n)} 
           {t({id: "date.to", message: "to"})} {format(rangeAvail.max, i18n)}
         </h3>
-        <MovementStats stats={chartData} onSetRange={(range) => onSliderChange({min: rangeAvail.min, max: rangeAvail.min, minValue: range.min, maxValue: range.max})}></MovementStats>
+        <MovementSummary stats={chartData} onSetRange={(range) => onSliderChange({min: rangeAvail.min, max: rangeAvail.min, minValue: range.min, maxValue: range.max})}></MovementSummary>
         <TimeSpanSlider 
           min={new Date(movementResults.data.minDate)} 
           max={new Date(movementResults.data.maxDate)} 
@@ -210,6 +221,8 @@ const Home = () => {
           steps={100} 
           onChange={onSliderChange} /> 
         <MovementsHistory data={chartData}/>
+        <MovementsStats data={chartData}
+        />
         <MovementsList 
           movements={chartData?.listData ?? []}
           categories={categoryResults.data}
