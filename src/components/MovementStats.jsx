@@ -1,6 +1,8 @@
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LabelList } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LabelList, Cell } from 'recharts';
 import { Row, Col } from 'reactstrap';
 import { useMediaQuery } from 'react-responsive'
+import { t, Trans } from "@lingui/macro";
+
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -27,12 +29,12 @@ const MovementsStats = ({data}) => {
     let expensesData = {
       expenses: [],
     };
+    let totalsData = [];
     if(data) {
-      earningData.totals = data.incomes;
-      expensesData.totals = data.outcomes;
+      totalsData = [{direction: 1, category: t`Earnings`, sum: data.incomes}, {direction: -1, category: t`Expenses`, sum: data.outcomes}];
       let outliers = {
-        incomes: {category: "Other in.", sum: 0, percent: 0, direction: 1},
-        outcomes: {category: "Other out.", sum: 0, percent: 0, direction: -1},
+        incomes: {category: t`Other in.`, sum: 0, percent: 0, direction: 1},
+        outcomes: {category: t`Other out.`, sum: 0, percent: 0, direction: -1},
       }
 
       for (const catName in data.categories) {
@@ -89,15 +91,17 @@ const MovementsStats = ({data}) => {
       }
     };
     
+    const nCategories = earningData.earnings.length + expensesData.expenses.length;
+    const earningsChartWidth = Math.ceil(9 * earningData.earnings.length / nCategories);
+    const expensedChartWidth = Math.floor(9 * expensesData.expenses.length / nCategories);
     return (
-      <Row>
-        <Col xs="12" lg="4">
-          <ResponsiveContainer height={400} width={"100%"} >
+      <Row className='mb-2'>
+        <Col xs="12" lg={earningsChartWidth}>
+          <ResponsiveContainer height={400} width={"90%"} >
             <BarChart data={earningData.earnings}
-              // width={150} height={40}
-              // layout= {isLargeScreen ? 'horizontal':'vertical'}
+              margin={{top:20, left:0, right:0, bottom:0}}
               barCategoryGap={'10%'} >
-              <YAxis type='number' label={{value:"%", position:"top"}} domain={[0, 100]}/>
+              <YAxis type='number' label={{value:"%", position:"insideTopLeft", offset: 10}} />
               <XAxis type='category' dataKey="category" tick={false} />
               <Tooltip content={<CustomTooltip />}/>
               <Bar dataKey={(item)=> 100*item.percent} fill={colors["1"]}>
@@ -105,14 +109,14 @@ const MovementsStats = ({data}) => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          <div className='bar-chart-title'><Trans>Earnings</Trans></div>
         </Col>
-        <Col xs="12" lg="8">
-          <ResponsiveContainer height={400} width={"100%"}>
+        <Col xs="12" lg={expensedChartWidth}>
+          <ResponsiveContainer height={400} width={"90%"}>
             <BarChart data={expensesData.expenses}
-              // width={150} height={40}
-              // layout= {isLargeScreen ? 'horizontal':'vertical'}
+              margin={{top:20, left:0, right:0, bottom:0}}
               barCategoryGap={'10%'} >
-              <YAxis type='number' label={{value:"%", position:"top"}} domain={[0, 100]}/>
+              <YAxis type='number' label={{value:"%", position:"insideTopLeft", offset: 10}} />
               <XAxis type='category' dataKey="category" tick={false} />
               <Tooltip content={<CustomTooltip />}/>
               <Bar dataKey={(item)=> 100*item.percent} fill={colors["-1"]}>
@@ -120,6 +124,27 @@ const MovementsStats = ({data}) => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          <div className='bar-chart-title'><Trans>Expenses</Trans></div>
+        </Col>
+        <Col xs="12" lg="3">
+          <ResponsiveContainer height={400} width={"90%"}>
+            <BarChart data={totalsData}
+              margin={{top:20, left:0, right:0, bottom:0}}
+              barCategoryGap={'10%'} >
+              <YAxis type='number' label={{value:"€", position:"insideTopLeft", offset: 10}} />
+              <XAxis type='category' dataKey="category" tick={false} />
+              <Tooltip content={<CustomTooltip />}/>
+              <Bar dataKey={"sum"}>
+                {
+                  totalsData.map((item, index) => (
+                    <Cell key={`bar_${index}`} fill={item.category === "Earnings" ? colors["1"]: colors["-1"]} />
+                  ))
+                }
+                <LabelList dataKey="category" position="end" angle={0} content={labelContentRenderer} />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+          <div className='bar-chart-title'><Trans>Totals</Trans></div>
         </Col>
       </Row>
     )
