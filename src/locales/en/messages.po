@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/components/MovementStats.jsx:120
+#: src/components/MovementStats.jsx:128
+#~ msgid "{title}"
+#~ msgstr "{title}"
+
 #: src/components/MovementsList.jsx:79
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
@@ -78,8 +83,18 @@ msgstr "Deleting"
 msgid "Description"
 msgstr "Description"
 
+#: src/components/MovementStats.jsx:34
+#: src/components/MovementStats.jsx:158
+msgid "Earnings"
+msgstr "Earnings"
+
+#: src/components/MovementStats.jsx:34
+#: src/components/MovementStats.jsx:161
+msgid "Expenses"
+msgstr "Expenses"
+
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:201
+#: src/components/Home.jsx:212
 msgid "date.from"
 msgstr "From"
 
@@ -91,11 +106,11 @@ msgstr "From"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:101
+#: src/components/Home.jsx:111
 msgid "Incomes"
 msgstr "Incomes"
 
-#: src/components/Home.jsx:219
+#: src/components/Home.jsx:232
 msgid "Insert new movement"
 msgstr "Insert new movement"
 
@@ -103,15 +118,15 @@ msgstr "Insert new movement"
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:92
+#: src/components/Home.jsx:102
 msgid "Last 3 months"
 msgstr "Last 3 months"
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:103
 msgid "Last 6 months"
 msgstr "Last 6 months"
 
-#: src/components/Home.jsx:94
+#: src/components/Home.jsx:104
 msgid "Last year"
 msgstr "Last year"
 
@@ -135,7 +150,7 @@ msgstr "months"
 msgid "Movement list"
 msgstr "Movement list"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:96
 msgid "movements in"
 msgstr "movements in"
 
@@ -143,7 +158,15 @@ msgstr "movements in"
 msgid "optional"
 msgstr "optional"
 
-#: src/components/Home.jsx:100
+#: src/components/MovementStats.jsx:36
+msgid "Other in."
+msgstr "Other in."
+
+#: src/components/MovementStats.jsx:37
+msgid "Other out."
+msgstr "Other out."
+
+#: src/components/Home.jsx:110
 msgid "Outcomes"
 msgstr "Outcomes"
 
@@ -152,7 +175,7 @@ msgstr "Outcomes"
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:95
+#: src/components/Home.jsx:105
 msgid "Past year"
 msgstr "Past year"
 
@@ -168,7 +191,7 @@ msgstr "Save"
 msgid "Save and add more"
 msgstr "Save and add more"
 
-#: src/components/Home.jsx:102
+#: src/components/Home.jsx:112
 msgid "Saving rate"
 msgstr "Saving rate"
 
@@ -212,7 +235,7 @@ msgstr "Submit"
 #~ msgstr "Submit"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:202
+#: src/components/Home.jsx:213
 msgid "date.to"
 msgstr "to"
 
@@ -220,7 +243,11 @@ msgstr "to"
 #~ msgid "to"
 #~ msgstr "to"
 
-#: src/components/Home.jsx:219
+#: src/components/MovementStats.jsx:164
+msgid "Totals"
+msgstr "Totals"
+
+#: src/components/Home.jsx:232
 msgid "Update movement data"
 msgstr "Update movement data"
 

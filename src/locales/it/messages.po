@@ -66,8 +66,18 @@ msgstr "Eliminazione in corso"
 msgid "Description"
 msgstr "Descrizione"
 
+#: src/components/MovementStats.jsx:34
+#: src/components/MovementStats.jsx:158
+msgid "Earnings"
+msgstr "Entrate"
+
+#: src/components/MovementStats.jsx:34
+#: src/components/MovementStats.jsx:161
+msgid "Expenses"
+msgstr "Spese"
+
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:201
+#: src/components/Home.jsx:212
 msgid "date.from"
 msgstr "dal"
 
@@ -75,11 +85,11 @@ msgstr "dal"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:101
+#: src/components/Home.jsx:111
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/Home.jsx:219
+#: src/components/Home.jsx:232
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
@@ -87,15 +97,15 @@ msgstr "Inserisci un nuovo movimento"
 msgid "Languages"
 msgstr "Lingue"
 
-#: src/components/Home.jsx:92
+#: src/components/Home.jsx:102
 msgid "Last 3 months"
 msgstr "Ultimi 3 mesi"
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:103
 msgid "Last 6 months"
 msgstr "Ultimi 6 mesi"
 
-#: src/components/Home.jsx:94
+#: src/components/Home.jsx:104
 msgid "Last year"
 msgstr "Ultimo anno"
 
@@ -119,7 +129,7 @@ msgstr "mesi"
 msgid "Movement list"
 msgstr "Lista movimenti"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:96
 msgid "movements in"
 msgstr "movimenti in"
 
@@ -127,7 +137,15 @@ msgstr "movimenti in"
 msgid "optional"
 msgstr "facoltativo"
 
-#: src/components/Home.jsx:100
+#: src/components/MovementStats.jsx:36
+msgid "Other in."
+msgstr "Altri ricavi"
+
+#: src/components/MovementStats.jsx:37
+msgid "Other out."
+msgstr "Altre spese"
+
+#: src/components/Home.jsx:110
 msgid "Outcomes"
 msgstr "Uscite"
 
@@ -136,7 +154,7 @@ msgstr "Uscite"
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:95
+#: src/components/Home.jsx:105
 msgid "Past year"
 msgstr "Anno scorso"
 
@@ -152,7 +170,7 @@ msgstr "Salva"
 msgid "Save and add more"
 msgstr "Salva e continua"
 
-#: src/components/Home.jsx:102
+#: src/components/Home.jsx:112
 msgid "Saving rate"
 msgstr "Saving rate"
 
@@ -179,11 +197,15 @@ msgid "login_form_submit"
 msgstr "Accedi"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:202
+#: src/components/Home.jsx:213
 msgid "date.to"
 msgstr "al"
 
-#: src/components/Home.jsx:219
+#: src/components/MovementStats.jsx:164
+msgid "Totals"
+msgstr "Totali"
+
+#: src/components/Home.jsx:232
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
