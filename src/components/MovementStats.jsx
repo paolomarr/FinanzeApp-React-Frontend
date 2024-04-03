@@ -2,7 +2,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LabelList, C
 import { Row, Col } from 'reactstrap';
 import { useMediaQuery } from 'react-responsive'
 import { t } from "@lingui/macro";
-
+import { colors } from '../constants';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -69,9 +69,9 @@ const MovementsStats = ({data}) => {
         expensesData.expenses.push(outliers.outcomes);
       }
     }
-    const colors = {
-      "1": "#66c2a5",
-      "-1": "#fc8d62",
+    const chart_colors = {
+      "1": colors.primary,
+      "-1": colors.error,
     }
     const isLargeScreen = useMediaQuery({minWidth: 960 });
     // const labelContentRenderer = (props) => {
@@ -110,7 +110,7 @@ const MovementsStats = ({data}) => {
                 <Bar dataKey={dataKey}>
                   {
                     data.map((item, index) => (
-                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? colors["1"]: colors["-1"]} />
+                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
                     ))
                   }
                   <LabelList dataKey="category" position="center" textAnchor='center' width={400} fill='#666' angle={-90} />
@@ -137,7 +137,7 @@ const MovementsStats = ({data}) => {
                 <Bar dataKey={dataKey} barSize={barSize} >
                   {
                     data.map((item, index) => (
-                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? colors["1"]: colors["-1"]} />
+                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
                     ))
                   }
                   <LabelList dataKey="category" position="insideLeft" width={400} angle={0} fill='#666' />

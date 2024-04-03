@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import { colors } from "../constants";
 
 const FixedBottomRightButton = ({onClick, icon}) => {
     if(!icon){
@@ -8,7 +9,7 @@ const FixedBottomRightButton = ({onClick, icon}) => {
     return (
         <button onClick={onClick} 
           style={{position: "fixed", right: "2%", bottom: "2%", border: "unset", background: "unset"}}>
-          <FontAwesomeIcon className="text-secondary" icon={icon} size="3x"/>
+          <FontAwesomeIcon style={{color: colors.secondary_800}} icon={icon} size="3x"/>
         </button>
     )
 }

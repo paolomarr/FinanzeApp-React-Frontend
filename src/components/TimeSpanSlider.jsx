@@ -4,6 +4,7 @@ import { format } from '../_lib/format_locale'
 import { eachMonthOfInterval, eachWeekOfInterval, eachDayOfInterval, intervalToDuration } from 'date-fns' 
 import { useMediaQuery } from 'react-responsive'
 import { useLingui } from '@lingui/react';
+import { colors } from '../constants';
 
 const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
     const {i18n} = useLingui();
@@ -58,6 +59,7 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
               }}
               labels={labels}
               style={{border: 'none', boxShadow: 'none'}}
+              barInnerColor={colors.secondary_800}
             />
 };
 
