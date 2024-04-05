@@ -59,7 +59,7 @@ const TimeSpanSlider = ({min, max, start, end, steps, onChange}) => {
               }}
               labels={labels}
               style={{border: 'none', boxShadow: 'none'}}
-              barInnerColor={colors.secondary_800}
+              barInnerColor={colors.secondary_A00}
             />
 };
 

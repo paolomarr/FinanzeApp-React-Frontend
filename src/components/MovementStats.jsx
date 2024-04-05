@@ -22,7 +22,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 const MovementsStats = ({data}) => {
-    const percent_cutin = 0.05;
+    const percent_cutin = 0.02;
     let earningData = {
       earnings: [],
     };
@@ -33,8 +33,8 @@ const MovementsStats = ({data}) => {
     if(data) {
       totalsData = [{direction: 1, category: t`Earnings`, sum: data.incomes}, {direction: -1, category: t`Expenses`, sum: data.outcomes}];
       let outliers = {
-        incomes: {category: t`Other in.`, sum: 0, percent: 0, direction: 1},
-        outcomes: {category: t`Other out.`, sum: 0, percent: 0, direction: -1},
+        incomes: {category: t`Other in.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: 1},
+        outcomes: {category: t`Other out.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: -1},
       }
 
       for (const catName in data.categories) {

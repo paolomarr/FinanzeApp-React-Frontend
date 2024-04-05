@@ -11,10 +11,7 @@ export const colors = {
   primary: "#66c2a5",
   secondary: "#666",
   secondary_300: "#333",
-  secondary_800: this.grayFunc(10.0/16),
   error: "#fc8d62",
-  grayFunc: (level) => {
-    const outlevel = Math.round(Math.min(Math.max(0, level), 1) * 16).toString(16);
-    return `#${outlevel}${outlevel}${outlevel}`;
-  }
+  secondary_800: "#888",
+  secondary_A00: "#AAA",
 };

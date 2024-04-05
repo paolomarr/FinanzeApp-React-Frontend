@@ -9,7 +9,7 @@ const FixedBottomRightButton = ({onClick, icon}) => {
     return (
         <button onClick={onClick} 
           style={{position: "fixed", right: "2%", bottom: "2%", border: "unset", background: "unset"}}>
-          <FontAwesomeIcon style={{color: colors.secondary_800}} icon={icon} size="3x"/>
+          <FontAwesomeIcon style={{color: colors.secondary_A00}} icon={icon} size="3x"/>
         </button>
     )
 }
