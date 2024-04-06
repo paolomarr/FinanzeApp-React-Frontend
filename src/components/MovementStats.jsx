@@ -199,8 +199,8 @@ const MovementsStats = ({data, slice, categories}) => {
     };
     
     const nCategories = earningData.earnings.length + expensesData.expenses.length;
-    const earningsChartWidth = Math.ceil(9 * earningData.earnings.length / nCategories);
-    const expensedChartWidth = Math.floor(9 * expensesData.expenses.length / nCategories);
+    const earningsChartWidth = Math.ceil(10 * earningData.earnings.length / nCategories);
+    const expensedChartWidth = Math.floor(10 * expensesData.expenses.length / nCategories);
     return (
       <Row className='mb-2'>
         <Col xs="12" lg={earningsChartWidth}>
@@ -209,7 +209,7 @@ const MovementsStats = ({data, slice, categories}) => {
         <Col xs="12" lg={expensedChartWidth}>
           <ResponsiveBarChart title={t`Expenses`} data={expensesData.expenses} dataKey={(item)=> 100*item.percent}/>
         </Col>
-        <Col xs="12" lg="3">
+        <Col xs="12" lg="2">
           <ResponsiveBarChart title={t`Totals`} label={{value: "€"}} data={totalsData} dataKey={"sum"}/>
         </Col>
       </Row>
