@@ -126,7 +126,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, onEdit}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit, slice}) => {
     const {i18n} = useLingui();
     const [sort, setSort] = useState({
       field: "date",
@@ -196,6 +196,13 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
       },
     ];
     
+    let slicedMovements = movements;
+    if(slice){
+      slicedMovements = movements.filter((movement) => {
+        const mDate = new Date(movement.date);
+        return mDate >= slice.minDate && mDate <= slice.maxDate;
+      });
+    }
     
     return (
       <>
@@ -204,20 +211,20 @@ const MovementsList = ({movements, categories, subcategories, onEdit}) => {
             <Input type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value)} />
           </Col>
           <Col xs={12} md={6}>
-            <PaginationControls setPagination={setPagination} pagination={pagination} total={movements.length}></PaginationControls>
+            <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
           </Col>
         </Row>
         <Table responsive={true} size="sm">
           <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
           <tbody>
-            {!movements || movements.length <= 0 ? (
+            {!slicedMovements || slicedMovements.length <= 0 ? (
               <tr>
                 <td colSpan="6" align="center">
                   <b>Ops, no one here yet</b>
                 </td>
               </tr>
             ) : (
-              movements.filter(movementsFilterFunction).toSorted(compareMovements).map((movement, index) => {
+              slicedMovements.filter(movementsFilterFunction).toSorted(compareMovements).map((movement, index) => {
                 const start = pagination.page * pagination.size;
                 const end = start + pagination.size;
                 if(index<start || index>=end){

@@ -21,7 +21,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const MovementsStats = ({data}) => {
+const MovementsStats = ({data, slice, categories}) => {
     const percent_cutin = 0.02;
     let earningData = {
       earnings: [],
@@ -30,18 +30,40 @@ const MovementsStats = ({data}) => {
       expenses: [],
     };
     let totalsData = [];
+    let incomes = 0;
+    let outcomes = 0;
+    let statsCategories = {};
     if(data) {
-      totalsData = [{direction: 1, category: t`Earnings`, sum: data.incomes}, {direction: -1, category: t`Expenses`, sum: data.outcomes}];
       let outliers = {
         incomes: {category: t`Other in.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: 1},
         outcomes: {category: t`Other out.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: -1},
       }
-
-      for (const catName in data.categories) {
-        const cat = data.categories[catName];
+      for (const movement of data.movements) {
+        if(slice){
+          const mDate = new Date(movement.date);
+          if(mDate < slice.minDate || mDate > slice.maxDate){
+            continue;
+          }
+        }
+        if(movement.amount>0){   
+          incomes += movement.abs_amount;
+        }else {
+          outcomes += movement.abs_amount;
+        }
+        const cat = categories.find((cat)=> cat.id === movement.category);
+        if(cat){
+          if(cat.category in statsCategories){
+            statsCategories[cat.category].sum += movement.abs_amount
+          }else{
+            statsCategories[cat.category] = {...cat, "sum": movement.abs_amount};
+          }
+        }
+      }
+      for (const catName in statsCategories) {
+        const cat = statsCategories[catName];
         let percent = 0.;
         if(cat.direction === 1) {
-          percent = cat.sum/data.incomes;
+          percent = cat.sum/incomes;
           const newitem = {...cat, "percent": percent};
           if(percent>=percent_cutin){
             earningData.earnings.push(newitem);
@@ -50,7 +72,7 @@ const MovementsStats = ({data}) => {
             outliers.incomes.percent += newitem.sum;
           }
         }else{
-          percent = cat.sum/data.outcomes;
+          percent = cat.sum/outcomes;
           const newitem = {...cat, "percent": percent};
           if(percent>=percent_cutin){
             expensesData.expenses.push(newitem)
@@ -69,27 +91,54 @@ const MovementsStats = ({data}) => {
         expensesData.expenses.push(outliers.outcomes);
       }
     }
+    totalsData = [{direction: 1, category: t`Earnings`, sum: incomes}, {direction: -1, category: t`Expenses`, sum: outcomes}];
+
+
+    // if(data) {
+    //   totalsData = [{direction: 1, category: t`Earnings`, sum: data.incomes}, {direction: -1, category: t`Expenses`, sum: data.outcomes}];
+    //   let outliers = {
+    //     incomes: {category: t`Other in.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: 1},
+    //     outcomes: {category: t`Other out.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: -1},
+    //   }
+
+    //   for (const catName in data.categories) {
+    //     const cat = data.categories[catName];
+    //     let percent = 0.;
+    //     if(cat.direction === 1) {
+    //       percent = cat.sum/data.incomes;
+    //       const newitem = {...cat, "percent": percent};
+    //       if(percent>=percent_cutin){
+    //         earningData.earnings.push(newitem);
+    //       }else{
+    //         outliers.incomes.sum += newitem.sum;
+    //         outliers.incomes.percent += newitem.sum;
+    //       }
+    //     }else{
+    //       percent = cat.sum/data.outcomes;
+    //       const newitem = {...cat, "percent": percent};
+    //       if(percent>=percent_cutin){
+    //         expensesData.expenses.push(newitem)
+    //       }else{
+    //         outliers.outcomes.sum += newitem.sum;
+    //         outliers.outcomes.percent += newitem.percent;
+    //       }
+    //     }
+    //   }
+    //   earningData.earnings.sort((a,b)=> b.sum - a.sum); // reverse sorted
+    //   if(outliers.incomes.sum > 0){
+    //     earningData.earnings.push(outliers.incomes)
+    //   }
+    //   expensesData.expenses.sort((a,b)=> b.sum - a.sum); // reverse sorted
+    //   if(outliers.outcomes.sum > 0){
+    //     expensesData.expenses.push(outliers.outcomes);
+    //   }
+    // }
     const chart_colors = {
       "1": colors.primary,
       "-1": colors.error,
     }
     const isLargeScreen = useMediaQuery({minWidth: 960 });
-    // const labelContentRenderer = (props) => {
-    //   const { x, y, width, height, fill, value } = props;
-    //   if(isLargeScreen){
-    //     return (
-    //     <text x={x} y={y-10} fill={fill} textAnchor="center" dominantBaseline="middle">
-    //       {value.split(' ')[0]}
-    //     </text>
-    //     )
-    //   }else{
-    //     return (
-    //       <text x={x+width+10} y={y+height/2} fill={fill} textAnchor="start" dominantBaseline="middle">
-    //       {value.split(' ')[0]}
-    //     </text>
-    //     )
-    //   }
-    // };
+    
     const ResponsiveBarChart = ({data, dataKey, title, label}) => {
       const defaultLabel = {value:"%", position:"insideTopLeft", offset: 10};
       if(label) {

@@ -7,7 +7,7 @@ import { Navigate } from "react-router-dom";
 import { t, Trans } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
 import { add, sub } from "date-fns";
-import { intervalToDuration, min, max } from "date-fns";
+import { intervalToDuration} from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,83 +17,47 @@ import MovementModal from "./MovementModal"
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import MovementsStats from "./MovementStats";
 
-const generateSlicedData = (data, slice, categories) => {
-  const baselineData = data.baseline?? null;
-  const minDate = data.minDate;
-  const maxDate = data.maxDate;
-  const plotStats = {
-    chartData: [],
-    categories: {},
-    listData: [],
-    nMovements: function() { return this.chartData.length }, // no arrow function when using 'this'
-    minDate: minDate,
-    maxDate: maxDate,
-    maxCumulative: 0,
-    minCumulative: 0,
-    incomes: 0,
-    outcomes: 0,
-    savingRate: function() {return this.outcomes != 0 ? (this.incomes-this.outcomes)/this.incomes : 0},
-    duration: function(keys) {
-      const fulldur = intervalToDuration({start:this.minDate, end: this.maxDate});
-      if(fulldur && keys && keys.length>0){
-        const ret = {};
-        keys.forEach(key => {
-          if(fulldur[key]){
-            ret[key] = fulldur[key];
-          }
-        });
-        return ret;
-      }
-      return fulldur;
-    }
-  }
-  if(baselineData){
-    let maxIdx = data.movements.length - 1;
-    if(slice){
-      plotStats.minDate = max([minDate, slice.minDate]);
-      plotStats.maxDate = min([maxDate, slice.maxDate]);
-    }
-    const baselineVal = baselineData[1];
-    let cumulative = baselineVal;
-    
-    for(let i=maxIdx; i>0; i--){ // remote data comes DATE DESC-sorted, so we start from the last, which is the oldest
-      const movement = data.movements[i];
-      const mDate = new Date(movement.date);
-      cumulative += movement.amount
-      plotStats.maxCumulative = Math.max(cumulative, plotStats.maxCumulative);
-      plotStats.minCumulative = Math.min(cumulative, plotStats.minCumulative);
-      if(mDate < plotStats.minDate) continue;
-      if(mDate > plotStats.maxDate) continue;
-      plotStats.chartData.push({"date": (mDate).getTime(), "cumulative": cumulative});
-      plotStats.listData.push(movement);
-      if(movement.amount>0){   
-        plotStats.incomes += movement.abs_amount;
-      }else {
-        plotStats.outcomes += movement.abs_amount;
-      }
-      const cat = categories.find((cat)=> cat.id === movement.category);
-      if(cat){
-        if(cat.category in plotStats.categories){
-          plotStats.categories[cat.category].sum += movement.abs_amount
-        }else{
-          plotStats.categories[cat.category] = {...cat, "sum": movement.abs_amount};
-        }
-      }
-    }
-  }
-  return plotStats;
-};
-const MovementSummary = ({stats, onSetRange}) => {
+
+const MovementSummary = ({data, slice, onSetRange}) => {
   const {i18n} = useLingui();
   const today = new Date();
   const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
-  const past_year_end = add(past_year_start, {years:1})
+  const past_year_end = add(past_year_start, {years:1});
+  let outcomes = 0;
+  let incomes = 0;
+  let nMovements = 0;
+  let minDate = today;
+  let maxDate = 0;
+  if(data){
+    for (const movement of data.movements) {
+      const mDate = new Date(movement.date);
+      if(slice){
+        if(mDate < slice.minDate || mDate > slice.maxDate){
+          continue;
+        }
+      }
+      minDate = Math.min(minDate, mDate);
+      maxDate = Math.max(maxDate, mDate);
+      nMovements+=1;
+      if(movement.amount > 0){
+        incomes += movement.abs_amount;
+      }else if(movement.amount < 0){
+        outcomes += movement.abs_amount;
+      }
+    }
+  }
+  const savingRate = incomes>0 ? (incomes-outcomes)/incomes : 0;
+  let duration = intervalToDuration({start:minDate, end: maxDate});
+  ["years", "months", "days"].forEach((key) => {
+    if(!duration[key] || duration.key<=0){
+      delete duration.key;
+    }
+  });
   return (
     <>
-    { stats && stats !== undefined ?
       <div className="movement-stats">
         <div className="d-flex flex-row align-items-center justify-content-center my-2">
-          <div>{stats.nMovements()} {t`movements in`} {formatDuration(stats.duration(), i18n, ["years", "months", "days"])}</div>
+          <div>{nMovements} {t`movements in`} {formatDuration(duration, i18n, ["years", "months", "days"])}</div>
           <UncontrolledDropdown className="px-1">
             <DropdownToggle caret={false} color="">
               <FontAwesomeIcon icon={faBolt} size="lg" className="text-secondary"/>
@@ -107,23 +71,21 @@ const MovementSummary = ({stats, onSetRange}) => {
           </UncontrolledDropdown>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
-          <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(stats.outcomes).toFixed(2)}€</div>
-          <div className="col-12 col-md-3">{t`Incomes`}: {parseFloat(stats.incomes).toFixed(2)}€</div>
-          <div className="col-12 col-md-3"><b>{t`Saving rate`}: {parseFloat(stats.savingRate()*100).toFixed(1)}%</b></div>
+          <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(outcomes).toFixed(2)}€</div>
+          <div className="col-12 col-md-3">{t`Incomes`}: {parseFloat(incomes).toFixed(2)}€</div>
+          <div className="col-12 col-md-3"><b>{t`Saving rate`}: {parseFloat(savingRate*100).toFixed(1)}%</b></div>
         </div> 
-      </div>: null
-    }
+      </div>
     </>
   )
 };
 const Home = () => {
     const {i18n} = useLingui();
-    // const printDate = ((date) => {
-    //   return i18n.date(date);
-    // });
 
-    const [dataSlice, setDataSlice] = useState(null);
-    const [chartData, setChartData] = useState(null);
+    const [dataSlice, setDataSlice] = useState({
+      minDate: sub(new Date(), {months:3}),
+      maxDate: new Date(),
+    });
     const [showModal, setShowModal] = useState({
       movement: null,
       show: false
@@ -152,6 +114,10 @@ const Home = () => {
         else return 3;
       }, 
     });
+    const reverseDataMovements = (data) => {
+      let ascMovements = data.movements?.toReversed(); // reversed because movements come date desc-ordered
+      return {...data, movements: ascMovements};
+    };
     const movementResults = useQuery({
       queryKey: ["movements", "all"],
       queryFn: fetchMovements,
@@ -160,14 +126,12 @@ const Home = () => {
         else return 3;
       },
       enabled: !!categoryResults.data && !!subcategoryResults.data,
-      onSuccess: (data) => {
-        setChartData(generateSlicedData(data, dataSlice, categoryResults.data));
-      }
+      select: reverseDataMovements,
     });
+    
     if (movementResults.isLoading) {
       return (
         <div className="loading-pane justify-content-center text-center">
-          {/* <h2 className="loader">🌀</h2> */}
           <FontAwesomeIcon icon={faSpinner} spinPulse size="2xl"/>
         </div>
       );
@@ -176,13 +140,14 @@ const Home = () => {
         switch (movementResults.error.message) {
             case "forbidden":
                 console.log("Unable to fetch: unauthenticated");
-                return (
-                    <Navigate to="/login" />
-                )
+                break;
             default:
                 console.log("Unable to fetch: unknown error");
                 break;
         }
+        return (
+            <Navigate to="/login" />
+        )
     }
     const onSliderChange = (changeResult) => {
       if(dataSlice?.minDate == changeResult.minValue && dataSlice?.maxDate == changeResult.maxValue){
@@ -199,32 +164,28 @@ const Home = () => {
         newDataSlice.maxIdx = endIdx;
       }
       setDataSlice(newDataSlice);
-      setChartData(generateSlicedData(movementResults.data, newDataSlice, categoryResults.data));
     };
     
-    const rangeAvail = {
-      min: dataSlice?.minDate ?? movementResults.data.minDate,
-      max: dataSlice?.maxDate ?? movementResults.data.maxDate,
-    }
     return (
       <>
         <h3 className="text-center">
-          {t({id: "date.from", message: "From"})} {format(rangeAvail.min, i18n)} 
-          {t({id: "date.to", message: "to"})} {format(rangeAvail.max, i18n)}
+          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate, i18n)} 
+          {t({id: "date.to", message: "to"})} {format(dataSlice.maxDate, i18n)}
         </h3>
-        <MovementSummary stats={chartData} onSetRange={(range) => onSliderChange({min: rangeAvail.min, max: rangeAvail.min, minValue: range.min, maxValue: range.max})}></MovementSummary>
+        <MovementSummary data={movementResults.data} slice={dataSlice} onSetRange={(range) => onSliderChange({min: dataSlice.minDate, max: dataSlice.maxDate, minValue: range.min, maxValue: range.max})}></MovementSummary>
         <TimeSpanSlider 
           min={new Date(movementResults.data.minDate)} 
           max={new Date(movementResults.data.maxDate)} 
-          start={dataSlice?.minDate ?? sub(new Date(), {months:3})} 
-          end={dataSlice?.maxDate ?? new Date()} 
+          start={dataSlice.minDate} 
+          end={dataSlice.maxDate} 
           steps={100} 
           onChange={onSliderChange} /> 
-        <MovementsHistory data={chartData}/>
-        <MovementsStats data={chartData}
+        <MovementsHistory data={movementResults.data} slice={dataSlice}/>
+        <MovementsStats data={movementResults.data} categories={categoryResults.data} slice={dataSlice}
         />
         <MovementsList 
-          movements={chartData?.listData ?? []}
+          movements={movementResults.data.movements}
+          slice={dataSlice}
           categories={categoryResults.data}
           subcategories={subcategoryResults.data}
           onEdit={(movement) => setShowModal({show: true, movement: movement})}/>

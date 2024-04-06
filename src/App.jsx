@@ -7,7 +7,7 @@ import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
 import { t } from "@lingui/macro";
 import UserContext from './contexts/UserContext.jsx';
-
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const getRouteMap = () => [
   { path: "/", title: t`Movement list`, element: <Home /> },
@@ -15,11 +15,15 @@ const getRouteMap = () => [
   { path: "/logout", title: t`Logout`, element: <LoginForm logout={true}/> },
 ];
 
+// Create a client
+const queryClient = new QueryClient();
+
 function App() {
   const pageTitle = useRef(getRouteMap()[0].title);
   let location = useLocation();
   const navigate = useNavigate();
   const loggedUser = useState(null);
+  
 
   for (const route of getRouteMap()) {
     if(location.pathname === route.path){
@@ -29,15 +33,17 @@ function App() {
   }
   return (
     <UserContext.Provider value={loggedUser}>
-      <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
-      <Container >
-        <Routes>
-          {getRouteMap().map((route, key) => {
-            return <Route key={key} path={route.path} element={route.element} />  
-          })}
-        </Routes>
-      </Container>
-      <Footer />
+      <QueryClientProvider client={queryClient}>
+        <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
+        <Container >
+          <Routes>
+            {getRouteMap().map((route, key) => {
+              return <Route key={key} path={route.path} element={route.element} />
+            })}
+          </Routes>
+        </Container>
+        <Footer />
+      </QueryClientProvider>
     </UserContext.Provider>    
   );
 }

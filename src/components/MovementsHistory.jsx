@@ -3,11 +3,27 @@ import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
 import { colors } from '../constants';
 
-const MovementsHistory = ({data}) => {
+const MovementsHistory = ({data, slice}) => {
     const {i18n} = useLingui();
+    const baselineVal = data?.baseline?.at(1) ?? 0.;
+    let chartData = [];
+    if(data){
+        let cumulative = baselineVal;
+        data.movements.map((movement) => {
+            const mDate = new Date(movement.date);
+            cumulative += movement.amount
+            if(slice){
+                if(mDate >= slice.minDate && mDate <= slice.maxDate){
+                    chartData.push({"date": (mDate).getTime(), "cumulative": cumulative})      
+                }
+            }else{
+                chartData.push({"date": (mDate).getTime(), "cumulative": cumulative})      
+            }
+        });
+    }
     return (
       <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={data?.chartData?? []}>
+          <LineChart data={chartData}>
               <Line type="stepAfter" dataKey="cumulative" stroke={colors.primary} dot={false} />
               <XAxis 
                   type='number' 
