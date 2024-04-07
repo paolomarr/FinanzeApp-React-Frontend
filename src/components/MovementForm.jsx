@@ -5,6 +5,7 @@ import { useState } from "react";
 import { API_URL } from "../constants";
 import { t, Trans } from "@lingui/macro";
 import authenticatedFecth from "../queries/authenticatedFetch";
+import { format_ISO_date } from "../_lib/format_locale";
 
 const DeleteState = {
   start: 0,
@@ -164,7 +165,7 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
             name="date"
             type="datetime-local"
             className={`form-control ${errors?.date? "is-invalid" : ""}`}
-            value={newmovement.date.toISOString().replace(/\.\d+Z$/,"")}
+            value={format_ISO_date(newmovement.date)}
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
           <FormFeedback>{errors?.date}</FormFeedback>
