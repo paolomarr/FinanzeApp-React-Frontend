@@ -39,6 +39,9 @@ const MovementsStats = ({data, slice, categories}) => {
         outcomes: {category: t`Other out.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: -1},
       }
       for (const movement of data.movements) {
+        if(movement.amount == 0.0){ // filter out BALANCE-type movements
+          continue
+        }
         if(slice){
           const mDate = new Date(movement.date);
           if(mDate < slice.minDate || mDate > slice.maxDate){
@@ -71,7 +74,7 @@ const MovementsStats = ({data, slice, categories}) => {
             outliers.incomes.sum += newitem.sum;
             outliers.incomes.percent += newitem.sum;
           }
-        }else{
+        }else if(cat.direction === -1){
           percent = cat.sum/outcomes;
           const newitem = {...cat, "percent": percent};
           if(percent>=percent_cutin){

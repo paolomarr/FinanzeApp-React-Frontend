@@ -157,6 +157,9 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
       }
     };
     const movementsFilterFunction = (movement) => {
+      // for now, skip balance movements
+      const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
+      if(movement.category == balanceCategory.id) return false;
       if(!movementFilter || movementFilter.length === 0) return true;
       const cat_name = categories.find((cat) => cat.id === movement.category)?.category ?? "";
       const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory ?? "";
