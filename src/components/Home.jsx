@@ -1,9 +1,9 @@
 import MovementsList from "./MovementsList";
 import MovementsHistory from "./MovementsHistory";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { t, Trans } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
 import { add, sub } from "date-fns";
@@ -81,6 +81,8 @@ const MovementSummary = ({data, slice, onSetRange}) => {
 };
 const Home = () => {
     const {i18n} = useLingui();
+    const queryclient = useQueryClient();
+    const navigate = useNavigate();
 
     const [dataSlice, setDataSlice] = useState({
       minDate: sub(new Date(), {months:3}),
@@ -102,16 +104,26 @@ const Home = () => {
       queryKey: ["categories"],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
-        if(error.message === "forbidden") return false;
-        else return 3;
+        if(error.message === "forbidden"){
+          queryclient.cancelQueries();
+          navigate("/login");
+          return false
+        } else{ 
+          return failureCount-1
+        }
       }, 
     });
     const subcategoryResults = useQuery({
       queryKey: ["subcategories"],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
-        if(error.message === "forbidden") return false;
-        else return 3;
+        if(error.message === "forbidden"){
+          queryclient.cancelQueries();
+          navigate("/login");
+          return false
+        } else{ 
+          return failureCount-1
+        }
       }, 
     });
     const reverseDataMovements = (data) => {
@@ -122,8 +134,13 @@ const Home = () => {
       queryKey: ["movements", "all"],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
-        if(error.message === "forbidden") return false;
-        else return 3;
+        if(error.message === "forbidden"){
+          queryclient.cancelQueries();
+          navigate("/login");
+          return false
+        } else{ 
+          return failureCount-1
+        }
       },
       enabled: !!categoryResults.data && !!subcategoryResults.data,
       select: reverseDataMovements,
@@ -169,7 +186,7 @@ const Home = () => {
     return (
       <>
         <h3 className="text-center">
-          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate, i18n)} 
+          {t({id: "date.from", message: "From"})} {format(dataSlice.minDate, i18n)}{' '} 
           {t({id: "date.to", message: "to"})} {format(dataSlice.maxDate, i18n)}
         </h3>
         <MovementSummary data={movementResults.data} slice={dataSlice} onSetRange={(range) => onSliderChange({min: dataSlice.minDate, max: dataSlice.maxDate, minValue: range.min, maxValue: range.max})}></MovementSummary>
