@@ -43,7 +43,7 @@ export function format(date, i18n, options) {
 }
 export function format_UTC_ISO_date(date) {
     const year = date.getUTCFullYear();
-    const month = date.getUTCMonth().toString().padStart(2, "0");
+    const month = (date.getUTCMonth()+1).toString().padStart(2, "0");
     const day = date.getUTCDate().toString().padStart(2, "0");
     const hour = date.getUTCHours().toString().padStart(2, "0");
     const minute = date.getUTCMinutes().toString().padStart(2, "0");
@@ -52,7 +52,7 @@ export function format_UTC_ISO_date(date) {
 }
 export function format_ISO_date(date) {
     const year = date.getFullYear();
-    const month = date.getMonth().toString().padStart(2, "0");
+    const month = (date.getMonth()+1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     const hour = date.getHours().toString().padStart(2, "0");
     const minute = date.getMinutes().toString().padStart(2, "0");
