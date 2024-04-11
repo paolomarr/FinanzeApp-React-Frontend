@@ -1,8 +1,9 @@
 import MovementsList from "./MovementsList";
 import MovementsHistory from "./MovementsHistory";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
+import mutateMovement from "../queries/mutateMovement";
 import { Navigate, useNavigate } from "react-router-dom";
 import { t, Trans } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
@@ -90,15 +91,12 @@ const Home = () => {
     });
     const [showModal, setShowModal] = useState({
       movement: null,
-      show: false
+      show: false,
+      errors: null,
     });
-    const toggleModal = (data_updated) => {
-      const show = !showModal.show
-      setShowModal({show: show, movement: showModal.movement});
-      if(!show && data_updated){
-        console.log("Data updated, refreshing...");
-        movementResults.refetch();
-      }
+    const toggleModal = () => {
+      const show = !showModal.show;
+      setShowModal({...showModal, show: show});
     };
     const categoryResults = useQuery({
       queryKey: ["categories"],
@@ -127,7 +125,7 @@ const Home = () => {
       }, 
     });
     const reverseDataMovements = (data) => {
-      let ascMovements = data.movements?.toReversed(); // reversed because movements come date desc-ordered
+      let ascMovements = data.movements?.toSorted((a,b)=> a.date>b.date ? 1 : -1); // reversed because movements come date desc-ordered
       return {...data, movements: ascMovements};
     };
     const movementResults = useQuery({
@@ -144,6 +142,40 @@ const Home = () => {
       },
       enabled: !!categoryResults.data && !!subcategoryResults.data,
       select: reverseDataMovements,
+    });
+    const mutation = useMutation({
+      mutationFn: ({movement, _delete}) => {
+        setShowModal({...showModal, errors: null});
+        return mutateMovement({movement, _delete})
+      },
+      onSuccess: (result, {movement, _delete, _continue}) => {
+        // remove movement from showModal object
+        setShowModal({...showModal, show: _continue, movement: null, errors: {}})
+        // update data
+        queryclient.setQueryData(["movements", "all"], (oldData) => {
+          if(_delete){ // it's been a DELETE
+            const index = oldData.movements.findIndex((omovement)=> omovement.id === movement.id);
+            if(index>=0){
+              oldData.movements.splice(index, 1);
+              return oldData;
+            }
+          }else if(movement.id){ // it's been a PUT
+            const index = oldData.movements.findIndex((omovement)=> omovement.id === movement.id);
+            if(index>=0){
+              oldData.movements.splice(index, 1, result);
+              return oldData;
+            }  
+          }else{ // it's been a POST
+            oldData.movements.push(result);
+            return reverseDataMovements(oldData);
+          }
+        });
+      },
+      onError: (error, variables, context) => {
+        console.log(variables);
+        console.log(context);
+        setShowModal({...showModal, errors: error.cause})
+      }
     });
     
     if (movementResults.isLoading) {
@@ -207,7 +239,7 @@ const Home = () => {
           subcategories={subcategoryResults.data}
           onEdit={(movement) => setShowModal({show: true, movement: movement})}/>
         <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
-        <MovementModal showModal={showModal} toggleModal={toggleModal} title={showModal.movement ? t`Update movement data` : t`Insert new movement`} />
+        <MovementModal showModal={showModal} toggleModal={toggleModal} onDataReady={(movement, todelete, tocontinue) => mutation.mutate({movement: movement, _delete: todelete, _continue: tocontinue})} />
       </>
     )
 }

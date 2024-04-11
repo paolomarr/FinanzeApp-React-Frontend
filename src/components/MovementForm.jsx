@@ -51,7 +51,7 @@ const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
   </Button>;
 };
 
-const MovementForm = ({movement, cancel, onDataReady, errors}) => {
+const MovementForm = ({movement, onDataReady, errors}) => {
     
     if(movement?.date){
       if(typeof movement.date == 'string'){
@@ -83,76 +83,18 @@ const MovementForm = ({movement, cancel, onDataReady, errors}) => {
       }
       setDeleteConfirmState(DeleteState.deleting);
       onDataReady(newmovement, true);
-      // const method = "DELETE";
-      // const url = `${API_URL}movements/${newmovement.id}`;
-      // authenticatedFetch(url, {
-      //   method: method,
-      // }).then((response) => {
-      //   setDeleteConfirmState(DeleteState.deleted);
-      //   if(response.ok){
-      //     setShowSuccess(true);
-      //     if(data_submitted){
-      //       data_submitted(true);
-      //     }
-      //   }else{
-      //     setShowFail(true);
-      //   }
-      // });
     }
-    const submitForm = (e, exit) => {
+    const submitForm = (e) => {
       e.preventDefault();
       onDataReady(newmovement, false);
-      if(exit && cancel){
-        cancel();
-      }
-      // let method = "";
-      // let url = `${API_URL}movements/`;
-      // if(newmovement.id){ // update existing -> PUT
-      //   method = "PUT";
-      //   url += `${newmovement.id}`;
-      // }else{ // new movement -> POST
-      //   method = "POST";
+      // if(exit && cancel){
+      //   cancel();
       // }
-      // const body = JSON.stringify(newmovement);
-      // authenticatedFetch(url, {
-      //   method: method,
-      //   body: body
-      // }, {
-      //   "Content-Type": "application/json"
-      // }).then((response) => {
-      //   if(response.ok){
-      //     response.json().then((data) => {
-      //       if(data.errors){
-      //         setErrors(response.data);
-      //       }else{
-      //         // reset some fields
-      //         setNewmovement({...newmovement, 
-      //           abs_amount: 0,
-      //           description:"",
-      //           category: null,
-      //           subcategory: null,
-      //         });
-      //         setShowSuccess(true);
-      //         if(data_submitted){
-      //           data_submitted(true);
-      //         }
-      //         if(exit && cancel){
-      //           cancel();
-      //         }
-      //       }
-      //     });
-      //   }else{
-      //     setShowFail(true);
-      //     response.json().then((json) => {
-      //       setErrors(json);
-      //     });
-      //   }
-      // });
     };
 
     return (
       <>
-      <Form id="movementForm" onSubmit={(e) => submitForm(e)} className="mb-2">
+      <Form id="movementForm" onSubmit={(e) => e.preventDefault()} className="mb-2">
         {movement ? 
           <Input type="hidden" name="id" value={movement.id} /> : null
         }

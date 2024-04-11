@@ -4,9 +4,7 @@ import authenticatedFetch from "./authenticatedFetch";
 const mutateMovement = async ({ movement, _delete }) => {
   const path = "movements/";
   let url = `${API_URL}${path}`;
-  let fetch_options = {
-    method: "POST"
-  }
+  let fetch_options = {}
   let headers = {};
   if(movement.id){
     url += `${movement.id}`;
@@ -14,10 +12,12 @@ const mutateMovement = async ({ movement, _delete }) => {
       fetch_options.method = "PUT";
       fetch_options.body = JSON.stringify(movement);
       headers["Content-Type"] = "application/json";
-    }else{
+    }else{ // DELETE. No body
       fetch_options.method = "DELETE";
     }
-  }else{
+  }else{ // POST
+    fetch_options.method = "POST";
+    fetch_options.body = JSON.stringify(movement);
     headers["Content-Type"] = "application/json";
   }
   const apiRes = await authenticatedFetch(url, fetch_options, headers);
@@ -32,7 +32,12 @@ const mutateMovement = async ({ movement, _delete }) => {
     }
   }
 
-  return apiRes.json();
+  const contentLenString = apiRes.headers.get("Content-Length");
+  if(contentLenString && parseInt(contentLenString)>0){
+    return apiRes.json();
+  }else{
+    return apiRes;
+  }
 };
 
 export default mutateMovement;
