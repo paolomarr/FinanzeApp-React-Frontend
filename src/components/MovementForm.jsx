@@ -2,9 +2,7 @@ import { Form, FormGroup, FormFeedback, Label, Input, Alert, Button } from "reac
 import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
-import { API_URL } from "../constants";
 import { t, Trans } from "@lingui/macro";
-import authenticatedFecth from "../queries/authenticatedFetch";
 import { format_ISO_date } from "../_lib/format_locale";
 
 const DeleteState = {
@@ -53,7 +51,7 @@ const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
   </Button>;
 };
 
-const MovementForm = ({movement, cancel, data_submitted}) => {
+const MovementForm = ({movement, cancel, onDataReady, errors}) => {
     
     if(movement?.date){
       if(typeof movement.date == 'string'){
@@ -64,9 +62,8 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
     const subcategories = subcatresults?.data ?? [];
-    const [errors, setErrors] = useState({});
-    const [showSuccess, setShowSuccess] = useState(false);
-    const [showFail, setShowFail] = useState(false);
+    let showSuccess = errors?.length==0 ?? false;
+    let showFail = errors?.length>0 ?? false;
     const [newmovement, setNewmovement] = useState(movement ?? {
       date: new Date(),
       abs_amount: 0,
@@ -85,69 +82,72 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
         return;
       }
       setDeleteConfirmState(DeleteState.deleting);
-      setShowSuccess(false); setShowFail(false); setErrors({});
-      const method = "DELETE";
-      const url = `${API_URL}movements/${newmovement.id}`;
-      authenticatedFecth(url, {
-        method: method,
-      }).then((response) => {
-        setDeleteConfirmState(DeleteState.deleted);
-        if(response.ok){
-          setShowSuccess(true);
-          if(data_submitted){
-            data_submitted(true);
-          }
-        }else{
-          setShowFail(true);
-        }
-      });
+      onDataReady(newmovement, true);
+      // const method = "DELETE";
+      // const url = `${API_URL}movements/${newmovement.id}`;
+      // authenticatedFetch(url, {
+      //   method: method,
+      // }).then((response) => {
+      //   setDeleteConfirmState(DeleteState.deleted);
+      //   if(response.ok){
+      //     setShowSuccess(true);
+      //     if(data_submitted){
+      //       data_submitted(true);
+      //     }
+      //   }else{
+      //     setShowFail(true);
+      //   }
+      // });
     }
     const submitForm = (e, exit) => {
       e.preventDefault();
-      setShowSuccess(false); setShowFail(false); setErrors({});
-      let method = "";
-      let url = `${API_URL}movements/`;
-      if(newmovement.id){ // update existing -> PUT
-        method = "PUT";
-        url += `${newmovement.id}`;
-      }else{ // new movement -> POST
-        method = "POST";
+      onDataReady(newmovement, false);
+      if(exit && cancel){
+        cancel();
       }
-      const body = JSON.stringify(newmovement);
-      authenticatedFecth(url, {
-        method: method,
-        body: body
-      }, {
-        "Content-Type": "application/json"
-      }).then((response) => {
-        if(response.ok){
-          response.json().then((data) => {
-            if(data.errors){
-              setErrors(response.data);
-            }else{
-              // reset some fields
-              setNewmovement({...newmovement, 
-                abs_amount: 0,
-                description:"",
-                category: null,
-                subcategory: null,
-              });
-              setShowSuccess(true);
-              if(data_submitted){
-                data_submitted(true);
-              }
-              if(exit && cancel){
-                cancel();
-              }
-            }
-          });
-        }else{
-          setShowFail(true);
-          response.json().then((json) => {
-            setErrors(json);
-          });
-        }
-      });
+      // let method = "";
+      // let url = `${API_URL}movements/`;
+      // if(newmovement.id){ // update existing -> PUT
+      //   method = "PUT";
+      //   url += `${newmovement.id}`;
+      // }else{ // new movement -> POST
+      //   method = "POST";
+      // }
+      // const body = JSON.stringify(newmovement);
+      // authenticatedFetch(url, {
+      //   method: method,
+      //   body: body
+      // }, {
+      //   "Content-Type": "application/json"
+      // }).then((response) => {
+      //   if(response.ok){
+      //     response.json().then((data) => {
+      //       if(data.errors){
+      //         setErrors(response.data);
+      //       }else{
+      //         // reset some fields
+      //         setNewmovement({...newmovement, 
+      //           abs_amount: 0,
+      //           description:"",
+      //           category: null,
+      //           subcategory: null,
+      //         });
+      //         setShowSuccess(true);
+      //         if(data_submitted){
+      //           data_submitted(true);
+      //         }
+      //         if(exit && cancel){
+      //           cancel();
+      //         }
+      //       }
+      //     });
+      //   }else{
+      //     setShowFail(true);
+      //     response.json().then((json) => {
+      //       setErrors(json);
+      //     });
+      //   }
+      // });
     };
 
     return (
@@ -235,13 +235,13 @@ const MovementForm = ({movement, cancel, data_submitted}) => {
           { !movement ? <FormSaveButton addMore={true} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitForm(e,false)}></FormSaveButton> : null }
         </div>
       </Form>
-      <Alert color="info" isOpen={showSuccess} toggle={() => setShowSuccess(false)}>
+      <Alert color="info" isOpen={showSuccess} toggle={() => showSuccess = !showSuccess}>
         { deleteConfirmState < DeleteState.deleting ?
           <Trans>Data has been saved</Trans> :
           <Trans>Deleted</Trans>
         }{"."}
       </Alert>
-      <Alert color="danger" isOpen={showFail} toggle={() => setShowFail(false)}>
+      <Alert color="danger" isOpen={showFail} toggle={() => showFail = !showFail}>
         <Trans>An error occurred while saving data.</Trans>
       </Alert>
       </>

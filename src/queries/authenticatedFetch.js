@@ -1,4 +1,4 @@
-const authenticatedFecth = (path, options, headers) => {
+const authenticatedFetch = (path, options, headers) => {
   const authToken = sessionStorage.getItem("authToken"); // fetch will fail if this is not set
   return fetch(path, {...options, 
       mode: "cors",
@@ -8,4 +8,4 @@ const authenticatedFecth = (path, options, headers) => {
   });
 };
 
-export default authenticatedFecth;
+export default authenticatedFetch;

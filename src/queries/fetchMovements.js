@@ -1,5 +1,5 @@
 import { API_URL } from "../constants";
-import authenticatedFecth from "./authenticatedFetch";
+import authenticatedFetch from "./authenticatedFetch";
 
 const fetchMovements = async ({ queryKey }) => {
   const path = queryKey[0];
@@ -7,7 +7,7 @@ const fetchMovements = async ({ queryKey }) => {
   if(queryKey.length>1){
     query = new URLSearchParams(queryKey[1]);
   }
-  const apiRes = await authenticatedFecth(`${API_URL}${path}?${query.toString()}`);
+  const apiRes = await authenticatedFetch(`${API_URL}${path}?${query.toString()}`);
   
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated
