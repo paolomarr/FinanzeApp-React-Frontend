@@ -118,12 +118,19 @@ const MovementsStats = ({data, slice, categories}) => {
       return <Rectangle x={x+theOffsetX} y={y+theOffsetY} width={theWidth} height={theHeight} fill={fill} radius={radius}></Rectangle>
     };
     const renderCustomisedLabel = (props) => {
-      const { x, y,  value, fill } = props;
-      return (
-        <text x={x} y={y+2} fill={fill} textAnchor="start" dominantBaseline="middle">
-          {value}
-        </text>
-      );
+      const { x, y, value, width, fill, chartHeight } = props;
+      if(isLargeScreen){
+        return (
+          <text textAnchor="start" alignmentBaseline="middle" transform={`translate(${x+width/2}, ${chartHeight-40}) rotate(270)`}>{value}</text>
+          // <text x={x} y={y+height} fill={"#666"}>{value}</text>
+        )
+      }else{
+        return (
+          <text x={x} y={y+2} fill={fill} textAnchor="start" dominantBaseline="middle">
+            {value}
+          </text>
+        );
+      }
     }
     
     const ResponsiveBarChart = ({data, dataKey, title, label}) => {
@@ -140,16 +147,22 @@ const MovementsStats = ({data, slice, categories}) => {
             <ResponsiveContainer height={400} width={"90%"} >
               <BarChart data={data}
                 margin={{top:20, left:0, right:0, bottom:0}}
-                barCategoryGap={'10%'} >
+                barCategoryGap={'15%'} >
                 <YAxis type='number' label={label} />
-                <XAxis type='category' dataKey="category" tick={true} tickLine={false} />
+                <XAxis type='category' dataKey="category" 
+                  // tick={true} tickLine={false} 
+                  tick={false}
+                  />
                 <Tooltip content={<CustomTooltip />}/>
-                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize}/>}>
+                <Bar dataKey={dataKey} 
+                  // shape={<CustomBarShape barSize={barSize}/>}
+                  >
                   {
                     data.map((item, index) => (
                       <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
                     ))
                   }
+                  <LabelList dataKey="category" content={(props)=>renderCustomisedLabel({...props, chartHeight: 400})} />
                   {/* <LabelList dataKey="category" position="center" textAnchor='center' width={400} fill='#666' angle={-90} /> */}
                 </Bar>
               </BarChart>
@@ -176,11 +189,7 @@ const MovementsStats = ({data, slice, categories}) => {
                       <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
                     ))
                   }
-                  <LabelList dataKey="category" 
-                    // position="insideTopLeft" offset={0} 
-                    content={renderCustomisedLabel}
-                    // width={400} angle={0} fill='#666' 
-                    />
+                  <LabelList dataKey="category" content={renderCustomisedLabel} />
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
