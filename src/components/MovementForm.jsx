@@ -62,17 +62,22 @@ const MovementForm = ({movement, onDataReady, errors}) => {
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
     const subcategories = subcatresults?.data ?? [];
-    let showSuccess = errors?.length==0 ?? false;
-    let showFail = errors?.length>0 ?? false;
+    let showSuccess = false;
+    let showFail = false;
     const [newmovement, setNewmovement] = useState(movement ?? {
       date: new Date(),
       abs_amount: 0,
       description: "",
-      category: null,
-      subcategory: null,
+      category: -1,
     });
+    if(errors){
+      showSuccess = Object.keys(errors).length==0;
+      showFail = Object.keys(errors).length>0;
+    }
+    
     const [deleteConfirmState, setDeleteConfirmState] = useState(0);
     const updateNewMovement = (update) => {
+      if(update.subcategory <0)  delete update.subcategory;
       setNewmovement({...newmovement, ...update});
     }
     const submitDelete = (e) => {
@@ -84,9 +89,9 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       setDeleteConfirmState(DeleteState.deleting);
       onDataReady(newmovement, true);
     }
-    const submitForm = (e) => {
+    const submitForm = (e, close) => {
       e.preventDefault();
-      onDataReady(newmovement, false);
+      onDataReady(newmovement, false, !close);
       // if(exit && cancel){
       //   cancel();
       // }
@@ -148,7 +153,7 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
             value={newmovement.category}>
-            <option value={null}></option>
+            <option value={-1}></option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
@@ -163,8 +168,9 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             type="select" 
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
-            value={newmovement.subcategory}>
-            <option value={null}>{"("}<Trans>optional</Trans>{")"}</option>
+            // value={newmovement.subcategory}
+            >
+            <option value={-1}>{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
