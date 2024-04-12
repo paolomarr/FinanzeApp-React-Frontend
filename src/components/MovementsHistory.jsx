@@ -1,9 +1,13 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
+import {Input, Label, FormGroup } from 'reactstrap'
 import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
 import { colors } from '../constants';
+import { useState } from 'react';
+import { Trans } from '@lingui/macro';
 
 const MovementsHistory = ({data, slice, categories}) => {
+    const [showAssets, setShowAssets] = useState(sessionStorage.getItem("MovementsHistory.showAssets")??false);
     const balanceCategoryId = categories.find((cat) => cat.category === "BALANCE")?.id ?? -1;
     const isBalanceMovement = (movement) => movement.category === balanceCategoryId;
     const {i18n} = useLingui();
@@ -65,25 +69,37 @@ const MovementsHistory = ({data, slice, categories}) => {
         }
     }
     return (
-      <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={chartData}>
-              <Line type="stepAfter" dataKey="cumulative" stroke={colors.primary} dot={false} />
-              <Line type="stepBefore" dataKey="balance" stroke={colors.secondary} dot={false} />
-              <XAxis 
-                  type='number' 
-                  dataKey="date"  
-                  domain={[data?.minDate, data?.maxDate]} 
-                  // domain={["auto", "auto"]} 
-                  tickFormatter={tick => (format(new Date(tick), i18n))}
-                  tickCount="10" />
-              <YAxis domain={["auto", "auto"]}/> 
-              <Tooltip 
-                  active={true} 
-                  formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
-                  labelStyle={{color: colors.primary}}
-                  labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
-          </LineChart>
-      </ResponsiveContainer>
+        <div className='movements-history-container mt-2'>
+            <div className='movements-history-showassetsblock text-end'>
+                <FormGroup check inline>
+                    <Label check htmlFor="showAssetsInput"><Trans>Show assets</Trans></Label>
+                    <Input type='checkbox' checked={Boolean(showAssets)} onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }} />
+                </FormGroup>
+            </div>
+            <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={chartData}>
+                    <Line type="stepAfter" dataKey="cumulative" stroke={colors.primary} dot={false} />
+                    { showAssets?
+                        <Line type="stepBefore" dataKey="balance" stroke={colors.secondary} dot={false} />
+                        : null
+                    }
+                    <XAxis 
+                        type='number' 
+                        dataKey="date"  
+                        domain={[data?.minDate, data?.maxDate]} 
+                        // domain={["auto", "auto"]} 
+                        tickFormatter={tick => (format(new Date(tick), i18n))}
+                        tickCount="10" />
+                    <YAxis domain={["auto", "auto"]}/> 
+                    <Tooltip 
+                        active={true} 
+                        formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
+                        LabelStyle={{color: colors.primary}}
+                        labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
+                </LineChart>
+            </ResponsiveContainer>
+        </div>
+      
     )
 }
 

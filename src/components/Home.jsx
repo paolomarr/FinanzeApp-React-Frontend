@@ -85,7 +85,12 @@ const Home = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
 
-    const [dataSlice, setDataSlice] = useState({
+    const persistedDataSliceStringyfied = sessionStorage.getItem("Home.dataSlice");
+    let persistedDataSlice = null;
+    if(persistedDataSliceStringyfied){
+      persistedDataSlice = JSON.parse(persistedDataSliceStringyfied);
+    }
+    const [dataSlice, setDataSlice] = useState(persistedDataSlice ?? {
       minDate: sub(new Date(), {months:3}),
       maxDate: new Date(),
     });
@@ -212,6 +217,7 @@ const Home = () => {
         newDataSlice.minIdx = startIdx;
         newDataSlice.maxIdx = endIdx;
       }
+      sessionStorage.setItem("Home.dataSlice", JSON.stringify(newDataSlice));
       setDataSlice(newDataSlice);
     };
     
