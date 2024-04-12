@@ -117,8 +117,15 @@ const MovementsStats = ({data, slice, categories}) => {
       // return <Rectangle x={x} y={y} width={width} height={barSize} fill={fill} radius={10}></Rectangle>
       return <Rectangle x={x+theOffsetX} y={y+theOffsetY} width={theWidth} height={theHeight} fill={fill} radius={radius}></Rectangle>
     };
+    // const customActiveBar = (props) => {
+    //   const { x, y, width, height } = props;
+    //   return <>
+    //       <rect x={x} y={y-40} width={width} height={height} fill={"#111"}></rect>
+    //       {/* <CustomBarShape props={props} />  */}
+    //     </>
+    // }
     const renderCustomisedLabel = (props) => {
-      const { x, y, value, width, fill, chartHeight } = props;
+      const { x, y, value, width, chartHeight } = props;
       if(isLargeScreen){
         return (
           <text textAnchor="start" alignmentBaseline="middle" transform={`translate(${x+width/2}, ${chartHeight-40}) rotate(270)`}>{value}</text>
@@ -126,7 +133,7 @@ const MovementsStats = ({data, slice, categories}) => {
         )
       }else{
         return (
-          <text x={x} y={y+2} fill={fill} textAnchor="start" dominantBaseline="middle">
+          <text x={x} y={y+2} fill={"#666"} textAnchor="start" dominantBaseline="middle">
             {value}
           </text>
         );
@@ -183,7 +190,7 @@ const MovementsStats = ({data, slice, categories}) => {
                 <XAxis type='number' label={label} />
                 <YAxis type='category' dataKey="category" tick={false} hide={true} />
                 <Tooltip content={<CustomTooltip />}/>
-                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} />}>
+                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} activeBar={false} />} >
                   {
                     data.map((item, index) => (
                       <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
