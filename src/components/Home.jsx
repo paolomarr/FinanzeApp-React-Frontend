@@ -229,7 +229,7 @@ const Home = () => {
           end={dataSlice.maxDate} 
           steps={100} 
           onChange={onSliderChange} /> 
-        <MovementsHistory data={movementResults.data} slice={dataSlice}/>
+        <MovementsHistory data={movementResults.data} slice={dataSlice} categories={categoryResults.data}/>
         <MovementsStats data={movementResults.data} categories={categoryResults.data} slice={dataSlice}
         />
         <MovementsList 
