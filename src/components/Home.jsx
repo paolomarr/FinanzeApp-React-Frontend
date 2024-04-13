@@ -7,7 +7,7 @@ import mutateMovement from "../queries/mutateMovement";
 import { Navigate, useNavigate } from "react-router-dom";
 import { t } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
-import { add, interval, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
+import { interval, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
 import { intervalToDuration} from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
@@ -92,13 +92,13 @@ const Home = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
 
-    const persistedDataSliceStringyfied = sessionStorage.getItem("Home.dataSlice");
-    let persistedDataSlice = null;
+    const persistedDataSliceStringyfied = sessionStorage.getItem("Home.dataSliceSpanDuration");
+    let persistedDuration = null;
     if(persistedDataSliceStringyfied){
-      persistedDataSlice = JSON.parse(persistedDataSliceStringyfied);
+      persistedDuration = JSON.parse(persistedDataSliceStringyfied);
     }
-    const [dataSlice, setDataSlice] = useState(persistedDataSlice ?? {
-      minDate: sub(new Date(), {months:3}),
+    const [dataSlice, setDataSlice] = useState({
+      minDate: persistedDuration ? sub(new Date(), persistedDuration) : sub(new Date(), {months:3}),
       maxDate: new Date(),
     });
     const [showModal, setShowModal] = useState({
@@ -214,8 +214,9 @@ const Home = () => {
       if(dataSlice?.minDate == changeResult.minValue && dataSlice?.maxDate == changeResult.maxValue){
         return;
       }
-      let newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
-      sessionStorage.setItem("Home.dataSlice", JSON.stringify(newDataSlice));
+      const newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
+      const durationToPersist = intervalToDuration(new interval(newDataSlice.minDate, newDataSlice.maxDate));
+      sessionStorage.setItem("Home.dataSliceSpanDuration", JSON.stringify(durationToPersist));
       setDataSlice(newDataSlice);
     };
     
