@@ -22,29 +22,41 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
 
-#: src/components/MovementForm.jsx:122
-#: src/components/MovementsList.jsx:185
+#: src/components/MovementForm.jsx:142
+#: src/components/MovementsList.jsx:186
 msgid "Amount"
 msgstr "Amount"
 
-#: src/components/MovementForm.jsx:193
+#: src/components/MovementForm.jsx:211
 msgid "An error occurred while saving data."
 msgstr "An error occurred while saving data."
 
 #: src/components/MovementForm.jsx:25
-msgid "Are you sure"
-msgstr "Are you sure"
+#~ msgid "Are you sure"
+#~ msgstr "Are you sure"
 
 #: src/components/MovementForm.jsx:179
 #~ msgid "Are you sure?"
 #~ msgstr "Are you sure?"
 
-#: src/components/MovementForm.jsx:148
-#: src/components/MovementsList.jsx:188
+#: src/components/MovementForm.jsx:52
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/components/MovementForm.jsx:168
+#: src/components/MovementsList.jsx:189
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementForm.jsx:188
+#: src/components/MovementForm.jsx:22
+msgid "Confirm"
+msgstr "Confirm"
+
+#: src/components/Home.jsx:22
+msgid "Current month"
+msgstr "Current month"
+
+#: src/components/MovementForm.jsx:206
 msgid "Data has been saved"
 msgstr "Data has been saved"
 
@@ -52,8 +64,8 @@ msgstr "Data has been saved"
 #~ msgid "Data has been saved!"
 #~ msgstr "Data has been saved!"
 
-#: src/components/MovementForm.jsx:108
-#: src/components/MovementsList.jsx:179
+#: src/components/MovementForm.jsx:128
+#: src/components/MovementsList.jsx:180
 msgid "Date"
 msgstr "Date"
 
@@ -61,16 +73,16 @@ msgstr "Date"
 msgid "days"
 msgstr "days"
 
-#: src/components/MovementForm.jsx:22
+#: src/components/MovementForm.jsx:19
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/MovementForm.jsx:31
-#: src/components/MovementForm.jsx:189
+#: src/components/MovementForm.jsx:28
+#: src/components/MovementForm.jsx:207
 msgid "Deleted"
 msgstr "Deleted"
 
-#: src/components/MovementForm.jsx:28
+#: src/components/MovementForm.jsx:25
 msgid "Deleting"
 msgstr "Deleting"
 
@@ -78,8 +90,8 @@ msgstr "Deleting"
 #~ msgid "Deleting..."
 #~ msgstr "Deleting..."
 
-#: src/components/MovementForm.jsx:135
-#: src/components/MovementsList.jsx:184
+#: src/components/MovementForm.jsx:155
+#: src/components/MovementsList.jsx:185
 msgid "Description"
 msgstr "Description"
 
@@ -94,7 +106,7 @@ msgid "Expenses"
 msgstr "Expenses"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:227
+#: src/components/Home.jsx:226
 msgid "date.from"
 msgstr "From"
 
@@ -106,7 +118,7 @@ msgstr "From"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:76
+#: src/components/Home.jsx:83
 msgid "Incomes"
 msgstr "Incomes"
 
@@ -118,15 +130,15 @@ msgstr "Insert new movement"
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:67
+#: src/components/Home.jsx:23
 msgid "Last 3 months"
 msgstr "Last 3 months"
 
-#: src/components/Home.jsx:68
+#: src/components/Home.jsx:24
 msgid "Last 6 months"
 msgstr "Last 6 months"
 
-#: src/components/Home.jsx:69
+#: src/components/Home.jsx:25
 msgid "Last year"
 msgstr "Last year"
 
@@ -150,11 +162,11 @@ msgstr "months"
 msgid "Movement list"
 msgstr "Movement list"
 
-#: src/components/Home.jsx:61
+#: src/components/Home.jsx:67
 msgid "movements in"
 msgstr "movements in"
 
-#: src/components/MovementForm.jsx:173
+#: src/components/MovementForm.jsx:193
 msgid "optional"
 msgstr "optional"
 
@@ -166,7 +178,7 @@ msgstr "Other in."
 msgid "Other out."
 msgstr "Other out."
 
-#: src/components/Home.jsx:75
+#: src/components/Home.jsx:82
 msgid "Outcomes"
 msgstr "Outcomes"
 
@@ -175,7 +187,7 @@ msgstr "Outcomes"
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:70
+#: src/components/Home.jsx:26
 msgid "Past year"
 msgstr "Past year"
 
@@ -183,19 +195,19 @@ msgstr "Past year"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/MovementForm.jsx:46
+#: src/components/MovementForm.jsx:40
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MovementForm.jsx:46
+#: src/components/MovementForm.jsx:40
 msgid "Save and add more"
 msgstr "Save and add more"
 
-#: src/components/Home.jsx:77
+#: src/components/Home.jsx:84
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:214
+#: src/components/MovementsList.jsx:217
 msgid "Search movements"
 msgstr "Search movements"
 
@@ -216,7 +228,7 @@ msgstr "seconds"
 #~ msgid "Select subcategory"
 #~ msgstr "Select subcategory"
 
-#: src/components/MovementsList.jsx:87
+#: src/components/MovementsList.jsx:88
 msgid "Show"
 msgstr "Show"
 
@@ -224,8 +236,8 @@ msgstr "Show"
 msgid "Show assets"
 msgstr "Show assets"
 
-#: src/components/MovementForm.jsx:164
-#: src/components/MovementsList.jsx:195
+#: src/components/MovementForm.jsx:184
+#: src/components/MovementsList.jsx:196
 msgid "Subcategory"
 msgstr "Subcategory"
 
@@ -239,7 +251,7 @@ msgstr "Submit"
 #~ msgstr "Submit"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:228
+#: src/components/Home.jsx:227
 msgid "date.to"
 msgstr "to"
 

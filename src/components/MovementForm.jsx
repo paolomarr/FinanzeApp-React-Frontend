@@ -11,18 +11,15 @@ const DeleteState = {
   deleting: 2,
   deleted: 3
 };
-const FormDeleteButton = ({movement, deleteConfirmState, onclick}) => {
-  if(!movement){
-    return null;
-  }
+const FormDeleteButton = ({deleteConfirmState, onclick}) => {
   let deleteLabel;
-  let className="";
+  let className="mx-1";
   switch (deleteConfirmState) {
     case DeleteState.start:
       deleteLabel = t`Delete`;
       break;
     case DeleteState.confirm:
-      deleteLabel = t`Are you sure` + "?";
+      deleteLabel = t`Confirm`;
       break;
     case DeleteState.deleting:
       deleteLabel = t`Deleting` + "...";
@@ -38,11 +35,8 @@ const FormDeleteButton = ({movement, deleteConfirmState, onclick}) => {
     <Button color="danger" onClick={onclick} className={className}>{deleteLabel}</Button>
   )
 };
-const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
-  let className = "";
-  if(deleteConfirmState >= DeleteState.deleting){
-    className = "disabled";
-  }
+const FormSaveButton = ({onclick, addMore}) => {
+  let className = "mx-1";
   const buttonLabel = addMore ? t`Save and add more` : t`Save`;
   const color = addMore ? "primary" : "secondary";
   
@@ -50,6 +44,33 @@ const FormSaveButton = ({deleteConfirmState, onclick, addMore}) => {
     {buttonLabel}
   </Button>;
 };
+const FormCancelDeleteButton = ({deleteConfirmState, onclick}) => {
+  let className = "mx-1";
+  if(deleteConfirmState >= DeleteState.deleting){
+    className += " disabled";
+  }
+  return <Button className={className} color="secondary" onClick={onclick}><Trans>Cancel</Trans></Button>
+}
+const FormButtonSet = ({movement, deleteConfirmState, submitter, deleter}) => {
+  if(movement){ // prepare the set for EDIT/DELETE
+      if(deleteConfirmState >= DeleteState.confirm){
+        return <>
+          <FormCancelDeleteButton deleteConfirmState={deleteConfirmState} onclick={(e) => {e.preventDefault(); deleter(false);}}/>
+          <FormDeleteButton deleteConfirmState={deleteConfirmState} onclick={(e) => {e.preventDefault(); deleter(true);}}/>
+        </>
+      }else{
+        return <>
+          <FormDeleteButton deleteConfirmState={deleteConfirmState} onclick={(e)=> {e.preventDefault(); deleter(true)}} />
+          <FormSaveButton onclick={(e) => {e.preventDefault(); submitter(true);}} addMore={false} />
+          </>
+      }
+  }else{ // prepare the set for SAVE [& CONTINUE]
+    return <>
+      <FormSaveButton onclick={(e) => {e.preventDefault(); submitter(true);}} addMore={false} />
+      <FormSaveButton onclick={(e) => {e.preventDefault(); submitter(false);}} addMore={true} />
+    </>
+  }
+}
 
 const MovementForm = ({movement, onDataReady, errors}) => {
     
@@ -80,8 +101,11 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       if(update.subcategory <0)  delete update.subcategory;
       setNewmovement({...newmovement, ...update});
     }
-    const submitDelete = (e) => {
-      e.preventDefault();
+    const submitDelete = (stepUp) => {
+      if(!stepUp){
+        setDeleteConfirmState(DeleteState.start);
+        return;
+      }
       if(deleteConfirmState === DeleteState.start){
         setDeleteConfirmState(DeleteState.confirm);
         return;
@@ -89,12 +113,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       setDeleteConfirmState(DeleteState.deleting);
       onDataReady(newmovement, true);
     }
-    const submitForm = (e, close) => {
-      e.preventDefault();
+    const submitForm = (close) => {
       onDataReady(newmovement, false, !close);
-      // if(exit && cancel){
-      //   cancel();
-      // }
     };
 
     return (
@@ -177,10 +197,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
           </Input>
           <FormFeedback>{errors?.subcategory?? ""}</FormFeedback>
         </FormGroup>
-        <div className="text-center">
-          <FormDeleteButton movement={movement} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitDelete(e)}></FormDeleteButton>{' '}
-          <FormSaveButton deleteConfirmState={deleteConfirmState} onclick={(e)=>submitForm(e,true)}></FormSaveButton>{' '}
-          { !movement ? <FormSaveButton addMore={true} deleteConfirmState={deleteConfirmState} onclick={(e)=>submitForm(e,false)}></FormSaveButton> : null }
+        <div className="justify-content-center d-flex">
+          <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>
       </Form>
       <Alert color="info" isOpen={showSuccess} toggle={() => showSuccess = !showSuccess}>
