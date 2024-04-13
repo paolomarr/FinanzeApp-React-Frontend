@@ -5,6 +5,7 @@ import { faPenToSquare, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } fr
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
+import { startOfDay, endOfDay } from "date-fns";
 
 function MovementsListTableHeader({fields, sort, onSort}) {
     return (
@@ -203,7 +204,9 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
     if(slice){
       slicedMovements = movements.filter((movement) => {
         const mDate = new Date(movement.date);
-        return mDate >= slice.minDate && mDate <= slice.maxDate;
+        const minFloored = startOfDay(slice.minDate);
+        const maxCeiled = endOfDay(slice.maxDate);
+        return mDate >= minFloored && mDate <= maxCeiled;
       });
     }
     
