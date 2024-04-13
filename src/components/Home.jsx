@@ -5,9 +5,9 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from "../queries/mutateMovement";
 import { Navigate, useNavigate } from "react-router-dom";
-import { t, Trans } from "@lingui/macro"
+import { t } from "@lingui/macro"
 import TimeSpanSlider from "./TimeSpanSlider";
-import { add, sub } from "date-fns";
+import { add, interval, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
 import { intervalToDuration} from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
@@ -18,12 +18,18 @@ import MovementModal from "./MovementModal"
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
 import MovementsStats from "./MovementStats";
 
-
+const CustomRanges = {
+  currentMonth: {range: {min: startOfMonth(new Date()), max: new Date()}, name: t`Current month`},
+  last3: {range: {min: sub(new Date(), {months:3}), max: new Date()}, name: t`Last 3 months`},
+  last6: {range: {min: sub(new Date(), {months:6}), max: new Date()}, name: t`Last 6 months`},
+  last12: {range: {min: sub(new Date(), {months:12}), max: new Date()}, name: t`Last year`},
+  pastYear: {range: {min: startOfYear(sub(new Date(), {years:1})), max: endOfYear(sub(new Date(), {years:1}))}, name: t`Past year`},
+};
 const MovementSummary = ({data, slice, onSetRange}) => {
   const {i18n} = useLingui();
   const today = new Date();
-  const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
-  const past_year_end = add(past_year_start, {years:1});
+  // const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
+  // const past_year_end = add(past_year_start, {years:1});
   let outcomes = 0;
   let incomes = 0;
   let nMovements = 0;
@@ -64,10 +70,11 @@ const MovementSummary = ({data, slice, onSetRange}) => {
               <FontAwesomeIcon icon={faBolt} size="lg" className="text-secondary"/>
             </DropdownToggle>
             <DropdownMenu>
-              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:3}), max: today})}><Trans>Last 3 months</Trans></DropdownItem>
-              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:6}), max: today})}><Trans>Last 6 months</Trans></DropdownItem>
-              <DropdownItem onClick={() => onSetRange({min: sub(today, {months:12}), max: today})}><Trans>Last year</Trans></DropdownItem>
-              <DropdownItem onClick={() => onSetRange({min: past_year_start, max: past_year_end})}><Trans>Past year</Trans></DropdownItem>
+              { Object.keys(CustomRanges).map((rangeKey)=> {
+                const range = CustomRanges[rangeKey];
+                return <DropdownItem key={rangeKey} onClick={() => onSetRange(range.range)}>{range.name}</DropdownItem>
+                })
+              }
             </DropdownMenu>
           </UncontrolledDropdown>
         </div>
@@ -208,15 +215,6 @@ const Home = () => {
         return;
       }
       let newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
-      if(movementResults.data?.movements){
-        const minPercent = (changeResult.minValue - changeResult.min) / (changeResult.max - changeResult.min);
-        const maxPercent = (changeResult.maxValue - changeResult.min) / (changeResult.max - changeResult.min);
-        const movements = movementResults.data.movements;
-        const startIdx = parseInt(minPercent * movements.length);
-        const endIdx = parseInt(maxPercent * movements.length);
-        newDataSlice.minIdx = startIdx;
-        newDataSlice.maxIdx = endIdx;
-      }
       sessionStorage.setItem("Home.dataSlice", JSON.stringify(newDataSlice));
       setDataSlice(newDataSlice);
     };
