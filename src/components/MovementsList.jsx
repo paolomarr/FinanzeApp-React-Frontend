@@ -162,10 +162,11 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
       const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
       if(movement.category == balanceCategory.id) return false;
       if(!movementFilter || movementFilter.length === 0) return true;
-      const cat_name = categories.find((cat) => cat.id === movement.category)?.category ?? "";
-      const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory ?? "";
+      const cat_name = categories.find((cat) => cat.id === movement.category)?.category.toLocaleLowerCase() ?? "";
+      const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory.toLocaleLowerCase() ?? "";
       let ret = false;
-      ret |= movement.description.indexOf(movementFilter) >= 0;
+      // Text filter on multiple columns
+      ret |= movement.description.toLocaleLowerCase().indexOf(movementFilter) >= 0;
       ret |= cat_name.indexOf(movementFilter) >= 0;
       ret |= subcat_name.indexOf(movementFilter) >= 0;
       ret |= movement.amount.toString().indexOf(movementFilter.replace(",", ".")) >= 0;
@@ -202,19 +203,23 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
     
     let slicedMovements = movements;
     if(slice){
-      slicedMovements = movements.filter((movement) => {
+      slicedMovements = slicedMovements.filter((movement) => {
         const mDate = new Date(movement.date);
         const minFloored = startOfDay(slice.minDate);
         const maxCeiled = endOfDay(slice.maxDate);
         return mDate >= minFloored && mDate <= maxCeiled;
       });
     }
+    slicedMovements = slicedMovements.filter(movementsFilterFunction).toSorted(compareMovements);
     
     return (
       <>
         <Row className="align-items-end">
-          <Col xs={12} md={6}>
-            <Input type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value)} />
+          <Col xs={12} md={6} className="position-relative">
+            { movementFilter.length>0 ? 
+              <div className="position-absolute" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
+            }
+            <Input type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
           </Col>
           <Col xs={12} md={6}>
             <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
@@ -230,7 +235,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
                 </td>
               </tr>
             ) : (
-              slicedMovements.filter(movementsFilterFunction).toSorted(compareMovements).map((movement, index) => {
+              slicedMovements.map((movement, index) => {
                 const start = pagination.page * pagination.size;
                 const end = start + pagination.size;
                 if(index<start || index>=end){
