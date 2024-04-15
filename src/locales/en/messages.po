@@ -23,7 +23,7 @@ msgstr ""
 #~ msgstr "Abs. amount"
 
 #: src/components/MovementForm.jsx:142
-#: src/components/MovementsList.jsx:186
+#: src/components/MovementsList.jsx:187
 msgid "Amount"
 msgstr "Amount"
 
@@ -44,7 +44,7 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #: src/components/MovementForm.jsx:168
-#: src/components/MovementsList.jsx:189
+#: src/components/MovementsList.jsx:190
 msgid "Category"
 msgstr "Category"
 
@@ -65,7 +65,7 @@ msgstr "Data has been saved"
 #~ msgstr "Data has been saved!"
 
 #: src/components/MovementForm.jsx:128
-#: src/components/MovementsList.jsx:180
+#: src/components/MovementsList.jsx:181
 msgid "Date"
 msgstr "Date"
 
@@ -91,7 +91,7 @@ msgstr "Deleting"
 #~ msgstr "Deleting..."
 
 #: src/components/MovementForm.jsx:155
-#: src/components/MovementsList.jsx:185
+#: src/components/MovementsList.jsx:186
 msgid "Description"
 msgstr "Description"
 
@@ -104,6 +104,15 @@ msgstr "Earnings"
 #: src/components/MovementStats.jsx:220
 msgid "Expenses"
 msgstr "Expenses"
+
+#. js-lingui-explicit-id
+#: src/components/MovementsList.jsx:220
+msgid "search.movements.found"
+msgstr "found"
+
+#: src/components/MovementsList.jsx:220
+#~ msgid "found"
+#~ msgstr "found"
 
 #. js-lingui-explicit-id
 #: src/components/Home.jsx:226
@@ -207,7 +216,7 @@ msgstr "Save and add more"
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:217
+#: src/components/MovementsList.jsx:222
 msgid "Search movements"
 msgstr "Search movements"
 
@@ -237,7 +246,7 @@ msgid "Show assets"
 msgstr "Show assets"
 
 #: src/components/MovementForm.jsx:184
-#: src/components/MovementsList.jsx:196
+#: src/components/MovementsList.jsx:197
 msgid "Subcategory"
 msgstr "Subcategory"
 

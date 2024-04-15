@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/components/MovementForm.jsx:142
-#: src/components/MovementsList.jsx:186
+#: src/components/MovementsList.jsx:187
 msgid "Amount"
 msgstr "Importo"
 
@@ -27,7 +27,7 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: src/components/MovementForm.jsx:168
-#: src/components/MovementsList.jsx:189
+#: src/components/MovementsList.jsx:190
 msgid "Category"
 msgstr "Categoria"
 
@@ -44,7 +44,7 @@ msgid "Data has been saved"
 msgstr "Dati salvati"
 
 #: src/components/MovementForm.jsx:128
-#: src/components/MovementsList.jsx:180
+#: src/components/MovementsList.jsx:181
 msgid "Date"
 msgstr "Data"
 
@@ -66,7 +66,7 @@ msgid "Deleting"
 msgstr "Eliminazione in corso"
 
 #: src/components/MovementForm.jsx:155
-#: src/components/MovementsList.jsx:185
+#: src/components/MovementsList.jsx:186
 msgid "Description"
 msgstr "Descrizione"
 
@@ -79,6 +79,11 @@ msgstr "Entrate"
 #: src/components/MovementStats.jsx:220
 msgid "Expenses"
 msgstr "Spese"
+
+#. js-lingui-explicit-id
+#: src/components/MovementsList.jsx:220
+msgid "search.movements.found"
+msgstr "trovati"
 
 #. js-lingui-explicit-id
 #: src/components/Home.jsx:226
@@ -178,7 +183,7 @@ msgstr "Salva e continua"
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:217
+#: src/components/MovementsList.jsx:222
 msgid "Search movements"
 msgstr "Cerca movimenti"
 
@@ -195,7 +200,7 @@ msgid "Show assets"
 msgstr "Mostra saldo"
 
 #: src/components/MovementForm.jsx:184
-#: src/components/MovementsList.jsx:196
+#: src/components/MovementsList.jsx:197
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
