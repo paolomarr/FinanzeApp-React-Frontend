@@ -20,7 +20,7 @@ function Header({title, onLogout}) {
     <>
       <div className="d-flex justify-content-between align-items-center p-2">
         <Dropdown>
-          <Dropdown.Toggle caret={false}>
+          <Dropdown.Toggle caret={false} split={false}>
             <FontAwesomeIcon icon={faBars} />
           </Dropdown.Toggle>
         </Dropdown>
