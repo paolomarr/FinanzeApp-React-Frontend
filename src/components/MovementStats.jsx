@@ -173,7 +173,6 @@ const MovementsStats = ({data, slice, categories}) => {
                     ))
                   }
                   <LabelList dataKey="category" content={(props)=>renderCustomisedLabel({...props, chartHeight: 400})} />
-                  {/* <LabelList dataKey="category" position="center" textAnchor='center' width={400} fill='#666' angle={-90} /> */}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -193,7 +192,7 @@ const MovementsStats = ({data, slice, categories}) => {
                 <XAxis type='number' label={label} />
                 <YAxis type='category' dataKey="category" tick={false} hide={true} />
                 <Tooltip content={<CustomTooltip />}/>
-                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} activeBar={false} />} >
+                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} />} activeBar={false} >
                   {
                     data.map((item, index) => (
                       <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
