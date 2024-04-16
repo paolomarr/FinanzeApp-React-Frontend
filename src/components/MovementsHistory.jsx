@@ -1,5 +1,5 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'recharts';
-import {Input, Label, FormGroup } from 'reactstrap'
+import Form from 'react-bootstrap/Form';
 import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
 import { colors } from '../constants';
@@ -71,10 +71,10 @@ const MovementsHistory = ({data, slice, categories}) => {
     return (
         <div className='movements-history-container mt-2'>
             <div className='movements-history-showassetsblock text-end'>
-                <FormGroup check inline>
-                    <Label check htmlFor="showAssetsInput"><Trans>Show assets</Trans></Label>
-                    <Input type='checkbox' checked={Boolean(showAssets)} onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }} />
-                </FormGroup>
+                <Form.Group check inline>
+                    <Form.Label check htmlFor="showAssetsInput"><Trans>Show assets</Trans></Form.Label>
+                    <Form.Check type='checkbox' checked={Boolean(showAssets)} onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }} />
+                </Form.Group>
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={chartData}>

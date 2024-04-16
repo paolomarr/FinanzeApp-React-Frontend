@@ -1,4 +1,10 @@
-import { Table, ButtonGroup, Button, Form, Row, Col, Label, Input } from "reactstrap";
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Table from 'react-bootstrap/Table'
+
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faPenToSquare, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
@@ -82,19 +88,19 @@ const PaginationControls = ({pagination, setPagination, total}) => {
       <Form>
         <Row className="row-cols-lg-auto g-3 align-items-end justify-content-md-end">
           <Col xs={3}>
-            <Label
+            <Form.Label
               for="itemsPerPage"
             >
               <Trans>Show</Trans>
-            </Label>
-            <Input
+            </Form.Label>
+            <Form.Select
               id="itemsPerPage"
               type="select"
               onChange={(e) => setPagination({...pagination, size:e.target.value})}
               value={pagination.size}
             >
             {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
-            </Input>
+            </Form.Select>
           </Col>
           <Col xs={9}>
             { numPages > pageCarouselWidth ?
@@ -219,7 +225,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
             { movementFilter.length>0 ? 
               <div className="position-absolute" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
             }
-            <Input type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
+            <Form.Text type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
           </Col>
           <Col xs={12} md={6}>
             <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>

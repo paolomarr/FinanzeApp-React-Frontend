@@ -6,7 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-import "bootstrap/dist/css/bootstrap.min.css";
+/* The following line can be included in your src/index.js or App.js file */
+import './App.scss';
 
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";

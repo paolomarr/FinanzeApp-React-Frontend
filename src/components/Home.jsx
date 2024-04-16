@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faBolt } from "@fortawesome/free-solid-svg-icons";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
-import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import Dropdown from 'react-bootstrap/Dropdown';
 import MovementsStats from "./MovementStats";
 
 const CustomRanges = {
@@ -65,18 +65,18 @@ const MovementSummary = ({data, slice, onSetRange}) => {
       <div className="movement-stats">
         <div className="d-flex flex-row align-items-center justify-content-center my-2">
           <div>{nMovements} {t`movements in`} {formatDuration(duration, i18n, ["years", "months", "days"])}</div>
-          <UncontrolledDropdown className="px-1">
-            <DropdownToggle caret={false} color="">
+          <Dropdown className="px-1">
+            <Dropdown.Toggle caret={false} color="">
               <FontAwesomeIcon icon={faBolt} size="lg" className="text-secondary"/>
-            </DropdownToggle>
-            <DropdownMenu>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
               { Object.keys(CustomRanges).map((rangeKey)=> {
                 const range = CustomRanges[rangeKey];
-                return <DropdownItem key={rangeKey} onClick={() => onSetRange(range.range)}>{range.name}</DropdownItem>
+                return <Dropdown.Item key={rangeKey} onClick={() => onSetRange(range.range)}>{range.name}</Dropdown.Item>
                 })
               }
-            </DropdownMenu>
-          </UncontrolledDropdown>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
         <div className="movement-stats text-center row justify-content-center my-2">
           <div className="col-12 col-md-3">{t`Outcomes`}: {parseFloat(outcomes).toFixed(2)}€</div>

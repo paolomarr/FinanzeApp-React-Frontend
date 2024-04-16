@@ -1,5 +1,9 @@
 import React from "react";
-import { Form, FormGroup, Input, Label, Button, Container, Row, Col } from "reactstrap";
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { Navigate } from "react-router-dom";
 import { useState } from "react";
 import authenticate from "../queries/authenticate";
@@ -44,28 +48,28 @@ const LoginForm = ({logout}) => {
       <Row className="justify-content-center">
         <Col className="col-md-6 col-lg-4">
           <Form onSubmit={(event) => handleSubmit(event)}>
-            <FormGroup>
-              <Label for="username" hidden>
+            <Form.Group>
+              <Form.Label for="username" hidden>
                 <Trans>Username</Trans>
-              </Label>
-              <Input
+              </Form.Label>
+              <Form.Text
                 id="username"
                 name="username"
                 placeholder={_(msg`Username`)}
                 type="username"
               />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password" hidden>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label for="password" hidden>
                 <Trans>Password</Trans>
-              </Label>
-              <Input
+              </Form.Label>
+              <Form.Text
                 id="password"
                 name="password"
                 placeholder={_(msg`Password`)}
                 type="password"
               />
-            </FormGroup>
+            </Form.Group>
             <Button><Trans id="login_form_submit">Submit</Trans></Button>
           </Form>
         </Col>

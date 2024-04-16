@@ -1,5 +1,6 @@
 import React from "react";
-import { NavbarBrand, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from "reactstrap";
+import Navbar from 'react-bootstrap/Navbar';
+import Dropdown from 'react-bootstrap/Dropdown';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faBars } from "@fortawesome/free-solid-svg-icons";
 import { Trans } from "@lingui/macro";
@@ -18,12 +19,12 @@ function Header({title, onLogout}) {
   return (
     <>
       <div className="d-flex justify-content-between align-items-center p-2">
-        <UncontrolledDropdown>
-          <DropdownToggle caret={false}>
+        <Dropdown>
+          <Dropdown.Toggle caret={false}>
             <FontAwesomeIcon icon={faBars} />
-          </DropdownToggle>
-        </UncontrolledDropdown>
-        <NavbarBrand>
+          </Dropdown.Toggle>
+        </Dropdown>
+        <Navbar.Brand>
           <img
           src="https://logrocket-assets.io/img/logo.png"
           alt="The website logo"
@@ -31,22 +32,22 @@ function Header({title, onLogout}) {
           className="img-thumbnail"
           // style={{ marginTop: "20px" }}
         />
-        </NavbarBrand>
+        </Navbar.Brand>
         { loggedUser ?
-          <UncontrolledDropdown>
-            <DropdownToggle caret={false}>
+          <Dropdown>
+            <Dropdown.Toggle caret={false}>
               <FontAwesomeIcon icon={faUser} />
-            </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem header>{loggedUser}</DropdownItem>
-              <DropdownItem onClick={()=>onLogout()}>Logout</DropdownItem>
-              <DropdownItem disabled={true}><Trans>Profile</Trans></DropdownItem>
-              <DropdownItem divider />
-              <DropdownItem header><Trans>Languages</Trans></DropdownItem>
-              { languages.map((loc)=> {return <DropdownItem className={loc.locale === i18n.locale ? "fw-bold" : ""} key={loc.locale} onClick={() => setLanguage(loc.locale)}>{loc.name}</DropdownItem>} )
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item header>{loggedUser}</Dropdown.Item>
+              <Dropdown.Item onClick={()=>onLogout()}>Logout</Dropdown.Item>
+              <Dropdown.Item disabled={true}><Trans>Profile</Trans></Dropdown.Item>
+              <Dropdown.Item divider />
+              <Dropdown.Item header><Trans>Languages</Trans></Dropdown.Item>
+              { languages.map((loc)=> {return <Dropdown.Item className={loc.locale === i18n.locale ? "fw-bold" : ""} key={loc.locale} onClick={() => setLanguage(loc.locale)}>{loc.name}</Dropdown.Item>} )
                 }
-            </DropdownMenu>
-          </UncontrolledDropdown> : null }
+            </Dropdown.Menu>
+          </Dropdown> : null }
       </div>
       <div className="text-center">
         <h1>{title}</h1>

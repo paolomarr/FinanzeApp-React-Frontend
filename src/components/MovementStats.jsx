@@ -1,5 +1,7 @@
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, LabelList, Cell, Rectangle } from 'recharts';
-import { Row, Col } from 'reactstrap';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 import { useMediaQuery } from 'react-responsive'
 import { t } from "@lingui/macro";
 import { colors } from '../constants';

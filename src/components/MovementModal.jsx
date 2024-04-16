@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalBody } from "reactstrap";
+import Modal from 'react-bootstrap/Modal';
 import MovementForm from "./MovementForm";
 import { t } from "@lingui/macro";
 
@@ -13,12 +13,12 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title }) => {
     toggleModal();
   }
   return (
-    <Modal isOpen={show} toggle={innerToggle}>
-      <ModalHeader toggle={innerToggle}>{title}</ModalHeader>
-      <ModalBody>
+    <Modal.Dialog isOpen={show} toggle={innerToggle}>
+      <Modal.Header toggle={innerToggle}>{title}</Modal.Header>
+      <Modal.Body>
         <MovementForm movement={movement} cancel={innerToggle} onDataReady={onDataReady} errors={errors}/>
-      </ModalBody>
-    </Modal>
+      </Modal.Body>
+    </Modal.Dialog>
   );
 };
 

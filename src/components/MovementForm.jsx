@@ -1,4 +1,6 @@
-import { Form, FormGroup, FormFeedback, Label, Input, Alert, Button } from "reactstrap";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
@@ -121,12 +123,12 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       <>
       <Form id="movementForm" onSubmit={(e) => e.preventDefault()} className="mb-2">
         {movement ? 
-          <Input type="hidden" name="id" value={movement.id} /> : null
+          <Form.Text type="hidden" name="id" value={movement.id} /> : null
         }
-        <FormGroup>
-          <Label for="date">
+        <Form.Group>
+          <Form.Label for="date">
             {t`Date`}
-          </Label>
+          </Form.Label>
           <input
             id="date"
             name="date"
@@ -135,13 +137,13 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             value={format_ISO_date(newmovement.date)}
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
-          <FormFeedback>{errors?.date}</FormFeedback>
-        </FormGroup>
-        <FormGroup>
-            <Label for="amount">
+          <Form.Control.Feedback>{errors?.date}</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group>
+            <Form.Label for="amount">
                 {t`Amount`}
-            </Label>
-            <Input
+            </Form.Label>
+            <Form.Text
                 id="amount"
                 name="abs_amount"
                 type="number"
@@ -149,11 +151,11 @@ const MovementForm = ({movement, onDataReady, errors}) => {
                 value={newmovement.abs_amount}
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
-          <FormFeedback>{errors?.abs_amount?? ""}</FormFeedback>
-        </FormGroup>
-        <FormGroup>
-          <Label for="description"><Trans>Description</Trans></Label>
-          <Input 
+          <Form.Control.Feedback>{errors?.abs_amount?? ""}</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label for="description"><Trans>Description</Trans></Form.Label>
+          <Form.Text 
             id="description" 
             name="description" 
             type="text" 
@@ -162,11 +164,11 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             onChange={(e) => updateNewMovement({description: e.target.value})}
             required
             />
-          <FormFeedback>{errors?.description?? ""}</FormFeedback>
-        </FormGroup>
-        <FormGroup>
-          <Label for="category"><Trans>Category</Trans></Label>
-          <Input 
+          <Form.Control.Feedback>{errors?.description?? ""}</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label for="category"><Trans>Category</Trans></Form.Label>
+          <Form.Select 
             id="category" 
             name="category" 
             type="select" 
@@ -177,12 +179,12 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
-          </Input>
-          <FormFeedback>{errors?.category?? ""}</FormFeedback>
-        </FormGroup>
-        <FormGroup>
-          <Label for="subcategory"><Trans>Subcategory</Trans></Label>
-          <Input 
+          </Form.Select>
+          <Form.Control.Feedback>{errors?.category?? ""}</Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label for="subcategory"><Trans>Subcategory</Trans></Form.Label>
+          <Form.Select 
             id="subcategory" 
             name="subcategory" 
             type="select" 
@@ -194,9 +196,9 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             {subcategories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
-          </Input>
-          <FormFeedback>{errors?.subcategory?? ""}</FormFeedback>
-        </FormGroup>
+          </Form.Select>
+          <Form.Control.Feedback>{errors?.subcategory?? ""}</Form.Control.Feedback>
+        </Form.Group>
         <div className="justify-content-center d-flex">
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>
