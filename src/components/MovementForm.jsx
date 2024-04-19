@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import Feedback from 'react-bootstrap/Feedback';
 import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
@@ -34,7 +35,7 @@ const FormDeleteButton = ({deleteConfirmState, onclick}) => {
       break;
   }
   return (
-    <Button color="danger" onClick={onclick} className={className}>{deleteLabel}</Button>
+    <Button variant="danger" onClick={onclick} className={className}>{deleteLabel}</Button>
   )
 };
 const FormSaveButton = ({onclick, addMore}) => {
@@ -42,7 +43,7 @@ const FormSaveButton = ({onclick, addMore}) => {
   const buttonLabel = addMore ? t`Save and add more` : t`Save`;
   const color = addMore ? "primary" : "secondary";
   
-  return <Button className={className} color={color} onClick={onclick}>
+  return <Button className={className} variant={color} onClick={onclick}>
     {buttonLabel}
   </Button>;
 };
@@ -51,7 +52,7 @@ const FormCancelDeleteButton = ({deleteConfirmState, onclick}) => {
   if(deleteConfirmState >= DeleteState.deleting){
     className += " disabled";
   }
-  return <Button className={className} color="secondary" onClick={onclick}><Trans>Cancel</Trans></Button>
+  return <Button className={className} variant="secondary" onClick={onclick}><Trans>Cancel</Trans></Button>
 }
 const FormButtonSet = ({movement, deleteConfirmState, submitter, deleter}) => {
   if(movement){ // prepare the set for EDIT/DELETE
@@ -123,10 +124,10 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       <>
       <Form id="movementForm" onSubmit={(e) => e.preventDefault()} className="mb-2">
         {movement ? 
-          <Form.Text type="hidden" name="id" value={movement.id} /> : null
+          <Form.Control type="hidden" name="id" value={movement.id} /> : null
         }
         <Form.Group>
-          <Form.Label for="date">
+          <Form.Label htmlFor="date">
             {t`Date`}
           </Form.Label>
           <input
@@ -137,13 +138,13 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             value={format_ISO_date(newmovement.date)}
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
-          <Form.Control.Feedback>{errors?.date}</Form.Control.Feedback>
+          <Feedback type='invalid'>{errors?.date}</Feedback>
         </Form.Group>
         <Form.Group>
-            <Form.Label for="amount">
+            <Form.Label htmlFor="amount">
                 {t`Amount`}
             </Form.Label>
-            <Form.Text
+            <Form.Control
                 id="amount"
                 name="abs_amount"
                 type="number"
@@ -151,11 +152,11 @@ const MovementForm = ({movement, onDataReady, errors}) => {
                 value={newmovement.abs_amount}
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
-          <Form.Control.Feedback>{errors?.abs_amount?? ""}</Form.Control.Feedback>
+          <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
         </Form.Group>
         <Form.Group>
-          <Form.Label for="description"><Trans>Description</Trans></Form.Label>
-          <Form.Text 
+          <Form.Label htmlFor="description"><Trans>Description</Trans></Form.Label>
+          <Form.Control 
             id="description" 
             name="description" 
             type="text" 
@@ -164,10 +165,10 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             onChange={(e) => updateNewMovement({description: e.target.value})}
             required
             />
-          <Form.Control.Feedback>{errors?.description?? ""}</Form.Control.Feedback>
+          <Feedback type='invalid'>{errors?.description?? ""}</Feedback>
         </Form.Group>
         <Form.Group>
-          <Form.Label for="category"><Trans>Category</Trans></Form.Label>
+          <Form.Label htmlFor="category"><Trans>Category</Trans></Form.Label>
           <Form.Select 
             id="category" 
             name="category" 
@@ -180,10 +181,10 @@ const MovementForm = ({movement, onDataReady, errors}) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
             }))}
           </Form.Select>
-          <Form.Control.Feedback>{errors?.category?? ""}</Form.Control.Feedback>
+          <Feedback type='invalid'>{errors?.category?? ""}</Feedback>
         </Form.Group>
         <Form.Group>
-          <Form.Label for="subcategory"><Trans>Subcategory</Trans></Form.Label>
+          <Form.Label htmlFor="subcategory"><Trans>Subcategory</Trans></Form.Label>
           <Form.Select 
             id="subcategory" 
             name="subcategory" 
@@ -197,7 +198,7 @@ const MovementForm = ({movement, onDataReady, errors}) => {
               return <option key={cat.id} value={cat.id}>{cat.subcategory}</option>
             })}
           </Form.Select>
-          <Form.Control.Feedback>{errors?.subcategory?? ""}</Form.Control.Feedback>
+          <Feedback type='invalid'>{errors?.subcategory?? ""}</Feedback>
         </Form.Group>
         <div className="justify-content-center d-flex">
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />

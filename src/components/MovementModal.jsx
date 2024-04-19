@@ -13,12 +13,12 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title }) => {
     toggleModal();
   }
   return (
-    <Modal.Dialog isOpen={show} toggle={innerToggle}>
-      <Modal.Header toggle={innerToggle}>{title}</Modal.Header>
+    <Modal show={show} onHide={innerToggle}>
+      <Modal.Header onHide={innerToggle}><Modal.Title>{title}</Modal.Title></Modal.Header>
       <Modal.Body>
         <MovementForm movement={movement} cancel={innerToggle} onDataReady={onDataReady} errors={errors}/>
       </Modal.Body>
-    </Modal.Dialog>
+    </Modal>
   );
 };
 

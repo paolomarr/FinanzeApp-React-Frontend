@@ -17,7 +17,24 @@ import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import Dropdown from 'react-bootstrap/Dropdown';
 import MovementsStats from "./MovementStats";
+import {forwardRef} from "react";
 
+// The forwardRef is important!!
+// Dropdown needs access to the DOM node in order to position the Menu
+const CustomToggle = forwardRef(function CustomToggle({ children, onClick }, ref){
+  return (
+    <button
+      className="border-0 bg-transparent"
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        onClick(e);
+      }}
+    >
+      {children}
+    </button>
+  )
+});
 const CustomRanges = {
   currentMonth: {range: {min: startOfMonth(new Date()), max: new Date()}, name: t`Current month`},
   last3: {range: {min: sub(new Date(), {months:3}), max: new Date()}, name: t`Last 3 months`},
@@ -66,7 +83,7 @@ const MovementSummary = ({data, slice, onSetRange}) => {
         <div className="d-flex flex-row align-items-center justify-content-center my-2">
           <div>{nMovements} {t`movements in`} {formatDuration(duration, i18n, ["years", "months", "days"])}</div>
           <Dropdown className="px-1">
-            <Dropdown.Toggle caret={false} color="">
+            <Dropdown.Toggle variant="outline-secondary" as={CustomToggle}>
               <FontAwesomeIcon icon={faBolt} size="lg" className="text-secondary"/>
             </Dropdown.Toggle>
             <Dropdown.Menu>

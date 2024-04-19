@@ -1,16 +1,17 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
-import { colors } from "../constants";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import Button from "react-bootstrap/Button";
 
 const FixedBottomRightButton = ({onClick, icon}) => {
     if(!icon){
-        icon = faCirclePlus;
+        icon = faPlus;
     }
     return (
-        <button onClick={onClick} 
-          style={{position: "fixed", right: "2%", bottom: "2%", border: "unset", background: "unset"}}>
-          <FontAwesomeIcon style={{color: colors.secondary_A00}} icon={icon} size="3x"/>
-        </button>
+        <Button onClick={onClick} variant="secondary"
+            className="rounded-circle bg-opacity-50"
+          style={{position: "fixed", right: "2%", bottom: "2%", border: "unset"}}>
+          <FontAwesomeIcon icon={icon} size="2x" className="text-primary"/>
+        </Button>
     )
 }
 export default FixedBottomRightButton;

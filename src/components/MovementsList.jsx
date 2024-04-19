@@ -7,7 +7,8 @@ import Table from 'react-bootstrap/Table'
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faPenToSquare, faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
+import { faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
@@ -79,7 +80,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
     }
   };
   const pageButtonColor = (page) => {
-    const btn_color = page == pagination.page ? "primary" : "secondary";
+    const btn_color = page == pagination.page ? "primary" : "outline-secondary";
     return btn_color;
   };
   
@@ -88,14 +89,11 @@ const PaginationControls = ({pagination, setPagination, total}) => {
       <Form>
         <Row className="row-cols-lg-auto g-3 align-items-end justify-content-md-end">
           <Col xs={3}>
-            <Form.Label
-              for="itemsPerPage"
-            >
+            <Form.Label htmlFor='itemsPerPage'>
               <Trans>Show</Trans>
             </Form.Label>
             <Form.Select
               id="itemsPerPage"
-              type="select"
               onChange={(e) => setPagination({...pagination, size:e.target.value})}
               value={pagination.size}
             >
@@ -106,23 +104,23 @@ const PaginationControls = ({pagination, setPagination, total}) => {
             { numPages > pageCarouselWidth ?
             <>
             <ButtonGroup id="paginationScrollBack">
-                <Button color={pageButtonColor(0)} onClick={()=>setPagination({...pagination, page:0})}>{1}</Button>
-                <Button color="secondary"  onClick={()=>setPagination({...pagination, page:Math.max(0, pagination.page-pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesLeft} /></Button>
+                <Button variant={pageButtonColor(0)} onClick={()=>setPagination({...pagination, page:0})}>{1}</Button>
+                <Button variant="outline-secondary"  onClick={()=>setPagination({...pagination, page:Math.max(0, pagination.page-pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesLeft} /></Button>
               </ButtonGroup>{' '}
               <ButtonGroup>
                 {pages.slice(pageCarousel.start(), pageCarousel.end()).map((page) => {
-                  return <Button color={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
+                  return <Button variant={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
                 })}
               </ButtonGroup>{' '}
               <ButtonGroup id="paginationScrollForward">
-                <Button color="secondary" onClick={()=>setPagination({...pagination, page: Math.min(numPages-1, pagination.page+pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesRight} /></Button>
-                <Button color={pageButtonColor(numPages-1)} onClick={()=>setPagination({...pagination, page:numPages-1})}>{numPages}</Button>
+                <Button variant="outline-secondary" onClick={()=>setPagination({...pagination, page: Math.min(numPages-1, pagination.page+pageCarouselWidth)})}><FontAwesomeIcon icon={faAnglesRight} /></Button>
+                <Button variant={pageButtonColor(numPages-1)} onClick={()=>setPagination({...pagination, page:numPages-1})}>{numPages}</Button>
               </ButtonGroup>
             </>
             : 
             <ButtonGroup>
               {pages.map((page) => {
-                return <Button color={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
+                return <Button variant={pageButtonColor(page)} key={page} onClick={()=>setPagination({...pagination, page:page})}>{page+1}</Button>
               })}
             </ButtonGroup>
             }
@@ -225,13 +223,13 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
             { movementFilter.length>0 ? 
               <div className="position-absolute" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
             }
-            <Form.Text type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
+            <Form.Control type="text" placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
           </Col>
           <Col xs={12} md={6}>
             <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
           </Col>
         </Row>
-        <Table responsive={true} size="sm">
+        <Table responsive="sm">
           <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
           <tbody>
             {!slicedMovements || slicedMovements.length <= 0 ? (

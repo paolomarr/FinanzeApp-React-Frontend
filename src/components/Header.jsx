@@ -20,7 +20,7 @@ function Header({title, onLogout}) {
     <>
       <div className="d-flex justify-content-between align-items-center p-2">
         <Dropdown>
-          <Dropdown.Toggle caret={false} split={false}>
+          <Dropdown.Toggle split={false} variant="secondary">
             <FontAwesomeIcon icon={faBars} />
           </Dropdown.Toggle>
         </Dropdown>
@@ -35,15 +35,15 @@ function Header({title, onLogout}) {
         </Navbar.Brand>
         { loggedUser ?
           <Dropdown>
-            <Dropdown.Toggle caret={false}>
+            <Dropdown.Toggle variant="secondary">
               <FontAwesomeIcon icon={faUser} />
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item header>{loggedUser}</Dropdown.Item>
+              <Dropdown.Header>{loggedUser}</Dropdown.Header>
               <Dropdown.Item onClick={()=>onLogout()}>Logout</Dropdown.Item>
               <Dropdown.Item disabled={true}><Trans>Profile</Trans></Dropdown.Item>
-              <Dropdown.Item divider />
-              <Dropdown.Item header><Trans>Languages</Trans></Dropdown.Item>
+              <Dropdown.Divider />
+              <Dropdown.Header><Trans>Languages</Trans></Dropdown.Header>
               { languages.map((loc)=> {return <Dropdown.Item className={loc.locale === i18n.locale ? "fw-bold" : ""} key={loc.locale} onClick={() => setLanguage(loc.locale)}>{loc.name}</Dropdown.Item>} )
                 }
             </Dropdown.Menu>
