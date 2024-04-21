@@ -4,7 +4,7 @@ import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
 import { colors } from '../constants';
 import { useState } from 'react';
-import { Trans } from '@lingui/macro';
+import { t } from '@lingui/macro';
 
 const MovementsHistory = ({data, slice, categories}) => {
     const [showAssets, setShowAssets] = useState(sessionStorage.getItem("MovementsHistory.showAssets")??false);
@@ -71,10 +71,12 @@ const MovementsHistory = ({data, slice, categories}) => {
     return (
         <div className='movements-history-container mt-2'>
             <div className='movements-history-showassetsblock text-end'>
-                <Form.Group check inline>
-                    <Form.Label check htmlFor="showAssetsInput"><Trans>Show assets</Trans></Form.Label>
-                    <Form.Check type='checkbox' checked={Boolean(showAssets)} onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }} />
-                </Form.Group>
+                <Form>
+                    <Form.Switch label={t`Show assets`} reverse 
+                        checked={Boolean(showAssets)} 
+                        onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }}
+                       />
+                </Form>
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={chartData}>
