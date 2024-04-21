@@ -13,38 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/MovementForm.jsx:142
-#: src/components/MovementsList.jsx:187
+#: src/components/MovementForm.jsx:141
+#: src/components/MovementsList.jsx:192
 msgid "Amount"
 msgstr "Importo"
 
-#: src/components/MovementForm.jsx:211
+#: src/components/MovementForm.jsx:210
 msgid "An error occurred while saving data."
 msgstr "Si è verificato un errore durante il salvataggio"
 
-#: src/components/MovementForm.jsx:52
+#: src/components/MovementForm.jsx:55
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/components/MovementForm.jsx:168
-#: src/components/MovementsList.jsx:190
+#: src/components/MovementForm.jsx:167
+#: src/components/MovementsList.jsx:195
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/MovementForm.jsx:22
+#: src/components/MovementForm.jsx:25
 msgid "Confirm"
 msgstr "Conferma"
 
-#: src/components/Home.jsx:22
+#: src/components/Home.jsx:39
 msgid "Current month"
 msgstr "Mese corrente"
 
-#: src/components/MovementForm.jsx:206
+#: src/components/MovementForm.jsx:205
 msgid "Data has been saved"
 msgstr "Dati salvati"
 
-#: src/components/MovementForm.jsx:128
-#: src/components/MovementsList.jsx:181
+#: src/components/MovementForm.jsx:127
+#: src/components/MovementsList.jsx:186
 msgid "Date"
 msgstr "Data"
 
@@ -52,41 +52,40 @@ msgstr "Data"
 msgid "days"
 msgstr "giorni"
 
-#: src/components/MovementForm.jsx:19
+#: src/components/MovementForm.jsx:22
 msgid "Delete"
 msgstr "Elimina"
 
-#: src/components/MovementForm.jsx:28
-#: src/components/MovementForm.jsx:207
+#: src/components/MovementForm.jsx:31
+#: src/components/MovementForm.jsx:206
 msgid "Deleted"
 msgstr "Eliminato"
 
-#: src/components/MovementForm.jsx:25
+#: src/components/MovementForm.jsx:28
 msgid "Deleting"
 msgstr "Eliminazione in corso"
 
-#: src/components/MovementForm.jsx:155
-#: src/components/MovementsList.jsx:186
+#: src/components/MovementForm.jsx:154
+#: src/components/MovementsList.jsx:191
 msgid "Description"
 msgstr "Descrizione"
 
-#: src/components/MovementStats.jsx:97
-#: src/components/MovementStats.jsx:217
+#: src/components/MovementStats.jsx:99
+#: src/components/MovementStats.jsx:209
 msgid "Earnings"
 msgstr "Entrate"
 
-#: src/components/MovementStats.jsx:97
-#: src/components/MovementStats.jsx:220
+#: src/components/MovementStats.jsx:99
+#: src/components/MovementStats.jsx:212
 msgid "Expenses"
 msgstr "Spese"
 
-#. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:220
-msgid "search.movements.found"
-msgstr "trovati"
+#: src/components/MovementsList.jsx:235
+msgid "filtered out of"
+msgstr "filtrati da"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:226
+#: src/components/Home.jsx:243
 msgid "date.from"
 msgstr "dal"
 
@@ -94,7 +93,7 @@ msgstr "dal"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:83
+#: src/components/Home.jsx:100
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -102,19 +101,19 @@ msgstr "Entrate"
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
-#: src/components/Header.jsx:45
+#: src/components/Header.jsx:46
 msgid "Languages"
 msgstr "Lingue"
 
-#: src/components/Home.jsx:23
+#: src/components/Home.jsx:40
 msgid "Last 3 months"
 msgstr "Ultimi 3 mesi"
 
-#: src/components/Home.jsx:24
+#: src/components/Home.jsx:41
 msgid "Last 6 months"
 msgstr "Ultimi 6 mesi"
 
-#: src/components/Home.jsx:25
+#: src/components/Home.jsx:42
 msgid "Last year"
 msgstr "Ultimo anno"
 
@@ -138,52 +137,61 @@ msgstr "mesi"
 msgid "Movement list"
 msgstr "Lista movimenti"
 
-#: src/components/Home.jsx:67
+#: src/components/Home.jsx:84
 msgid "movements in"
 msgstr "movimenti in"
 
-#: src/components/MovementForm.jsx:193
+#. js-lingui-explicit-id
+#: src/components/MovementsList.jsx:235
+msgid "movementsListFilterStats.of"
+msgstr "di"
+
+#: src/components/MovementForm.jsx:192
 msgid "optional"
 msgstr "facoltativo"
 
-#: src/components/MovementStats.jsx:38
+#: src/components/MovementStats.jsx:40
 msgid "Other in."
 msgstr "Altri ricavi"
 
-#: src/components/MovementStats.jsx:39
+#: src/components/MovementStats.jsx:41
 msgid "Other out."
 msgstr "Altre spese"
 
-#: src/components/Home.jsx:82
+#: src/components/Home.jsx:99
 msgid "Outcomes"
 msgstr "Uscite"
 
-#: src/components/LoginForm.jsx:60
-#: src/components/LoginForm.jsx:65
+#: src/components/MovementsList.jsx:93
+msgid "Page size"
+msgstr "Dim. pagina"
+
+#: src/components/LoginForm.jsx:64
+#: src/components/LoginForm.jsx:69
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:26
+#: src/components/Home.jsx:43
 msgid "Past year"
 msgstr "Anno scorso"
 
-#: src/components/Header.jsx:43
+#: src/components/Header.jsx:44
 msgid "Profile"
 msgstr "Profilo"
 
-#: src/components/MovementForm.jsx:40
+#: src/components/MovementForm.jsx:43
 msgid "Save"
 msgstr "Salva"
 
-#: src/components/MovementForm.jsx:40
+#: src/components/MovementForm.jsx:43
 msgid "Save and add more"
 msgstr "Salva e continua"
 
-#: src/components/Home.jsx:84
+#: src/components/Home.jsx:101
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:222
+#: src/components/MovementsList.jsx:227
 msgid "Search movements"
 msgstr "Cerca movimenti"
 
@@ -191,30 +199,30 @@ msgstr "Cerca movimenti"
 msgid "seconds"
 msgstr "secondi"
 
-#: src/components/MovementsList.jsx:88
-msgid "Show"
-msgstr "Visualizzati"
-
 #: src/components/MovementsHistory.jsx:75
 msgid "Show assets"
 msgstr "Mostra saldo"
 
-#: src/components/MovementForm.jsx:184
-#: src/components/MovementsList.jsx:197
+#: src/components/MovementsList.jsx:235
+msgid "Showing"
+msgstr "Visualizzati"
+
+#: src/components/MovementForm.jsx:183
+#: src/components/MovementsList.jsx:202
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
 #. js-lingui-explicit-id
-#: src/components/LoginForm.jsx:69
+#: src/components/LoginForm.jsx:73
 msgid "login_form_submit"
 msgstr "Accedi"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:227
+#: src/components/Home.jsx:244
 msgid "date.to"
 msgstr "al"
 
-#: src/components/MovementStats.jsx:223
+#: src/components/MovementStats.jsx:215
 msgid "Totals"
 msgstr "Totali"
 
@@ -222,8 +230,8 @@ msgstr "Totali"
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
-#: src/components/LoginForm.jsx:49
-#: src/components/LoginForm.jsx:54
+#: src/components/LoginForm.jsx:53
+#: src/components/LoginForm.jsx:58
 msgid "Username"
 msgstr "Nome utente"
 

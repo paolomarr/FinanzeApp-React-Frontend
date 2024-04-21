@@ -164,8 +164,8 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
     };
     const movementsFilterFunction = (movement) => {
       // for now, skip balance movements
-      const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
-      if(movement.category == balanceCategory.id) return false;
+      // const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
+      // if(movement.category == balanceCategory.id) return false;
       if(!movementFilter || movementFilter.length === 0) return true;
       const cat_name = categories.find((cat) => cat.id === movement.category)?.category.toLocaleLowerCase() ?? "";
       const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory.toLocaleLowerCase() ?? "";
@@ -215,19 +215,24 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
         return mDate >= minFloored && mDate <= maxCeiled;
       });
     }
+    const nMovementsInDateRange = slicedMovements.length;
     slicedMovements = slicedMovements.filter(movementsFilterFunction).toSorted(compareMovements);
     
+    const paginationStartIdx = pagination.page * pagination.size;
+    const paginationEndIdx = paginationStartIdx + pagination.size;
     return (
       <>
         <Row className="align-items-end mt-4">
           <Col xs={12} md={6} className="position-relative">
-            { movementFilter.length>0 ? 
-              <div className="position-absolute small" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
-            }
             <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
           </Col>
           <Col xs={12} md={6}>
             <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
+          </Col>
+        </Row>
+        <Row className='filter-stats'>
+          <Col className='text-center small'>
+            <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}<Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}<Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
           </Col>
         </Row>
         <Table responsive="sm">
@@ -241,9 +246,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
               </tr>
             ) : (
               slicedMovements.map((movement, index) => {
-                const start = pagination.page * pagination.size;
-                const end = start + pagination.size;
-                if(index<start || index>=end){
+                if(index<paginationStartIdx || index>=paginationEndIdx){
                   return null;
                 }
                 return (

@@ -13,6 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/components/MovementsList.jsx:220
+#~ msgid "search.movements.found"
+#~ msgstr "found"
+
 #: src/components/MovementStats.jsx:120
 #: src/components/MovementStats.jsx:128
 #~ msgid "{title}"
@@ -22,12 +27,12 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
 
-#: src/components/MovementForm.jsx:142
-#: src/components/MovementsList.jsx:187
+#: src/components/MovementForm.jsx:141
+#: src/components/MovementsList.jsx:192
 msgid "Amount"
 msgstr "Amount"
 
-#: src/components/MovementForm.jsx:211
+#: src/components/MovementForm.jsx:210
 msgid "An error occurred while saving data."
 msgstr "An error occurred while saving data."
 
@@ -39,24 +44,24 @@ msgstr "An error occurred while saving data."
 #~ msgid "Are you sure?"
 #~ msgstr "Are you sure?"
 
-#: src/components/MovementForm.jsx:52
+#: src/components/MovementForm.jsx:55
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/MovementForm.jsx:168
-#: src/components/MovementsList.jsx:190
+#: src/components/MovementForm.jsx:167
+#: src/components/MovementsList.jsx:195
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementForm.jsx:22
+#: src/components/MovementForm.jsx:25
 msgid "Confirm"
 msgstr "Confirm"
 
-#: src/components/Home.jsx:22
+#: src/components/Home.jsx:39
 msgid "Current month"
 msgstr "Current month"
 
-#: src/components/MovementForm.jsx:206
+#: src/components/MovementForm.jsx:205
 msgid "Data has been saved"
 msgstr "Data has been saved"
 
@@ -64,8 +69,8 @@ msgstr "Data has been saved"
 #~ msgid "Data has been saved!"
 #~ msgstr "Data has been saved!"
 
-#: src/components/MovementForm.jsx:128
-#: src/components/MovementsList.jsx:181
+#: src/components/MovementForm.jsx:127
+#: src/components/MovementsList.jsx:186
 msgid "Date"
 msgstr "Date"
 
@@ -73,16 +78,16 @@ msgstr "Date"
 msgid "days"
 msgstr "days"
 
-#: src/components/MovementForm.jsx:19
+#: src/components/MovementForm.jsx:22
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/MovementForm.jsx:28
-#: src/components/MovementForm.jsx:207
+#: src/components/MovementForm.jsx:31
+#: src/components/MovementForm.jsx:206
 msgid "Deleted"
 msgstr "Deleted"
 
-#: src/components/MovementForm.jsx:25
+#: src/components/MovementForm.jsx:28
 msgid "Deleting"
 msgstr "Deleting"
 
@@ -90,32 +95,31 @@ msgstr "Deleting"
 #~ msgid "Deleting..."
 #~ msgstr "Deleting..."
 
-#: src/components/MovementForm.jsx:155
-#: src/components/MovementsList.jsx:186
+#: src/components/MovementForm.jsx:154
+#: src/components/MovementsList.jsx:191
 msgid "Description"
 msgstr "Description"
 
-#: src/components/MovementStats.jsx:97
-#: src/components/MovementStats.jsx:217
+#: src/components/MovementStats.jsx:99
+#: src/components/MovementStats.jsx:209
 msgid "Earnings"
 msgstr "Earnings"
 
-#: src/components/MovementStats.jsx:97
-#: src/components/MovementStats.jsx:220
+#: src/components/MovementStats.jsx:99
+#: src/components/MovementStats.jsx:212
 msgid "Expenses"
 msgstr "Expenses"
 
-#. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:220
-msgid "search.movements.found"
-msgstr "found"
+#: src/components/MovementsList.jsx:235
+msgid "filtered out of"
+msgstr "filtered out of"
 
-#: src/components/MovementsList.jsx:220
+#: src/components/MovementsList.jsx:228
 #~ msgid "found"
 #~ msgstr "found"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:226
+#: src/components/Home.jsx:243
 msgid "date.from"
 msgstr "From"
 
@@ -127,7 +131,7 @@ msgstr "From"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:83
+#: src/components/Home.jsx:100
 msgid "Incomes"
 msgstr "Incomes"
 
@@ -135,19 +139,19 @@ msgstr "Incomes"
 msgid "Insert new movement"
 msgstr "Insert new movement"
 
-#: src/components/Header.jsx:45
+#: src/components/Header.jsx:46
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:23
+#: src/components/Home.jsx:40
 msgid "Last 3 months"
 msgstr "Last 3 months"
 
-#: src/components/Home.jsx:24
+#: src/components/Home.jsx:41
 msgid "Last 6 months"
 msgstr "Last 6 months"
 
-#: src/components/Home.jsx:25
+#: src/components/Home.jsx:42
 msgid "Last year"
 msgstr "Last year"
 
@@ -171,52 +175,65 @@ msgstr "months"
 msgid "Movement list"
 msgstr "Movement list"
 
-#: src/components/Home.jsx:67
+#: src/components/Home.jsx:84
 msgid "movements in"
 msgstr "movements in"
 
-#: src/components/MovementForm.jsx:193
+#. js-lingui-explicit-id
+#: src/components/MovementsList.jsx:235
+msgid "movementsListFilterStats.of"
+msgstr "of"
+
+#: src/components/MovementsList.jsx:235
+#~ msgid "of"
+#~ msgstr "of"
+
+#: src/components/MovementForm.jsx:192
 msgid "optional"
 msgstr "optional"
 
-#: src/components/MovementStats.jsx:38
+#: src/components/MovementStats.jsx:40
 msgid "Other in."
 msgstr "Other in."
 
-#: src/components/MovementStats.jsx:39
+#: src/components/MovementStats.jsx:41
 msgid "Other out."
 msgstr "Other out."
 
-#: src/components/Home.jsx:82
+#: src/components/Home.jsx:99
 msgid "Outcomes"
 msgstr "Outcomes"
 
-#: src/components/LoginForm.jsx:60
-#: src/components/LoginForm.jsx:65
+#: src/components/MovementsList.jsx:93
+msgid "Page size"
+msgstr "Page size"
+
+#: src/components/LoginForm.jsx:64
+#: src/components/LoginForm.jsx:69
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:26
+#: src/components/Home.jsx:43
 msgid "Past year"
 msgstr "Past year"
 
-#: src/components/Header.jsx:43
+#: src/components/Header.jsx:44
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/MovementForm.jsx:40
+#: src/components/MovementForm.jsx:43
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MovementForm.jsx:40
+#: src/components/MovementForm.jsx:43
 msgid "Save and add more"
 msgstr "Save and add more"
 
-#: src/components/Home.jsx:84
+#: src/components/Home.jsx:101
 msgid "Saving rate"
 msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:222
+#: src/components/MovementsList.jsx:227
 msgid "Search movements"
 msgstr "Search movements"
 
@@ -238,20 +255,24 @@ msgstr "seconds"
 #~ msgstr "Select subcategory"
 
 #: src/components/MovementsList.jsx:88
-msgid "Show"
-msgstr "Show"
+#~ msgid "Show"
+#~ msgstr "Show"
 
 #: src/components/MovementsHistory.jsx:75
 msgid "Show assets"
 msgstr "Show assets"
 
-#: src/components/MovementForm.jsx:184
-#: src/components/MovementsList.jsx:197
+#: src/components/MovementsList.jsx:235
+msgid "Showing"
+msgstr "Showing"
+
+#: src/components/MovementForm.jsx:183
+#: src/components/MovementsList.jsx:202
 msgid "Subcategory"
 msgstr "Subcategory"
 
 #. js-lingui-explicit-id
-#: src/components/LoginForm.jsx:69
+#: src/components/LoginForm.jsx:73
 msgid "login_form_submit"
 msgstr "Submit"
 
@@ -260,7 +281,7 @@ msgstr "Submit"
 #~ msgstr "Submit"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:227
+#: src/components/Home.jsx:244
 msgid "date.to"
 msgstr "to"
 
@@ -268,7 +289,7 @@ msgstr "to"
 #~ msgid "to"
 #~ msgstr "to"
 
-#: src/components/MovementStats.jsx:223
+#: src/components/MovementStats.jsx:215
 msgid "Totals"
 msgstr "Totals"
 
@@ -276,8 +297,8 @@ msgstr "Totals"
 msgid "Update movement data"
 msgstr "Update movement data"
 
-#: src/components/LoginForm.jsx:49
-#: src/components/LoginForm.jsx:54
+#: src/components/LoginForm.jsx:53
+#: src/components/LoginForm.jsx:58
 msgid "Username"
 msgstr "Username"
 
