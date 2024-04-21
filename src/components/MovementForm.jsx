@@ -86,18 +86,14 @@ const MovementForm = ({movement, onDataReady, errors}) => {
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
     const subcategories = subcatresults?.data ?? [];
-    let showSuccess = false;
-    let showFail = false;
+    const [showSuccess, setShowSuccess] = useState(errors ? Object.keys(errors).length==0 : false);
+    const [showFail, setShowFail] = useState(errors ? Object.keys(errors).length>0 : false);
     const [newmovement, setNewmovement] = useState(movement ?? {
       date: new Date(),
       abs_amount: 0,
       description: "",
       category: -1,
     });
-    if(errors){
-      showSuccess = Object.keys(errors).length==0;
-      showFail = Object.keys(errors).length>0;
-    }
     
     const [deleteConfirmState, setDeleteConfirmState] = useState(0);
     const updateNewMovement = (update) => {
@@ -200,17 +196,17 @@ const MovementForm = ({movement, onDataReady, errors}) => {
           </Form.Select>
           <Feedback type='invalid'>{errors?.subcategory?? ""}</Feedback>
         </Form.Group>
-        <div className="justify-content-center d-flex">
+        <div className="justify-content-center d-flex mt-2">
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>
       </Form>
-      <Alert color="info" isOpen={showSuccess} toggle={() => showSuccess = !showSuccess}>
+      <Alert variant="info" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>
         { deleteConfirmState < DeleteState.deleting ?
           <Trans>Data has been saved</Trans> :
           <Trans>Deleted</Trans>
         }{"."}
       </Alert>
-      <Alert color="danger" isOpen={showFail} toggle={() => showFail = !showFail}>
+      <Alert variant="danger" show={showFail} onClose={() => setShowFail(false)} dismissible>
         <Trans>An error occurred while saving data.</Trans>
       </Alert>
       </>

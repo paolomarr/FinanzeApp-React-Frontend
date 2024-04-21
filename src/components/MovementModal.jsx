@@ -14,7 +14,7 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title }) => {
   }
   return (
     <Modal show={show} onHide={innerToggle}>
-      <Modal.Header onHide={innerToggle}><Modal.Title>{title}</Modal.Title></Modal.Header>
+      <Modal.Header closeButton><Modal.Title>{title}</Modal.Title></Modal.Header>
       <Modal.Body>
         <MovementForm movement={movement} cancel={innerToggle} onDataReady={onDataReady} errors={errors}/>
       </Modal.Body>
