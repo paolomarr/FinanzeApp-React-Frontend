@@ -222,7 +222,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
         <Row className="align-items-end mt-4">
           <Col xs={12} md={6} className="position-relative">
             { movementFilter.length>0 ? 
-              <div className="position-absolute" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
+              <div className="position-absolute small" style={{top: "0.4rem", right: "5%", color: "#666"}}>{slicedMovements.length}{' '}<Trans>found</Trans></div> : null
             }
             <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
           </Col>
