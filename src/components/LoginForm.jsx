@@ -48,29 +48,29 @@ const LoginForm = ({logout}) => {
       <Row className="justify-content-center">
         <Col className="col-md-6 col-lg-4">
           <Form onSubmit={(event) => handleSubmit(event)}>
-            <Form.Group>
-              <Form.Label for="username" hidden>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="username" hidden>
                 <Trans>Username</Trans>
               </Form.Label>
-              <Form.Text
+              <Form.Control
                 id="username"
                 name="username"
                 placeholder={_(msg`Username`)}
                 type="username"
               />
             </Form.Group>
-            <Form.Group>
-              <Form.Label for="password" hidden>
+            <Form.Group className="mb-3">
+              <Form.Label htmlFor="password" hidden>
                 <Trans>Password</Trans>
               </Form.Label>
-              <Form.Text
+              <Form.Control
                 id="password"
                 name="password"
                 placeholder={_(msg`Password`)}
                 type="password"
               />
             </Form.Group>
-            <Button><Trans id="login_form_submit">Submit</Trans></Button>
+            <Button type="submit"><Trans id="login_form_submit">Submit</Trans></Button>
           </Form>
         </Col>
       </Row>
