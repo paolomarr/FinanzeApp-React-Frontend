@@ -2,7 +2,6 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from 'rec
 import Form from 'react-bootstrap/Form';
 import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
-import { colors } from '../constants';
 import { useState } from 'react';
 import { t } from '@lingui/macro';
 
@@ -80,9 +79,9 @@ const MovementsHistory = ({data, slice, categories}) => {
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={chartData}>
-                    <Line type="stepAfter" dataKey="cumulative" stroke={colors.primary} dot={false} />
+                    <Line type="stepAfter" dataKey="cumulative" className='history-movements-chartline' dot={false} />
                     { showAssets?
-                        <Line type="stepBefore" dataKey="balance" stroke={colors.secondary} dot={false} />
+                        <Line type="stepBefore" dataKey="balance" className='history-assets-chartline' dot={false} />
                         : null
                     }
                     <XAxis 
@@ -96,7 +95,7 @@ const MovementsHistory = ({data, slice, categories}) => {
                     <Tooltip 
                         active={true} 
                         formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
-                        LabelStyle={{color: colors.primary}}
+                        // LabelStyle={{color: colors.primary}}
                         labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
                 </LineChart>
             </ResponsiveContainer>

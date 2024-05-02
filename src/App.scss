@@ -42,3 +42,23 @@
 // 8. Add additional custom code here
 // styles specific to the app
 @import './scss/components';
+
+// additional colors
+
+
+.recharts-line.history-movements-chartline path {
+    stroke: $primary;
+}
+.recharts-line.history-assets-chartline path {
+    stroke: $secondary;
+}
+
+.stats-bar-earnings {
+    fill: $primary;
+}
+.stats-bar-expenses {
+    fill: $pink-600;
+}
+.stats-bar-totals {
+    fill: $secondary;
+}

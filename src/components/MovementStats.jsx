@@ -4,7 +4,7 @@ import Col from 'react-bootstrap/Col';
 
 import { useMediaQuery } from 'react-responsive'
 import { t } from "@lingui/macro";
-import { colors } from '../constants';
+// import { colors } from '../constants';
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
@@ -98,10 +98,10 @@ const MovementsStats = ({data, slice, categories}) => {
     }
     totalsData = [{direction: 1, category: t`Earnings`, sum: incomes}, {direction: -1, category: t`Expenses`, sum: outcomes}];
 
-    const chart_colors = {
-      "1": colors.primary,
-      "-1": colors.error,
-    }
+    // const chart_colors = {
+    //   "1": colors.primary,
+    //   "-1": colors.error,
+    // }
     const isLargeScreen = useMediaQuery({minWidth: 960 });
 
     const CustomBarShape = (props) => {
@@ -135,7 +135,7 @@ const MovementsStats = ({data, slice, categories}) => {
       }
     }
     
-    const ResponsiveBarChart = ({data, dataKey, title, label}) => {
+    const ResponsiveBarChart = ({data, dataKey, title, label, barClass}) => {
       const defaultLabel = {value:"%", position:"insideTopLeft", offset: 10};
       if(label) {
         label = {...defaultLabel, ...label};
@@ -161,7 +161,8 @@ const MovementsStats = ({data, slice, categories}) => {
                   >
                   {
                     data.map((item, index) => (
-                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
+                      // <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
+                      <Cell key={`bar_${index}`} />
                     ))
                   }
                   <LabelList dataKey="category" content={(props)=>renderCustomisedLabel({...props, chartHeight: 400})} />
@@ -184,10 +185,13 @@ const MovementsStats = ({data, slice, categories}) => {
                 <XAxis type='number' label={label} axisLine={false} />
                 <YAxis type='category' dataKey="category" tick={false} hide={true} />
                 <Tooltip content={<CustomTooltip />}/>
-                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} />} activeBar={false} >
+                <Bar dataKey={dataKey} shape={<CustomBarShape barSize={barSize} />} activeBar={false} 
+                  className={barClass?? null}
+                >
                   {
                     data.map((item, index) => (
-                      <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
+                      // <Cell key={`bar_${index}`} fill={item.direction === 1 ? chart_colors["1"]: chart_colors["-1"]} />
+                      <Cell key={`bar_${index}`} className={item.direction === 1 ? "stats-bar-earnings" : "stats-bar-expenses"} />
                     ))
                   }
                   <LabelList dataKey="category" content={ (props)=> renderCustomisedLabel({...props, barSize:barSize}) } />
@@ -206,13 +210,13 @@ const MovementsStats = ({data, slice, categories}) => {
     return (
       <Row className='mb-2'>
         <Col xs="12" lg={earningsChartWidth}>
-          <ResponsiveBarChart title={t`Earnings`} data={earningData.earnings}  dataKey={(item)=> 100*item.percent}/>
+          <ResponsiveBarChart barClass="stats-bar-earnings" title={t`Earnings`} data={earningData.earnings}  dataKey={(item)=> 100*item.percent}/>
         </Col>
         <Col xs="12" lg={expensedChartWidth}>
-          <ResponsiveBarChart title={t`Expenses`} data={expensesData.expenses} dataKey={(item)=> 100*item.percent}/>
+          <ResponsiveBarChart barClass="stats-bar-expenses" title={t`Expenses`} data={expensesData.expenses} dataKey={(item)=> 100*item.percent}/>
         </Col>
         <Col xs="12" lg="2">
-          <ResponsiveBarChart title={t`Totals`} label={{value: "€"}} data={totalsData} dataKey={"sum"}/>
+          <ResponsiveBarChart barClass="stats-bar-totals" title={t`Totals`} label={{value: "€"}} data={totalsData} dataKey={"sum"}/>
         </Col>
       </Row>
     )
