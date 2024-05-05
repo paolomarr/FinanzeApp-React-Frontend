@@ -86,8 +86,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
     const categories = catresults?.data ?? [];
     const subcatresults = useQuery(["subcategories"], fetchCategories);
     const subcategories = subcatresults?.data ?? [];
-    const [showSuccess, setShowSuccess] = useState(errors ? Object.keys(errors).length==0 : false);
-    const [showFail, setShowFail] = useState(errors ? Object.keys(errors).length>0 : false);
+    const [showSuccess, setShowSuccess] = useState(true);
+    const [showFail, setShowFail] = useState(true);
     const [newmovement, setNewmovement] = useState(movement ?? {
       date: new Date(),
       abs_amount: 0,
@@ -100,6 +100,16 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       if(update.subcategory <0)  delete update.subcategory;
       setNewmovement({...newmovement, ...update});
     }
+    const cleanUpForm = () => {
+      setShowSuccess(true);
+      setShowFail(true);
+      setNewmovement({
+       date: new Date(),
+        abs_amount: 0,
+        description: "",
+        category: -1,
+      });
+    }
     const submitDelete = (stepUp) => {
       if(!stepUp){
         setDeleteConfirmState(DeleteState.start);
@@ -111,10 +121,23 @@ const MovementForm = ({movement, onDataReady, errors}) => {
       }
       setDeleteConfirmState(DeleteState.deleting);
       onDataReady(newmovement, true);
+      cleanUpForm();
     }
     const submitForm = (close) => {
       onDataReady(newmovement, false, !close);
+      cleanUpForm();
     };
+
+    let errors_success = false;
+    let errors_fail = false;
+    if(errors){
+      const any_error = Object.keys(errors).length > 0;
+      if(any_error){
+        errors_fail = true
+      }else{
+        errors_success = true;
+      }
+    }
 
     return (
       <>
@@ -200,15 +223,19 @@ const MovementForm = ({movement, onDataReady, errors}) => {
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>
       </Form>
-      <Alert variant="info" show={showSuccess} onClose={() => setShowSuccess(false)} dismissible>
-        { deleteConfirmState < DeleteState.deleting ?
-          <Trans>Data has been saved</Trans> :
-          <Trans>Deleted</Trans>
-        }{"."}
-      </Alert>
-      <Alert variant="danger" show={showFail} onClose={() => setShowFail(false)} dismissible>
-        <Trans>An error occurred while saving data.</Trans>
-      </Alert>
+      { errors_success && showSuccess ? 
+        <Alert variant="info" onClose={() => setShowSuccess(false)} dismissible>
+          { deleteConfirmState < DeleteState.deleting ?
+            <Trans>Data has been saved</Trans> :
+            <Trans>Deleted</Trans>
+          }{"."}
+        </Alert> : null 
+      }
+      { errors_fail && showFail ?
+        <Alert variant="danger" onClose={() => setShowFail(false)} dismissible>
+          <Trans>An error occurred while saving data.</Trans>
+        </Alert> : null
+      }
       </>
     );
 };

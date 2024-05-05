@@ -5,7 +5,8 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from "../queries/mutateMovement";
 import { Navigate, useNavigate } from "react-router-dom";
-import { t } from "@lingui/macro"
+import { msg, t } from "@lingui/macro"
+import { Trans } from "@lingui/react";
 import TimeSpanSlider from "./TimeSpanSlider";
 import { interval, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
 import { intervalToDuration} from "date-fns";
@@ -36,11 +37,11 @@ const CustomToggle = forwardRef(function CustomToggle({ children, onClick }, ref
   )
 });
 const CustomRanges = {
-  currentMonth: {range: {min: startOfMonth(new Date()), max: new Date()}, name: t`Current month`},
-  last3: {range: {min: sub(new Date(), {months:3}), max: new Date()}, name: t`Last 3 months`},
-  last6: {range: {min: sub(new Date(), {months:6}), max: new Date()}, name: t`Last 6 months`},
-  last12: {range: {min: sub(new Date(), {months:12}), max: new Date()}, name: t`Last year`},
-  pastYear: {range: {min: startOfYear(sub(new Date(), {years:1})), max: endOfYear(sub(new Date(), {years:1}))}, name: t`Past year`},
+  currentMonth: {range: {min: startOfMonth(new Date()), max: new Date()}, name: msg`Current month`},
+  last3: {range: {min: sub(new Date(), {months:3}), max: new Date()}, name: msg`Last 3 months`},
+  last6: {range: {min: sub(new Date(), {months:6}), max: new Date()}, name: msg`Last 6 months`},
+  last12: {range: {min: sub(new Date(), {months:12}), max: new Date()}, name: msg`Last year`},
+  pastYear: {range: {min: startOfYear(sub(new Date(), {years:1})), max: endOfYear(sub(new Date(), {years:1}))}, name: msg`Past year`},
 };
 const MovementSummary = ({data, slice, onSetRange}) => {
   const {i18n} = useLingui();
@@ -89,7 +90,7 @@ const MovementSummary = ({data, slice, onSetRange}) => {
             <Dropdown.Menu>
               { Object.keys(CustomRanges).map((rangeKey)=> {
                 const range = CustomRanges[rangeKey];
-                return <Dropdown.Item key={rangeKey} onClick={() => onSetRange(range.range)}>{range.name}</Dropdown.Item>
+                return <Dropdown.Item key={rangeKey} onClick={() => onSetRange(range.range)}><Trans id={range.name.id} /></Dropdown.Item>
                 })
               }
             </Dropdown.Menu>
@@ -158,7 +159,7 @@ const Home = () => {
       return {...data, movements: ascMovements};
     };
     const movementResults = useQuery({
-      queryKey: ["movements", "all"],
+      queryKey: ["movements", {all: true}],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
         if(error.message === "forbidden"){
@@ -181,7 +182,7 @@ const Home = () => {
         // remove movement from showModal object
         setShowModal({...showModal, show: _continue, movement: null, errors: {}})
         // update data
-        queryclient.setQueryData(["movements", "all"], (oldData) => {
+        queryclient.setQueryData(["movements", {all: true}], (oldData) => {
           if(_delete){ // it's been a DELETE
             const index = oldData.movements.findIndex((omovement)=> omovement.id === movement.id);
             if(index>=0){
