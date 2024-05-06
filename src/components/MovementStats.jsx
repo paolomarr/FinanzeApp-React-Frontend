@@ -120,11 +120,16 @@ const MovementsStats = ({data, slice, categories}) => {
       return <Rectangle x={x+theOffsetX} y={y+theOffsetY} width={theWidth} height={theHeight} fill={fill} radius={radius}></Rectangle>
     };
     const renderCustomisedLabel = (props) => {
-      const { x, y, value, width, height, chartHeight, barSize } = props;
+      const { x, y, value, height, chartHeight, barSize } = props;
       if(isLargeScreen){
+        let trimmedtext = value;
+        if(value.length>10){
+          trimmedtext = value.slice(0, value.search(/[^a-zA-Z0-9]/))
+        }
         return (
-          <text textAnchor="start" alignmentBaseline="middle" transform={`translate(${x+width/2}, ${chartHeight-40}) rotate(270)`}>{value}</text>
-          // <text x={x} y={y+height} fill={"#666"}>{value}</text>
+          // <text textAnchor="start" alignmentBaseline="middle" transform={`translate(${x+width/2}, ${chartHeight-40}) rotate(270)`}>{trimmedtext}</text>
+          <text textAnchor="start" fill={"#666"} alignmentBaseline="middle" transform={`translate(${x}, ${chartHeight-height-40})`}>{trimmedtext}</text>
+          // <text x={x} y={y+height} fill={"#666"}>{trimmedtext}</text>
         )
       }else{
         return (
@@ -157,6 +162,7 @@ const MovementsStats = ({data, slice, categories}) => {
                   />
                 <Tooltip content={<CustomTooltip />}/>
                 <Bar dataKey={dataKey} 
+                  className={barClass?? null}
                   // shape={<CustomBarShape barSize={barSize}/>}
                   >
                   {

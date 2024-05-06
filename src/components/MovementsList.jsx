@@ -48,12 +48,13 @@ const MovementsListItem = ({movement, fields, edit}) => {
           </td>
         {fields.map((field) => {
           const key = `${field.column}_${movement.id}`;
+          const extra_class = field.className ?? "";
           if (field.format !== undefined) {
             const val = field.format(movement[field.column]);
-            return <td key={key}>{val??""}</td>;
+            return <td key={key} className={extra_class}>{val??""}</td>;
           } else {
             const val = movement[field.column];
-            return <td key={key}>{val??""}</td>;
+            return <td key={key} className={extra_class}>{val??""}</td>;
           }
         })}
       </tr>
@@ -189,7 +190,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
         },
       },
       { column: "description", name: t`Description` },
-      { column: "amount", name: t`Amount`, format: (val) => val.toFixed(2) + "€" },
+      { column: "amount", name: t`Amount`, format: (val) => val.toFixed(2) + "€", className: "text-end" },
       {
         column: "category",
         name: t`Category`,
