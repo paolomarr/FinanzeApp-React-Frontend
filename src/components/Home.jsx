@@ -13,12 +13,13 @@ import { intervalToDuration} from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner, faBolt } from "@fortawesome/free-solid-svg-icons";
+import { faBolt } from "@fortawesome/free-solid-svg-icons";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import Dropdown from 'react-bootstrap/Dropdown';
 import MovementsStats from "./MovementStats";
 import {forwardRef} from "react";
+import LoadingDiv from "./LoadingDiv";
 
 // The forwardRef is important!!
 // Dropdown needs access to the DOM node in order to position the Menu
@@ -209,11 +210,7 @@ const Home = () => {
     });
     
     if (movementResults.isLoading) {
-      return (
-        <div className="loading-pane justify-content-center text-center">
-          <FontAwesomeIcon icon={faSpinner} spinPulse size="2xl"/>
-        </div>
-      );
+      return <LoadingDiv />
     }
     if (movementResults.isError) {
         switch (movementResults.error.message) {

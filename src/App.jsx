@@ -5,12 +5,14 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./components/Home";
 import LoginForm from "./components/LoginForm";
+import AssetsManager from "./components/Assets.jsx";
 import { t } from "@lingui/macro";
 import UserContext from './contexts/UserContext.jsx';
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const getRouteMap = () => [
   { path: "/", title: t`Movement list`, element: <Home /> },
+  { path: "/assets", title: t`Movement list`, element: <AssetsManager /> },
   { path: "/login", title: t`Login`, element: <LoginForm /> },
   { path: "/logout", title: t`Logout`, element: <LoginForm logout={true}/> },
 ];
@@ -35,7 +37,7 @@ function App() {
     <UserContext.Provider value={loggedUser}>
       <QueryClientProvider client={queryClient}>
         <Header title={pageTitle.current} onLogout={() => navigate("/logout")}/>
-        <Container >
+        <Container fluid="sm">
           <Routes>
             {getRouteMap().map((route, key) => {
               return <Route key={key} path={route.path} element={route.element} />
