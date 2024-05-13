@@ -1,4 +1,4 @@
-import { sub } from "date-fns";
+// import { sub } from "date-fns";
 import {format} from '../_lib/format_locale';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Accordion from 'react-bootstrap/Accordion';
@@ -18,18 +18,20 @@ import Col from "react-bootstrap/Col";
 import CloseButton from "react-bootstrap/CloseButton";
 import Card from "react-bootstrap/Card";
 import Feedback from "react-bootstrap/Feedback";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 
-const samples = [
-    {date: sub(new Date(), {days: 2}), abs_amount: 100, description: "sample_0_a"},
-    {date: sub(new Date(), {days: 2}), abs_amount: 1000, description: "sample_0_b very very very long description that possibly spans more than one single line"},
-    {date: sub(new Date(), {days: 2}), abs_amount: 500, description: "sample_0_c"},
-    {date: sub(new Date(), {days: 22}), abs_amount: 140, description: "sample_1_a"},
-    {date: sub(new Date(), {days: 22}), abs_amount: 1400, description: "sample_1_b"},
-    {date: sub(new Date(), {days: 22}), abs_amount: 540, description: "sample_1_c"},
-    {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_a"},
-    {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 3000, description: "sample_2_b"},
-    {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_c"},
-];
+// const samples = [
+//     {date: sub(new Date(), {days: 2}), abs_amount: 100, description: "sample_0_a"},
+//     {date: sub(new Date(), {days: 2}), abs_amount: 1000, description: "sample_0_b very very very long description that possibly spans more than one single line"},
+//     {date: sub(new Date(), {days: 2}), abs_amount: 500, description: "sample_0_c"},
+//     {date: sub(new Date(), {days: 22}), abs_amount: 140, description: "sample_1_a"},
+//     {date: sub(new Date(), {days: 22}), abs_amount: 1400, description: "sample_1_b"},
+//     {date: sub(new Date(), {days: 22}), abs_amount: 540, description: "sample_1_c"},
+//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_a"},
+//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 3000, description: "sample_2_b"},
+//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_c"},
+// ];
 const groupByDate = (movements) => {
     let grouped = {};
     for (const movement of movements) {
@@ -46,7 +48,7 @@ const groupByDate = (movements) => {
     })
     return output;
 }
-const AssetsHistoryList = ({assets}) => {
+const AssetsHistoryList = ({assets, copyItems}) => {
     const {i18n} = useLingui();
     const grouped = groupByDate(assets);
     
@@ -57,35 +59,34 @@ const AssetsHistoryList = ({assets}) => {
             <Accordion.Item eventKey={`dategroup_${groupidx}`} key={`dategroup_${groupidx}`}>
                 <Accordion.Header>
                     <div className="flex-grow-1">{format(new Date(dategroup.date), i18n)}</div>
-                    <div className="px-2">{totalEntries}{"€"}</div>
-                    {/* <Stack direction="horizontal" gap={3}>
-                        <div className="me-auto">{format(new Date(dategroup.date), i18n)}</div>
-                        <div className="ms-auto">{totalEntries}{"€"}</div>
-                    </Stack> */}
+                    <div className="px-2">{parseFloat(totalEntries).toFixed(2)}{"€"}</div>
                 </Accordion.Header>
                 <Accordion.Body>
                     {dategroup.entries.map((asset, assetidx)=>{
                         return (
                             <div key={`asset_${assetidx}`} className="d-flex w-100 justify-content-between">
                                 <div className="mb-1 pe-2 lh-sm">{asset.description}</div>
-                                <small>{asset.abs_amount}{'€'}</small>
+                                <small>{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
                             </div>
                             )
                     })}
+                    {/* <div className="link-opacity-75 link-primary text-center text-decoration-underline"><Trans>Copy items</Trans></div> */}
+                    <div className="text-center"><Button variant='link' onClick={copyItems?()=>copyItems(dategroup.entries):null}><Trans>Copy items</Trans></Button></div>
                 </Accordion.Body>
             </Accordion.Item>
             )
         })}
     </Accordion>
 };
-const AssetsInsertionForm = ({balanceCategory, onAdd}) => {
+const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
     const initialMovement = {
       date: new Date(),
       abs_amount: 0,
       description: "",
       category: balanceCategory.id,
     };
-    const [newmovement, setNewmovement] = useState(initialMovement);
+    if(!initial) initial = initialMovement;
+    const [newmovement, setNewmovement] = useState(initial);
     const [errors, setErrors] = useState(null);
     const addMovement = () => {
         let localerrors = {};
@@ -103,8 +104,14 @@ const AssetsInsertionForm = ({balanceCategory, onAdd}) => {
             setNewmovement(initialMovement);
         }
     };
+    // const updateNewMovement = (update) => {
+    //   setNewmovement({...newmovement, ...update});
+    // }
+    if(initial && initial.id !== newmovement.id){
+        setNewmovement(initial);
+    }
     
-    return <Form>
+    return <Form id='assetInsertForm'>
         <Form.Group className="mb-3">
           <Form.Label htmlFor="date">
             {t`Date`}
@@ -145,12 +152,12 @@ const AssetsInsertionForm = ({balanceCategory, onAdd}) => {
             />
             <Feedback type='invalid'>{errors?.description?? ""}</Feedback>
         </Form.Group>
-        <Button variant="primary" type="button" onClick={()=>addMovement()}>
+        <Button variant="secondary" type="button" onClick={()=>addMovement()}>
             <Trans>Add</Trans>
         </Button>
     </Form>
 };
-const AssetsStagingList = ({list: assets, itemRemover}) => {
+const AssetsStagingList = ({list: assets, itemRemover, itemEditor}) => {
     if(!assets || assets.length === 0){
         return <div className="text-secondary"><Trans>Add your balances using the form above</Trans></div>
     }
@@ -161,16 +168,22 @@ const AssetsStagingList = ({list: assets, itemRemover}) => {
             <ListGroup.Item key={`asset_${assetidx}`}>
                 <div className="d-flex w-100">
                     <div className="mb-1 pe-2 lh-sm me-auto">{asset.description}</div>
-                    <small className="px-2">{asset.abs_amount}{'€'}</small>
+                    <small className="px-2">{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
+                    <div className='px-2'>
+                        <FontAwesomeIcon icon={faPenToSquare} className='opacity-75' onClick={()=>{ asset.date = new Date(asset.date); itemEditor(asset); itemRemover(assetidx); }}/>
+                    </div>
                     <CloseButton onClick={()=>itemRemover(assetidx)}/>
                 </div>
             </ListGroup.Item>
             )
         })}
         <ListGroup.Item key="assets_total">
-            <div className="d-flex w-100">
+            <div className="d-flex w-100 fw-bold">
                 <div className="mb-1 pe-2 lh-sm me-auto"><Trans>TOTAL</Trans></div>
-                <small className="px-2">{total}{'€'}</small>
+                <small className="px-2">{parseFloat(total).toFixed(2)}{'€'}</small>
+                 <div className='px-2'>
+                        <FontAwesomeIcon icon={faPenToSquare} className='invisible'/>
+                    </div>
                 <CloseButton className="invisible"/>
             </div>
         </ListGroup.Item>
@@ -179,10 +192,23 @@ const AssetsStagingList = ({list: assets, itemRemover}) => {
 const AssetsManager = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
-    const {data: catData, status} = useQuery({
+    const {data: catData, status: catStatus} = useQuery({
       queryKey: ["categories"],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
+        if(error.message === "forbidden"){
+          queryclient.cancelQueries();
+          navigate("/login");
+          return false
+        } else{ 
+          return failureCount-1
+        }
+      }, 
+    });
+    const {data: balanceData, status: balanceStatus} = useQuery({
+        queryKey: ["balances"],
+        queryFn: fetchMovements,
+        retry: (failureCount, error) => {
         if(error.message === "forbidden"){
           queryclient.cancelQueries();
           navigate("/login");
@@ -196,11 +222,12 @@ const AssetsManager = () => {
     const addToStagingList = (movement) => {
         setStagingList([...stagingList, movement]);
     }
+    const [editStagingItem, setEditStagingItem] = useState(null);
 
-    if(status === "loading"){
+    if(catStatus === "loading" || balanceStatus === "loading"){
         return <LoadingDiv />
     }
-    if(status === "error"){
+    if(catStatus === "error" || balanceStatus === "error"){
         return <div>Error</div>
     }
     const balanceCategory = catData.find((category)=> category.category === "BALANCE" && category.direction == 0.0);
@@ -208,7 +235,13 @@ const AssetsManager = () => {
         <div className="my-2">
             <Row className="justify-content-center" md={2}>
                 <Col>
-                    <AssetsInsertionForm balanceCategory={balanceCategory} onAdd={(movement)=> addToStagingList(movement)}></AssetsInsertionForm>
+                    <Card className="shadow-lg" bg="primary">
+                        <Card.Body>
+                            <Card.Text>
+                                <AssetsInsertionForm balanceCategory={balanceCategory} onAdd={(movement)=> { addToStagingList(movement); setEditStagingItem(null)} } initial={editStagingItem}></AssetsInsertionForm>
+                            </Card.Text>
+                        </Card.Body>
+                    </Card>
                 </Col>
             </Row>
         </div>
@@ -219,7 +252,7 @@ const AssetsManager = () => {
                             <Card.Body>
                                 <Card.Title><Trans>Assets to be recorded</Trans></Card.Title>
                                 <Card.Text>
-                                    <AssetsStagingList list={stagingList} itemRemover={(listidx)=> setStagingList(stagingList.toSpliced(listidx,1))}/>
+                                    <AssetsStagingList list={stagingList} itemRemover={(listidx)=> setStagingList(stagingList.toSpliced(listidx,1))} itemEditor={(asset)=> setEditStagingItem(asset)}/>
                                 </Card.Text>
                                 <Button className="mt-2"><Trans>Save</Trans></Button>
                             </Card.Body>
@@ -234,7 +267,7 @@ const AssetsManager = () => {
                         <Card.Body>
                             <Card.Title><Trans>Balance record history</Trans></Card.Title>
                             <Card.Text>
-                                <AssetsHistoryList assets={samples} />
+                                <AssetsHistoryList assets={balanceData} copyItems={(dateGroup_items)=>setStagingList(dateGroup_items)}/>
                             </Card.Text>
                         </Card.Body>
                     </Card>
