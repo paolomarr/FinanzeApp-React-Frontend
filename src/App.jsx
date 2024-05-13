@@ -11,8 +11,8 @@ import UserContext from './contexts/UserContext.jsx';
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 const getRouteMap = () => [
-  { path: "/", title: t`Movement list`, element: <Home /> },
-  { path: "/assets", title: t`Movement list`, element: <AssetsManager /> },
+  { path: "/", title: t`Movements overview`, element: <Home /> },
+  { path: "/assets", title: t`Balance records`, element: <AssetsManager /> },
   { path: "/login", title: t`Login`, element: <LoginForm /> },
   { path: "/logout", title: t`Logout`, element: <LoginForm logout={true}/> },
 ];

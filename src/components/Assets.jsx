@@ -5,8 +5,9 @@ import Accordion from 'react-bootstrap/Accordion';
 import Form from "react-bootstrap/Form";
 import { useLingui } from "@lingui/react";
 import { format_ISO_date } from "../_lib/format_locale";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
+import mutateMovement from '../queries/mutateMovement';
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
@@ -32,6 +33,11 @@ import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 //     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 3000, description: "sample_2_b"},
 //     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_c"},
 // ];
+const UploadState = {
+    idle: 0,
+    uploading: 1,
+    done: 2
+};
 const groupByDate = (movements) => {
     let grouped = {};
     for (const movement of movements) {
@@ -157,37 +163,38 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
         </Button>
     </Form>
 };
-const AssetsStagingList = ({list: assets, itemRemover, itemEditor}) => {
+const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) => {
     if(!assets || assets.length === 0){
-        return <div className="text-secondary"><Trans>Add your balances using the form above</Trans></div>
+        return <div className="text-secondary my-2"><Trans>Add your balances using the form above or by copying one group of entries from the list below</Trans></div>
     }
     const total = assets.reduce((sum, item)=>sum+=parseFloat(item.abs_amount),0);
+    const baseButtonsClass = uploading !== UploadState.idle ? "disabled" : "";
     return <ListGroup variant="flush">
-        {assets?.map((asset, assetidx) => {
-            return (
-            <ListGroup.Item key={`asset_${assetidx}`}>
-                <div className="d-flex w-100">
-                    <div className="mb-1 pe-2 lh-sm me-auto">{asset.description}</div>
-                    <small className="px-2">{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
-                    <div className='px-2'>
-                        <FontAwesomeIcon icon={faPenToSquare} className='opacity-75' onClick={()=>{ asset.date = new Date(asset.date); itemEditor(asset); itemRemover(assetidx); }}/>
+            {assets?.map((asset, assetidx) => {
+                return (
+                <ListGroup.Item key={`asset_${assetidx}`} className={asset.error ? "bg-danger-subtle" : ""}>
+                    <div className={"d-flex w-100" + (asset.success ? " opacity-25" : "")}>
+                        <div className="mb-1 pe-2 lh-sm me-auto">{asset.description}</div>
+                        <small className="px-2">{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
+                        <div className='px-2'>
+                            <FontAwesomeIcon icon={faPenToSquare} className={baseButtonsClass + " opacity-75"} onClick={()=>{ asset.date = new Date(asset.date); itemEditor(asset); itemRemover(assetidx); }}/>
+                        </div>
+                        <CloseButton className={baseButtonsClass} onClick={()=>itemRemover(assetidx)}/>
                     </div>
-                    <CloseButton onClick={()=>itemRemover(assetidx)}/>
+                </ListGroup.Item>
+                )
+            })}
+            <ListGroup.Item key="assets_total">
+                <div className="d-flex w-100 fw-bold">
+                    <div className="mb-1 pe-2 lh-sm me-auto"><Trans>TOTAL</Trans></div>
+                    <small className="px-2">{parseFloat(total).toFixed(2)}{'€'}</small>
+                    <div className='px-2'>
+                            <FontAwesomeIcon icon={faPenToSquare} className='invisible'/>
+                        </div>
+                    <CloseButton className="invisible"/>
                 </div>
             </ListGroup.Item>
-            )
-        })}
-        <ListGroup.Item key="assets_total">
-            <div className="d-flex w-100 fw-bold">
-                <div className="mb-1 pe-2 lh-sm me-auto"><Trans>TOTAL</Trans></div>
-                <small className="px-2">{parseFloat(total).toFixed(2)}{'€'}</small>
-                 <div className='px-2'>
-                        <FontAwesomeIcon icon={faPenToSquare} className='invisible'/>
-                    </div>
-                <CloseButton className="invisible"/>
-            </div>
-        </ListGroup.Item>
-    </ListGroup>
+        </ListGroup>
 }
 const AssetsManager = () => {
     const queryclient = useQueryClient();
@@ -223,6 +230,50 @@ const AssetsManager = () => {
         setStagingList([...stagingList, movement]);
     }
     const [editStagingItem, setEditStagingItem] = useState(null);
+    const balanceMutation = useMutation({
+        mutationFn: ({balanceMov}) => {
+            delete balanceMov.id;
+            return mutateMovement(balanceMov);
+        },
+        onSuccess: (result, {movIdx}) => {
+            queryclient.setQueryData(["balances"], (oldData) => {
+                oldData.push(result);
+            });
+            let copylist = stagingList;
+            copylist[movIdx].success = true;
+            setStagingList(copylist);
+        },
+        onError: (error, {movIdx}) => {
+            let copylist = stagingList;
+            copylist[movIdx].success = false;
+            copylist[movIdx].error = error;
+            setStagingList(copylist);
+        }
+    });
+    
+    const saveButtonLabel = (uploadState) => {
+        switch (uploadState) {
+            case UploadState.idle:
+                return t`Save`;
+            case UploadState.uploading:
+                return t`Saving`;
+            case UploadState.done:
+                return t`Saved`;
+            default:
+                return t`Save`;
+        }
+    }
+    const [uploading, setUploading] = useState(UploadState.idle);
+    const bulk_upload_assets = (list) => {
+        setUploading(UploadState.uploading);
+        list.forEach((movement, movidx) => {
+            balanceMutation.mutate({balanceMov: movement, movIdx: movidx});
+        });
+        // setUploading(UploadState.done);
+        // setTimeout(() => {
+        //     setStagingList
+        // }, 1000);
+    }
 
     if(catStatus === "loading" || balanceStatus === "loading"){
         return <LoadingDiv />
@@ -237,9 +288,7 @@ const AssetsManager = () => {
                 <Col>
                     <Card className="shadow-lg" bg="primary">
                         <Card.Body>
-                            <Card.Text>
-                                <AssetsInsertionForm balanceCategory={balanceCategory} onAdd={(movement)=> { addToStagingList(movement); setEditStagingItem(null)} } initial={editStagingItem}></AssetsInsertionForm>
-                            </Card.Text>
+                            <AssetsInsertionForm balanceCategory={balanceCategory} onAdd={(movement)=> { addToStagingList(movement); setEditStagingItem(null)} } initial={editStagingItem}></AssetsInsertionForm>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -251,10 +300,16 @@ const AssetsManager = () => {
                         <Card className="shadow-lg">
                             <Card.Body>
                                 <Card.Title><Trans>Assets to be recorded</Trans></Card.Title>
-                                <Card.Text>
-                                    <AssetsStagingList list={stagingList} itemRemover={(listidx)=> setStagingList(stagingList.toSpliced(listidx,1))} itemEditor={(asset)=> setEditStagingItem(asset)}/>
-                                </Card.Text>
-                                <Button className="mt-2"><Trans>Save</Trans></Button>
+                                <AssetsStagingList list={stagingList} 
+                                    itemRemover={(listidx)=> setStagingList(stagingList.toSpliced(listidx,1))} 
+                                    itemEditor={(asset)=> setEditStagingItem(asset)}
+                                    onSave={(list)=>bulk_upload_assets(list)}
+                                    uploading={uploading}
+                                    />
+                                <Button className={"mt-2" + uploading > UploadState.idle ? " disabled" : ""}
+                                    onClick={() => bulk_upload_assets(stagingList)}>
+                                    {saveButtonLabel(uploading)}
+                                </Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -266,9 +321,7 @@ const AssetsManager = () => {
                     <Card className="shadow-lg">
                         <Card.Body>
                             <Card.Title><Trans>Balance record history</Trans></Card.Title>
-                            <Card.Text>
-                                <AssetsHistoryList assets={balanceData} copyItems={(dateGroup_items)=>setStagingList(dateGroup_items)}/>
-                            </Card.Text>
+                            <AssetsHistoryList assets={balanceData} copyItems={(dateGroup_items)=>setStagingList(dateGroup_items)}/>
                         </Card.Body>
                     </Card>
                 </Col>
