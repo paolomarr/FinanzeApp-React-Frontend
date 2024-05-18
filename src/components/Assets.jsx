@@ -4,7 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from "react-bootstrap/Form";
 import { useLingui } from "@lingui/react";
-import { format_ISO_date } from "../_lib/format_locale";
+// import { format_ISO_date } from "../_lib/format_locale";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from '../queries/mutateMovement';
@@ -21,6 +21,7 @@ import Card from "react-bootstrap/Card";
 import Feedback from "react-bootstrap/Feedback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
+import { debuglog } from '../constants';
 
 // const samples = [
 //     {date: sub(new Date(), {days: 2}), abs_amount: 100, description: "sample_0_a"},
@@ -71,13 +72,14 @@ const AssetsHistoryList = ({assets, copyItems}) => {
                     {dategroup.entries.map((asset, assetidx)=>{
                         return (
                             <div key={`asset_${assetidx}`} className="d-flex w-100 justify-content-between">
+                                <FontAwesomeIcon icon={faPenToSquare} />
                                 <div className="mb-1 pe-2 lh-sm">{asset.description}</div>
                                 <small>{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
                             </div>
                             )
                     })}
                     {/* <div className="link-opacity-75 link-primary text-center text-decoration-underline"><Trans>Copy items</Trans></div> */}
-                    <div className="text-center"><Button variant='link' onClick={copyItems?()=>copyItems(dategroup.entries):null}><Trans>Copy items</Trans></Button></div>
+                    <div className="text-center"><Button variant='link' onClick={copyItems?()=>copyItems(dategroup.entries.map((entry)=>{entry.date = new Date(); return entry;})):null}><Trans>Copy items</Trans></Button></div>
                 </Accordion.Body>
             </Accordion.Item>
             )
@@ -85,6 +87,7 @@ const AssetsHistoryList = ({assets, copyItems}) => {
     </Accordion>
 };
 const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
+    const {i18n} = useLingui();
     const initialMovement = {
       date: new Date(),
       abs_amount: 0,
@@ -119,17 +122,19 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
     
     return <Form id='assetInsertForm'>
         <Form.Group className="mb-3">
-          <Form.Label htmlFor="date">
+            <Form.Text><Trans>Date</Trans>{": " + format(new Date(), i18n, {dateStyle: "short"})}</Form.Text>
+          {/* <Form.Label htmlFor="date">
             {t`Date`}
           </Form.Label>
           <input
+            readOnly
             id="date"
             name="date"
-            type="datetime-local"
+            type="date"
             className={`form-control`}
             value={format_ISO_date(newmovement.date)}
             onChange={(e) => setNewmovement({...newmovement, date: new Date(e.target.value)})}
-          />
+          /> */}
         </Form.Group>
         <Form.Group className="mb-3">
             <Form.Label htmlFor="amount">
@@ -164,6 +169,7 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
     </Form>
 };
 const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) => {
+    // const {i18n} = useLingui();
     if(!assets || assets.length === 0){
         return <div className="text-secondary my-2"><Trans>Add your balances using the form above or by copying one group of entries from the list below</Trans></div>
     }
@@ -172,8 +178,9 @@ const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) =
     return <ListGroup variant="flush">
             {assets?.map((asset, assetidx) => {
                 return (
-                <ListGroup.Item key={`asset_${assetidx}`} className={asset.error ? "bg-danger-subtle" : ""}>
+                <ListGroup.Item key={`asset_${assetidx}`} className={"mx-0 px-0" + (asset.error ? "bg-danger-subtle" : "")}>
                     <div className={"d-flex w-100" + (asset.success ? " opacity-25" : "")}>
+                        {/* <small className='pe-2 opacity-50'>{format(asset.date, i18n, {dateStyle: "short"})}</small> */}
                         <div className="mb-1 pe-2 lh-sm me-auto">{asset.description}</div>
                         <small className="px-2">{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
                         <div className='px-2'>
@@ -233,9 +240,24 @@ const AssetsManager = () => {
     const balanceMutation = useMutation({
         mutationFn: ({balanceMov}) => {
             delete balanceMov.id;
-            return mutateMovement(balanceMov);
+            return mutateMovement({movement: balanceMov});
         },
         onSuccess: (result, {movIdx}) => {
+            setUploadingCounter(uploadingCounter-1);
+            debuglog(`Item ${movIdx} uploaded. Upload counter: ${uploadingCounter}`);
+            // if all upload ops have completed AND no error occured, clear the staging list after a while
+            if(uploadingCounter === 0){
+                if(stagingList.findIndex((item)=> item.error !== undefined)<0){
+                    const timeout = 2000;
+                    debuglog(`will clear staging list in ${timeout/1000} seconds`);
+                    setTimeout(() => {
+                        setStagingList([]);
+                    }, timeout);
+                }else{
+                    debuglog("Some upload did fail. Retaining staging list for debug purpose");
+                }
+                setUploading(false);
+            }
             queryclient.setQueryData(["balances"], (oldData) => {
                 oldData.push(result);
             });
@@ -244,6 +266,7 @@ const AssetsManager = () => {
             setStagingList(copylist);
         },
         onError: (error, {movIdx}) => {
+            debuglog(`Item ${movIdx} failed to upload: ${error}`);
             let copylist = stagingList;
             copylist[movIdx].success = false;
             copylist[movIdx].error = error;
@@ -264,9 +287,17 @@ const AssetsManager = () => {
         }
     }
     const [uploading, setUploading] = useState(UploadState.idle);
+    const [uploadingCounter, setUploadingCounter] = useState(0);
+    
     const bulk_upload_assets = (list) => {
         setUploading(UploadState.uploading);
+        // set a constant date for all the items to be uploaded
+        const fixdate = new Date();
+        debuglog(`will upload ${list.length} items`);
         list.forEach((movement, movidx) => {
+            movement.date = fixdate;
+            setUploadingCounter(uploadingCounter+1);
+            debuglog(`Upload counter: ${uploadingCounter}`);
             balanceMutation.mutate({balanceMov: movement, movIdx: movidx});
         });
         // setUploading(UploadState.done);

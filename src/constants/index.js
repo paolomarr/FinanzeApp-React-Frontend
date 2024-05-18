@@ -15,3 +15,11 @@ export const colors = {
   secondary_800: "#888",
   secondary_A00: "#AAA",
 };
+
+export const ENVIRONMENT = process.env.NODE_ENV
+export const isDevelopment = () => ENVIRONMENT === 'development';
+export const debuglog = (message) => {
+  if(isDevelopment()){
+    console.log(`[DEBUG] ${message}`);
+  }
+}
