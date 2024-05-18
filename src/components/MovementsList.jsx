@@ -206,8 +206,9 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
         },
       },
     ];
-    
-    let slicedMovements = movements;
+    const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
+    // if(movement.category == balanceCategory.id) return false  
+    let slicedMovements = movements.filter((movement)=>movement.category!=balanceCategory.id);
     if(slice){
       slicedMovements = slicedMovements.filter((movement) => {
         const mDate = new Date(movement.date);
