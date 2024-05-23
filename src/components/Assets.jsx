@@ -22,18 +22,8 @@ import Feedback from "react-bootstrap/Feedback";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 import { debuglog } from '../constants';
+import MovementModal from './MovementModal';
 
-// const samples = [
-//     {date: sub(new Date(), {days: 2}), abs_amount: 100, description: "sample_0_a"},
-//     {date: sub(new Date(), {days: 2}), abs_amount: 1000, description: "sample_0_b very very very long description that possibly spans more than one single line"},
-//     {date: sub(new Date(), {days: 2}), abs_amount: 500, description: "sample_0_c"},
-//     {date: sub(new Date(), {days: 22}), abs_amount: 140, description: "sample_1_a"},
-//     {date: sub(new Date(), {days: 22}), abs_amount: 1400, description: "sample_1_b"},
-//     {date: sub(new Date(), {days: 22}), abs_amount: 540, description: "sample_1_c"},
-//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_a"},
-//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 3000, description: "sample_2_b"},
-//     {date: sub(new Date(), {months: 1, days: 10}), abs_amount: 300, description: "sample_2_c"},
-// ];
 const UploadState = {
     idle: 0,
     uploading: 1,
@@ -55,7 +45,7 @@ const groupByDate = (movements) => {
     })
     return output;
 }
-const AssetsHistoryList = ({assets, copyItems}) => {
+const AssetsHistoryList = ({assets, copyItems, onEditAsset}) => {
     const {i18n} = useLingui();
     const grouped = groupByDate(assets);
     
@@ -71,14 +61,13 @@ const AssetsHistoryList = ({assets, copyItems}) => {
                 <Accordion.Body>
                     {dategroup.entries.map((asset, assetidx)=>{
                         return (
-                            <div key={`asset_${assetidx}`} className="d-flex w-100 justify-content-between">
-                                <FontAwesomeIcon icon={faPenToSquare} />
+                            <div key={`asset_${assetidx}`} className="d-flex w-100">
+                                <div className='pe-2'><FontAwesomeIcon icon={faPenToSquare} onClick={() => onEditAsset(asset)}/></div>
                                 <div className="mb-1 pe-2 lh-sm">{asset.description}</div>
-                                <small>{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small>
+                                <div className='ms-auto'><small>{parseFloat(asset.abs_amount).toFixed(2)}{'€'}</small></div>
                             </div>
                             )
                     })}
-                    {/* <div className="link-opacity-75 link-primary text-center text-decoration-underline"><Trans>Copy items</Trans></div> */}
                     <div className="text-center"><Button variant='link' onClick={copyItems?()=>copyItems(dategroup.entries.map((entry)=>{entry.date = new Date(); return entry;})):null}><Trans>Copy items</Trans></Button></div>
                 </Accordion.Body>
             </Accordion.Item>
@@ -113,9 +102,6 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
             setNewmovement(initialMovement);
         }
     };
-    // const updateNewMovement = (update) => {
-    //   setNewmovement({...newmovement, ...update});
-    // }
     if(initial && initial.id !== newmovement.id){
         setNewmovement(initial);
     }
@@ -123,18 +109,6 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
     return <Form id='assetInsertForm'>
         <Form.Group className="mb-3">
             <Form.Text><Trans>Date</Trans>{": " + format(new Date(), i18n, {dateStyle: "short"})}</Form.Text>
-          {/* <Form.Label htmlFor="date">
-            {t`Date`}
-          </Form.Label>
-          <input
-            readOnly
-            id="date"
-            name="date"
-            type="date"
-            className={`form-control`}
-            value={format_ISO_date(newmovement.date)}
-            onChange={(e) => setNewmovement({...newmovement, date: new Date(e.target.value)})}
-          /> */}
         </Form.Group>
         <Form.Group className="mb-3">
             <Form.Label htmlFor="amount">
@@ -171,7 +145,7 @@ const AssetsInsertionForm = ({balanceCategory, onAdd, initial}) => {
 const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) => {
     // const {i18n} = useLingui();
     if(!assets || assets.length === 0){
-        return <div className="text-secondary my-2"><Trans>Add your balances using the form above or by copying one group of entries from the list below</Trans></div>
+        return <div className="text-secondary my-2"><Trans>Record your current net worth using the form above or by copying one group of past entries from the list below</Trans></div>
     }
     const total = assets.reduce((sum, item)=>sum+=parseFloat(item.abs_amount),0);
     const baseButtonsClass = uploading !== UploadState.idle ? "disabled" : "";
@@ -238,34 +212,46 @@ const AssetsManager = () => {
     }
     const [editStagingItem, setEditStagingItem] = useState(null);
     const balanceMutation = useMutation({
-        mutationFn: ({balanceMov}) => {
-            delete balanceMov.id;
-            return mutateMovement({movement: balanceMov});
+        mutationFn: ({balanceMov, _delete}) => {
+            setShowModal({...showModal, errors: null});
+            return mutateMovement({movement: balanceMov, _delete});
         },
-        onSuccess: (result, {movIdx}) => {
-            setUploadingCounter(uploadingCounter-1);
-            debuglog(`Item ${movIdx} uploaded. Upload counter: ${uploadingCounter}`);
-            // if all upload ops have completed AND no error occured, clear the staging list after a while
-            if(uploadingCounter === 0){
-                if(stagingList.findIndex((item)=> item.error !== undefined)<0){
-                    const timeout = 2000;
-                    debuglog(`will clear staging list in ${timeout/1000} seconds`);
-                    setTimeout(() => {
-                        setStagingList([]);
-                    }, timeout);
-                }else{
-                    debuglog("Some upload did fail. Retaining staging list for debug purpose");
+        onSuccess: (result, {balanceMov, movIdx, _delete}) => {
+            setShowModal({...showModal, show: false, movement: null, errors: null})
+            if(!_delete){ // it was a post
+                setUploadingCounter(uploadingCounter-1);
+                debuglog(`Item ${movIdx} uploaded. Upload counter: ${uploadingCounter}`);
+                // if all upload ops have completed AND no error occured, clear the staging list after a while
+                if(uploadingCounter === 0){
+                    if(stagingList.findIndex((item)=> item.error !== undefined)<0){
+                        const timeout = 2000;
+                        debuglog(`will clear staging list in ${timeout/1000} seconds`);
+                        setTimeout(() => {
+                            setStagingList([]);
+                        }, timeout);
+                    }else{
+                        debuglog("Some upload did fail. Retaining staging list for debug purpose");
+                    }
+                    setUploading(false);
                 }
-                setUploading(false);
+                queryclient.setQueryData(["balances"], (oldData) => {
+                    oldData.push(result);
+                });
+                let copylist = stagingList;
+                copylist[movIdx].success = true;
+                setStagingList(copylist);
+            }else{ // it was a delete
+                queryclient.setQueryData(["balances"], (oldData) => {
+                    const index = oldData.findIndex((omovement)=> omovement.id === balanceMov.id);
+                    if(index>=0){
+                        oldData.splice(index, 1);
+                        return oldData;
+                    }
+                });
             }
-            queryclient.setQueryData(["balances"], (oldData) => {
-                oldData.push(result);
-            });
-            let copylist = stagingList;
-            copylist[movIdx].success = true;
-            setStagingList(copylist);
         },
         onError: (error, {movIdx}) => {
+            setShowModal({...showModal, errors: error.cause});
             debuglog(`Item ${movIdx} failed to upload: ${error}`);
             let copylist = stagingList;
             copylist[movIdx].success = false;
@@ -286,6 +272,15 @@ const AssetsManager = () => {
                 return t`Save`;
         }
     }
+    const [showModal, setShowModal] = useState({
+      movement: null,
+      show: false,
+      errors: null,
+    });
+    const toggleModal = () => {
+      const show = !showModal.show;
+      setShowModal({...showModal, show: show});
+    };
     const [uploading, setUploading] = useState(UploadState.idle);
     const [uploadingCounter, setUploadingCounter] = useState(0);
     
@@ -293,17 +288,17 @@ const AssetsManager = () => {
         setUploading(UploadState.uploading);
         // set a constant date for all the items to be uploaded
         const fixdate = new Date();
+        const allowed_keys = ["description", "abs_amount"];
         debuglog(`will upload ${list.length} items`);
         list.forEach((movement, movidx) => {
-            movement.date = fixdate;
+            let uploading_mov = {date: fixdate, category: balanceCategory.id};
+            Object.keys(movement)
+                .filter((key)=> allowed_keys.includes(key))
+                .forEach((key) => uploading_mov[key]=movement[key]);
             setUploadingCounter(uploadingCounter+1);
             debuglog(`Upload counter: ${uploadingCounter}`);
-            balanceMutation.mutate({balanceMov: movement, movIdx: movidx});
+            balanceMutation.mutate({balanceMov: uploading_mov, movIdx: movidx});
         });
-        // setUploading(UploadState.done);
-        // setTimeout(() => {
-        //     setStagingList
-        // }, 1000);
     }
 
     if(catStatus === "loading" || balanceStatus === "loading"){
@@ -352,12 +347,13 @@ const AssetsManager = () => {
                     <Card className="shadow-lg">
                         <Card.Body>
                             <Card.Title><Trans>Balance record history</Trans></Card.Title>
-                            <AssetsHistoryList assets={balanceData} copyItems={(dateGroup_items)=>setStagingList(dateGroup_items)}/>
+                            <AssetsHistoryList assets={balanceData} copyItems={(dateGroup_items)=>setStagingList(dateGroup_items)} onEditAsset={(asset) => {setShowModal({...showModal, movement: asset, show: true})}}/>
                         </Card.Body>
                     </Card>
                 </Col>
             </Row>
         </div>
+        <MovementModal showModal={showModal} toggleModal={toggleModal} onDataReady={(movement, todelete, tocontinue) => balanceMutation.mutate({balanceMov: movement, _delete: todelete, _continue: tocontinue})} />
     </>
 };
 
