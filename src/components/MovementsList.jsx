@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Table from 'react-bootstrap/Table'
+import ListGroup from 'react-bootstrap/ListGroup'
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -13,6 +14,7 @@ import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
 import { startOfDay, endOfDay } from "date-fns";
+import { useMediaQuery } from "react-responsive";
 
 function MovementsListTableHeader({fields, sort, onSort}) {
     return (
@@ -40,7 +42,7 @@ function MovementsListTableHeader({fields, sort, onSort}) {
     );
 }
 
-const MovementsListItem = ({movement, fields, edit}) => {
+const MovementsListTableItem = ({movement, fields, edit}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
           <td className="list-item-edit">
@@ -222,6 +224,9 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
     
     const paginationStartIdx = pagination.page * pagination.size;
     const paginationEndIdx = paginationStartIdx + pagination.size;
+
+    const isMobile = useMediaQuery({ query: '(max-width: 576px)' })
+
     return (
       <>
         <Row className="align-items-end mt-4">
@@ -237,27 +242,40 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
             <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}<Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}<Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
           </Col>
         </Row>
-        <Table responsive="sm">
-          <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
-          <tbody>
-            {!slicedMovements || slicedMovements.length <= 0 ? (
-              <tr>
-                <td colSpan="6" align="center">
-                  <b>Ops, no one here yet</b>
-                </td>
-              </tr>
-            ) : (
-              slicedMovements.map((movement, index) => {
-                if(index<paginationStartIdx || index>=paginationEndIdx){
-                  return null;
-                }
-                return (
-                <MovementsListItem key={movement.id} movement={movement} fields={fields} edit={() => onEdit(movement)} />
-                )}
-                )
-            )}
-          </tbody>
-        </Table>
+        { !isMobile ?
+          <Table responsive="sm">
+            <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
+            <tbody>
+              {!slicedMovements || slicedMovements.length <= 0 ? (
+                <tr>
+                  <td colSpan="6" align="center">
+                    <b>Ops, no one here yet</b>
+                  </td>
+                </tr>
+              ) : (
+                slicedMovements.map((movement, index) => {
+                  if(index<paginationStartIdx || index>=paginationEndIdx){
+                    return null;
+                  }
+                  return (
+                  <MovementsListTableItem key={movement.id} movement={movement} fields={fields} edit={() => onEdit(movement)} />
+                  )}
+                  )
+              )}
+            </tbody>
+          </Table> : slicedMovements.map((movement, index) => {
+            return <ListGroup key={`movement_${index}`} variant='flush'>
+              <ListGroup.Item className='border-bottom' onClick={() => onEdit(movement)}>
+                <div className='d-flex'>
+                  <div className='me-auto text-primary fw-bold'>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
+                  <div className='small text-secondary'>{format(movement.date, i18n)}</div>
+                </div>
+                <div className='fs-4 fw-semibold'>{parseFloat(movement.amount).toFixed(2)}{' €'}</div>
+                <div className='small'>{movement.description}</div>
+              </ListGroup.Item>
+            </ListGroup>
+          })
+        }
       </>
     );
 }
