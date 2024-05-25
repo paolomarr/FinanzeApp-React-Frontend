@@ -50,7 +50,7 @@ const OffcanvasNavbar = () => {
                     <Offcanvas.Title><div className="invisible">Title</div></Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Nav className="flex-column">
+                    <Nav className="flex-column" variant="underline">
                         <Nav.Item>
                             <NavLink to="/" end
                             className={({isActive}) => "nav-link" + (isActive ? " active" : "")}
