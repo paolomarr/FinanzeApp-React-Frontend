@@ -165,7 +165,7 @@ const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) =
                 </ListGroup.Item>
                 )
             })}
-            <ListGroup.Item key="assets_total">
+            <ListGroup.Item key="assets_total" className='mx-0 px-0'>
                 <div className="d-flex w-100 fw-bold">
                     <div className="mb-1 pe-2 lh-sm me-auto"><Trans>TOTAL</Trans></div>
                     <small className="px-2">{parseFloat(total).toFixed(2)}{'€'}</small>
