@@ -218,28 +218,37 @@ const AssetsManager = () => {
         },
         onSuccess: (result, {balanceMov, movIdx, _delete}) => {
             setShowModal({...showModal, show: false, movement: null, errors: null})
-            if(!_delete){ // it was a post
-                setUploadingCounter(uploadingCounter-1);
-                debuglog(`Item ${movIdx} uploaded. Upload counter: ${uploadingCounter}`);
-                // if all upload ops have completed AND no error occured, clear the staging list after a while
-                if(uploadingCounter === 0){
-                    if(stagingList.findIndex((item)=> item.error !== undefined)<0){
-                        const timeout = 2000;
-                        debuglog(`will clear staging list in ${timeout/1000} seconds`);
-                        setTimeout(() => {
-                            setStagingList([]);
-                        }, timeout);
-                    }else{
-                        debuglog("Some upload did fail. Retaining staging list for debug purpose");
+            if(!_delete){ // it was a POST or a PUT
+                if(movIdx){ // definitely POST
+                    setUploadingCounter(uploadingCounter-1);
+                    debuglog(`Item ${movIdx} uploaded. Upload counter: ${uploadingCounter}`);
+                    // if all upload ops have completed AND no error occured, clear the staging list after a while
+                    if(uploadingCounter === 0){
+                        if(stagingList.findIndex((item)=> item.error !== undefined)<0){
+                            const timeout = 2000;
+                            debuglog(`will clear staging list in ${timeout/1000} seconds`);
+                            setTimeout(() => {
+                                setStagingList([]);
+                            }, timeout);
+                        }else{
+                            debuglog("Some upload did fail. Retaining staging list for debug purpose");
+                        }
+                        setUploading(false);
                     }
-                    setUploading(false);
+                    queryclient.setQueryData(["balances"], (oldData) => {
+                        oldData.push(result);
+                    });
+                    let copylist = stagingList;
+                    copylist[movIdx].success = true;
+                    setStagingList(copylist);
+                }else { // movIdx === undefined -> it was a PUT, i.e. an history item has been edited on remote server. Let's update our local queryData
+                    queryclient.setQueryData(["balances"], (oldData) => {
+                        const index = oldData.findIndex((omovement)=> omovement.id === balanceMov.id);
+                        if(index>=0){
+                            oldData.splice(index, 1, result);
+                        }
+                    });
                 }
-                queryclient.setQueryData(["balances"], (oldData) => {
-                    oldData.push(result);
-                });
-                let copylist = stagingList;
-                copylist[movIdx].success = true;
-                setStagingList(copylist);
             }else{ // it was a delete
                 queryclient.setQueryData(["balances"], (oldData) => {
                     const index = oldData.findIndex((omovement)=> omovement.id === balanceMov.id);
