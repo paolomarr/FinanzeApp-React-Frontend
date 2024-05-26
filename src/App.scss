@@ -51,7 +51,8 @@
 @import './scss/components';
 
 // additional colors
-
+$earnings_color: $primary;
+$expenses_color: $pink-600;
 
 .recharts-line.history-movements-chartline path {
     stroke: $primary;
@@ -64,8 +65,16 @@
     fill: $primary;
 }
 .stats-bar-expenses {
-    fill: $pink-600;
+    fill: $expenses_color;
 }
 .stats-bar-totals {
     fill: $secondary;
+}
+.movements-list-category {
+    &.expenses {
+        color: $expenses_color;
+    }
+    &.earnings {
+        color: $earnings_color;
+    }
 }
