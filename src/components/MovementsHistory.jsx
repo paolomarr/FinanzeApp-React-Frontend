@@ -35,7 +35,6 @@ const MovementsHistory = ({data, slice, categories}) => {
 
         for(let index=0; index<data.movements.length; index++){
             const movement = data.movements.at(index);
-            let skipAdd = false;
             const mDate = new Date(movement.date);
             if(slice && mDate.getTime()<slice.minDate){
                 continue;
@@ -43,27 +42,39 @@ const MovementsHistory = ({data, slice, categories}) => {
             if(isBalanceMovement(movement)){ // this means category.direction == 0, i.e. this is a 'BALANCE' type movement
                 if(index>0 && (!slice || slice.minDate<=mDate)){
                     // BALANCE movements come in blocks of N>=1 entries with the same exact date. We need to sort-of group them into one chart point
-                    const prev_mov = data.movements[index-1];
-                    const prev_date = new Date(prev_mov.date);
-                    if(isBalanceMovement(prev_mov) && prev_date.getTime() === mDate.getTime()){
-                        // let prev_chartData = chartData[chartData.length-2];
-                        balance += movement.abs_amount;
-                    }else{
-                        balance = movement.abs_amount; // the first of the BALANCE items group for a given date
+                    let inner_movement = movement;
+                    let inner_balance = 0;
+                    while(isBalanceMovement(inner_movement)){
+                        const cur_date = new Date(inner_movement.date);
+                        inner_balance += inner_movement.abs_amount;
+                        index++;
+                        if(index>=data.movements.length) break;
+                        inner_movement = data.movements[index];
+                        const next_date = new Date(inner_movement.date);
+                        if(cur_date.getTime() !== next_date.getTime()){ // next mov could either be a balance or not, as long as the date differs we exit the loop
+                            break;
+                        }
                     }
+                    balance = inner_balance;
+
+                    // const prev_mov = data.movements[index-1];
+                    // const prev_date = new Date(prev_mov.date);
+                    // if(isBalanceMovement(prev_mov) && prev_date.getTime() === mDate.getTime()){
+                    //     // let prev_chartData = chartData[chartData.length-2];
+                    //     balance += movement.abs_amount;
+                    // }else{
+                    //     balance = movement.abs_amount; // the first of the BALANCE items group for a given date
+                    // }
                 }
-                skipAdd = true;
             }else{
                 cumulative += movement.amount
-                if(!skipAdd){
-                    if(slice){
-                        if(mDate <= slice.maxDate){
-                            chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance}) 
-                        }
-                    }else{
-                        chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance})  
-                    }
+            }
+            if(slice){
+                if(mDate <= slice.maxDate){
+                    chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance}) 
                 }
+            }else{
+                chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance})  
             }
         }
     }
@@ -81,7 +92,7 @@ const MovementsHistory = ({data, slice, categories}) => {
                 <LineChart data={chartData}>
                     <Line type="stepAfter" dataKey="cumulative" className='history-movements-chartline' dot={false} />
                     { showAssets?
-                        <Line type="stepBefore" dataKey="balance" className='history-assets-chartline' dot={false} />
+                        <Line type="stepAfter" dataKey="balance" className='history-assets-chartline' dot={false} />
                         : null
                     }
                     <XAxis 
