@@ -268,8 +268,10 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
                   <div className={`me-auto ${category_class} fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
                   <div className='small text-secondary'>{format(movement.date, i18n)}</div>
                 </div>
-                <div className='fs-4 fw-semibold'>{parseFloat(movement.amount).toFixed(2)}{' €'}</div>
-                <div className='small'>{movement.description}</div>
+                <div className='d-flex'>
+                  <div className='small me-auto'>{movement.description}</div>
+                  <div className='fs-4 fw-semibold'>{parseFloat(movement.amount).toFixed(2)}&nbsp;€</div>
+                </div>
               </ListGroup.Item>
             </ListGroup>
           })

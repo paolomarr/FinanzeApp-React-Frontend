@@ -71,6 +71,10 @@ $expenses_color: $pink-600;
     fill: $secondary;
 }
 .movements-list-category {
+    width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     &.expenses {
         color: $expenses_color;
     }
