@@ -75,7 +75,7 @@ const FormButtonSet = ({movement, deleteConfirmState, submitter, deleter}) => {
   }
 }
 
-const MovementForm = ({movement, onDataReady, errors}) => {
+const MovementForm = ({movement, onDataReady, errors, fields}) => {
     
     if(movement?.date){
       if(typeof movement.date == 'string'){
@@ -138,6 +138,14 @@ const MovementForm = ({movement, onDataReady, errors}) => {
         errors_success = true;
       }
     }
+    const ConditionalFormGroup = ({children, field}) => {
+      if(field && fields){
+        if(!fields.includes(field)){
+          return null;
+        }
+      }
+      return <Form.Group>{children}</Form.Group>
+    };
 
     return (
       <>
@@ -145,7 +153,7 @@ const MovementForm = ({movement, onDataReady, errors}) => {
         {movement ? 
           <Form.Control type="hidden" name="id" value={movement.id} /> : null
         }
-        <Form.Group>
+        <ConditionalFormGroup field={"date"}>
           <Form.Label htmlFor="date">
             {t`Date`}
           </Form.Label>
@@ -158,8 +166,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
           <Feedback type='invalid'>{errors?.date}</Feedback>
-        </Form.Group>
-        <Form.Group>
+        </ConditionalFormGroup>
+        <ConditionalFormGroup field={"abs_amount"}>
             <Form.Label htmlFor="amount">
                 {t`Amount`}
             </Form.Label>
@@ -172,8 +180,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
           <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
-        </Form.Group>
-        <Form.Group>
+        </ConditionalFormGroup>
+        <ConditionalFormGroup field={"description"}>
           <Form.Label htmlFor="description"><Trans>Description</Trans></Form.Label>
           <Form.Control 
             id="description" 
@@ -185,8 +193,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             required
             />
           <Feedback type='invalid'>{errors?.description?? ""}</Feedback>
-        </Form.Group>
-        <Form.Group>
+        </ConditionalFormGroup>
+        <ConditionalFormGroup field={"category"}>
           <Form.Label htmlFor="category"><Trans>Category</Trans></Form.Label>
           <Form.Select 
             id="category" 
@@ -201,8 +209,8 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             }))}
           </Form.Select>
           <Feedback type='invalid'>{errors?.category?? ""}</Feedback>
-        </Form.Group>
-        <Form.Group>
+        </ConditionalFormGroup>
+        <ConditionalFormGroup field={"subcategory"}>
           <Form.Label htmlFor="subcategory"><Trans>Subcategory</Trans></Form.Label>
           <Form.Select 
             id="subcategory" 
@@ -218,7 +226,7 @@ const MovementForm = ({movement, onDataReady, errors}) => {
             })}
           </Form.Select>
           <Feedback type='invalid'>{errors?.subcategory?? ""}</Feedback>
-        </Form.Group>
+        </ConditionalFormGroup>
         <div className="justify-content-center d-flex mt-2">
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>

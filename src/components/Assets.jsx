@@ -362,7 +362,10 @@ const AssetsManager = () => {
                 </Col>
             </Row>
         </div>
-        <MovementModal showModal={showModal} toggleModal={toggleModal} onDataReady={(movement, todelete, tocontinue) => balanceMutation.mutate({balanceMov: movement, _delete: todelete, _continue: tocontinue})} />
+        <MovementModal showModal={showModal} 
+            toggleModal={toggleModal} 
+            onDataReady={(movement, todelete, tocontinue) => balanceMutation.mutate({balanceMov: movement, _delete: todelete, _continue: tocontinue})} 
+            fields={["id", "abs_amount", "description"]}/>
     </>
 };
 
