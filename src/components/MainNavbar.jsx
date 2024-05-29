@@ -20,8 +20,8 @@ const RightButtonGroup = () => {
     };
     return <ButtonGroup>
         <Dropdown as={ButtonGroup}>
-            <Dropdown.Toggle variant="secondary">
-                <FontAwesomeIcon icon={faLanguage} />
+            <Dropdown.Toggle variant="transparent">
+                <FontAwesomeIcon icon={faLanguage} className="text-secondary" size="lg"/>
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 <Dropdown.Header><Trans>Languages</Trans></Dropdown.Header>
@@ -29,8 +29,8 @@ const RightButtonGroup = () => {
                     }
             </Dropdown.Menu>
         </Dropdown>
-        <Button variant="secondary" href="/logout">
-            <FontAwesomeIcon icon={faRightFromBracket} />
+        <Button variant="transparent" href="/logout">
+            <FontAwesomeIcon icon={faRightFromBracket} className="text-secondary" size="lg"/>
         </Button>
     </ButtonGroup>
 };
@@ -40,10 +40,10 @@ const OffcanvasNavbar = () => {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    return <div className="my-2 mx-2 d-flex">
+    return <div className="my-2 mx-2 d-flex align-items-center">
         <div className="me-auto">
-            <Button variant="secondary" onClick={handleShow}>
-                <FontAwesomeIcon icon={faBars} />
+            <Button variant="transparent" onClick={handleShow}>
+                <FontAwesomeIcon icon={faBars} className="text-secondary" size="lg"/>
             </Button>
             <Offcanvas show={show} onHide={handleClose}>
                 <Offcanvas.Header closeButton>
@@ -73,7 +73,7 @@ const OffcanvasNavbar = () => {
     </div>
 };
 const StandardNavbar = () => {
-    return <div className="m-2 d-flex">
+    return <div className="m-2 d-flex align-items-center">
         <div className="me-auto">
             <Nav variant="underline">
                 <Nav.Item>
