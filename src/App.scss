@@ -82,3 +82,7 @@ $expenses_color: $pink-600;
         color: $earnings_color;
     }
 }
+.btn-transparent {
+    background-color: unset;
+    border: unset;
+}
