@@ -1,9 +1,9 @@
-import { API_URL } from "../constants";
+import { API_URL_MOVEMENTS } from "../constants";
 import authenticatedFetch from "./authenticatedFetch";
 
 const mutateMovement = async ({ movement, _delete }) => {
   const path = "movements/";
-  let url = `${API_URL}${path}`;
+  let url = `${API_URL_MOVEMENTS}${path}`;
   let fetch_options = {}
   let headers = {};
   if(movement.id){
