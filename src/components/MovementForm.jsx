@@ -7,6 +7,7 @@ import fetchCategories from "../queries/fetchCategories";
 import { useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import { format_ISO_date } from "../_lib/format_locale";
+import FormGroup from 'react-bootstrap/esm/FormGroup';
 
 const DeleteState = {
   start: 0,
@@ -138,14 +139,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
         errors_success = true;
       }
     }
-    const ConditionalFormGroup = ({children, field}) => {
-      if(field && fields){
-        if(!fields.includes(field)){
-          return null;
-        }
-      }
-      return <Form.Group>{children}</Form.Group>
-    };
+    
 
     return (
       <>
@@ -153,7 +147,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
         {movement ? 
           <Form.Control type="hidden" name="id" value={movement.id} /> : null
         }
-        <ConditionalFormGroup field={"date"}>
+        { fields && !fields?.includes("date") ? null : <FormGroup>
           <Form.Label htmlFor="date">
             {t`Date`}
           </Form.Label>
@@ -166,8 +160,8 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
           <Feedback type='invalid'>{errors?.date}</Feedback>
-        </ConditionalFormGroup>
-        <ConditionalFormGroup field={"abs_amount"}>
+          </FormGroup> }
+        { fields && !fields?.includes("abs_amount") ? null : <FormGroup>
             <Form.Label htmlFor="amount">
                 {t`Amount`}
             </Form.Label>
@@ -180,8 +174,8 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
           <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
-        </ConditionalFormGroup>
-        <ConditionalFormGroup field={"description"}>
+          </FormGroup> }
+        { fields && !fields?.includes("description") ? null : <FormGroup>
           <Form.Label htmlFor="description"><Trans>Description</Trans></Form.Label>
           <Form.Control 
             id="description" 
@@ -193,8 +187,8 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             required
             />
           <Feedback type='invalid'>{errors?.description?? ""}</Feedback>
-        </ConditionalFormGroup>
-        <ConditionalFormGroup field={"category"}>
+          </FormGroup> }
+        { fields && !fields?.includes("category") ? null : <FormGroup>
           <Form.Label htmlFor="category"><Trans>Category</Trans></Form.Label>
           <Form.Select 
             id="category" 
@@ -209,8 +203,8 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             }))}
           </Form.Select>
           <Feedback type='invalid'>{errors?.category?? ""}</Feedback>
-        </ConditionalFormGroup>
-        <ConditionalFormGroup field={"subcategory"}>
+          </FormGroup> }
+        { fields && !fields?.includes("subcategory") ? null : <FormGroup>
           <Form.Label htmlFor="subcategory"><Trans>Subcategory</Trans></Form.Label>
           <Form.Select 
             id="subcategory" 
@@ -226,7 +220,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             })}
           </Form.Select>
           <Feedback type='invalid'>{errors?.subcategory?? ""}</Feedback>
-        </ConditionalFormGroup>
+          </FormGroup> }
         <div className="justify-content-center d-flex mt-2">
           <FormButtonSet movement={movement} deleteConfirmState={deleteConfirmState} submitter={(finished)=>{submitForm(finished)}} deleter={(stepUp)=>{submitDelete(stepUp)}} />
         </div>
