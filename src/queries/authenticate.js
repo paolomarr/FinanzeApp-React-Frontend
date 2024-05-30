@@ -1,10 +1,13 @@
-import { API_URL } from "../constants";
+import { API_URL_MOVEMENTS } from "../constants";
 
-const authenticate = async (user, password) => {
+const authenticate = async (user, password, what) => {
+  if(!what){
+    what = API_URL_MOVEMENTS;
+  }
   const fd = new FormData();
   fd.set("username", user);
   fd.set("password", password);
-  let url = `${API_URL}api-token-auth/`;
+  let url = `${what}api-token-auth/`;
 
   const result = await fetch(url, {
       method: "POST",
