@@ -177,7 +177,7 @@ const Home = () => {
     const mutation = useMutation({
       mutationFn: ({movement, _delete}) => {
         setShowModal({...showModal, errors: null});
-        return mutateMovement({movement, _delete})
+        return mutateMovement({movement, _delete});
       },
       onSuccess: (result, {movement, _delete, _continue}) => {
         // remove movement from showModal object

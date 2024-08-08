@@ -27,9 +27,18 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
 
+#: src/components/Trading.jsx:87
+msgid "Account no."
+msgstr "Account no."
+
 #: src/components/Assets.jsx:141
+#: src/components/Trading.jsx:171
 msgid "Add"
 msgstr "Add"
+
+#: src/components/Trading.jsx:113
+msgid "Add new stock"
+msgstr "Add new stock"
 
 #: src/components/Assets.jsx:162
 #~ msgid "Add your balances using the form above"
@@ -40,7 +49,7 @@ msgstr "Add"
 #~ msgstr "Add your balances using the form above or by copying one group of entries from the list below"
 
 #: src/components/Assets.jsx:115
-#: src/components/MovementForm.jsx:164
+#: src/components/MovementForm.jsx:166
 #: src/components/MovementsList.jsx:195
 msgid "Amount"
 msgstr "Amount"
@@ -49,7 +58,7 @@ msgstr "Amount"
 msgid "Amount cannot be zero"
 msgstr "Amount cannot be zero"
 
-#: src/components/MovementForm.jsx:236
+#: src/components/MovementForm.jsx:238
 msgid "An error occurred while saving data."
 msgstr "An error occurred while saving data."
 
@@ -69,22 +78,26 @@ msgstr "Assets to be recorded"
 msgid "Balance record history"
 msgstr "Balance record history"
 
-#: src/App.jsx:16
+#: src/App.jsx:17
 #: src/components/MainNavbar.jsx:65
 #: src/components/MainNavbar.jsx:88
 msgid "Balance records"
 msgstr "Balance records"
 
-#: src/components/MovementForm.jsx:55
+#: src/components/MovementForm.jsx:56
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/MovementForm.jsx:190
+#: src/components/MovementForm.jsx:192
 #: src/components/MovementsList.jsx:198
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementForm.jsx:25
+#: src/components/Trading.jsx:60
+msgid "Code"
+msgstr "Code"
+
+#: src/components/MovementForm.jsx:26
 msgid "Confirm"
 msgstr "Confirm"
 
@@ -96,7 +109,7 @@ msgstr "Copy items"
 msgid "Current month"
 msgstr "Current month"
 
-#: src/components/MovementForm.jsx:229
+#: src/components/MovementForm.jsx:231
 msgid "Data has been saved"
 msgstr "Data has been saved"
 
@@ -105,8 +118,9 @@ msgstr "Data has been saved"
 #~ msgstr "Data has been saved!"
 
 #: src/components/Assets.jsx:111
-#: src/components/MovementForm.jsx:150
+#: src/components/MovementForm.jsx:152
 #: src/components/MovementsList.jsx:189
+#: src/components/Trading.jsx:73
 msgid "Date"
 msgstr "Date"
 
@@ -114,16 +128,16 @@ msgstr "Date"
 msgid "days"
 msgstr "days"
 
-#: src/components/MovementForm.jsx:22
+#: src/components/MovementForm.jsx:23
 msgid "Delete"
 msgstr "Delete"
 
-#: src/components/MovementForm.jsx:31
-#: src/components/MovementForm.jsx:230
+#: src/components/MovementForm.jsx:32
+#: src/components/MovementForm.jsx:232
 msgid "Deleted"
 msgstr "Deleted"
 
-#: src/components/MovementForm.jsx:28
+#: src/components/MovementForm.jsx:29
 msgid "Deleting"
 msgstr "Deleting"
 
@@ -132,7 +146,7 @@ msgstr "Deleting"
 #~ msgstr "Deleting..."
 
 #: src/components/Assets.jsx:128
-#: src/components/MovementForm.jsx:177
+#: src/components/MovementForm.jsx:179
 #: src/components/MovementsList.jsx:194
 msgid "Description"
 msgstr "Description"
@@ -197,8 +211,8 @@ msgstr "Last 6 months"
 msgid "Last year"
 msgstr "Last year"
 
-#: src/App.jsx:17
 #: src/App.jsx:18
+#: src/App.jsx:19
 msgid "Login"
 msgstr "Login"
 
@@ -227,7 +241,7 @@ msgstr "Movements"
 msgid "movements in"
 msgstr "movements in"
 
-#: src/App.jsx:15
+#: src/App.jsx:16
 msgid "Movements overview"
 msgstr "Movements overview"
 
@@ -240,7 +254,11 @@ msgstr "of"
 #~ msgid "of"
 #~ msgstr "of"
 
-#: src/components/MovementForm.jsx:215
+#: src/components/Trading.jsx:118
+msgid "Operation"
+msgstr "Operation"
+
+#: src/components/MovementForm.jsx:217
 msgid "optional"
 msgstr "optional"
 
@@ -269,9 +287,21 @@ msgstr "Password"
 msgid "Past year"
 msgstr "Past year"
 
+#: src/components/Trading.jsx:133
+msgid "Price"
+msgstr "Price"
+
 #: src/components/Header.jsx:44
 msgid "Profile"
 msgstr "Profile"
+
+#: src/components/Trading.jsx:144
+msgid "Quantity"
+msgstr "Quantity"
+
+#: src/components/Trading.jsx:271
+msgid "Record a new order"
+msgstr "Record a new order"
 
 #: src/components/Assets.jsx:148
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
@@ -279,11 +309,11 @@ msgstr "Record your current net worth using the form above or by copying one gro
 
 #: src/components/Assets.jsx:275
 #: src/components/Assets.jsx:281
-#: src/components/MovementForm.jsx:43
+#: src/components/MovementForm.jsx:44
 msgid "Save"
 msgstr "Save"
 
-#: src/components/MovementForm.jsx:43
+#: src/components/MovementForm.jsx:44
 msgid "Save and add more"
 msgstr "Save and add more"
 
@@ -324,7 +354,7 @@ msgstr "seconds"
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/MovementsHistory.jsx:74
+#: src/components/MovementsHistory.jsx:85
 msgid "Show assets"
 msgstr "Show assets"
 
@@ -332,7 +362,11 @@ msgstr "Show assets"
 msgid "Showing"
 msgstr "Showing"
 
-#: src/components/MovementForm.jsx:206
+#: src/components/Trading.jsx:100
+msgid "Stock"
+msgstr "Stock"
+
+#: src/components/MovementForm.jsx:208
 #: src/components/MovementsList.jsx:205
 msgid "Subcategory"
 msgstr "Subcategory"
@@ -363,6 +397,14 @@ msgstr "TOTAL"
 msgid "Totals"
 msgstr "Totals"
 
+#: src/App.jsx:20
+msgid "Trading"
+msgstr "Trading"
+
+#: src/components/Trading.jsx:158
+msgid "Transaction cost"
+msgstr "Transaction cost"
+
 #: src/components/MovementModal.jsx:10
 msgid "Update movement data"
 msgstr "Update movement data"
@@ -375,3 +417,7 @@ msgstr "Username"
 #: src/_lib/format_locale.js:5
 msgid "years"
 msgstr "years"
+
+#: src/components/Trading.jsx:217
+msgid "Your current trading assets"
+msgstr "Your current trading assets"

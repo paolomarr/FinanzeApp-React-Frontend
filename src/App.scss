@@ -96,3 +96,11 @@ $expenses_color: $pink-600;
     background-color: unset;
     border: unset;
 }
+.trading-gain {
+    &.gain {
+    color: $primary;
+    }
+    &.loss {
+    color: $pink-600;
+    }
+}

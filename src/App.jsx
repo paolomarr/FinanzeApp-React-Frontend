@@ -9,6 +9,7 @@ import { t } from "@lingui/macro";
 import UserContext from './contexts/UserContext.jsx';
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import MainNavbar from "./components/MainNavbar.jsx";
+import Trading from "./components/Trading.jsx";
 // import Header from "./components/Header";
 
 const getRouteMap = () => [
@@ -16,6 +17,7 @@ const getRouteMap = () => [
   { path: "/assets", title: t`Balance records`, element: <AssetsManager /> },
   { path: "/login", title: t`Login`, element: <LoginForm /> },
   { path: "/logout", title: t`Login`, element: <LoginForm logout={true}/> },
+  { path: "/trading", title: t`Trading`, element: <Trading /> },
 ];
 
 // Create a client

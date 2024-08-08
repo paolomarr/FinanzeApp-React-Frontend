@@ -1,24 +1,21 @@
-import { API_URL_MOVEMENTS } from "../constants";
 import authenticatedFetch from "./authenticatedFetch";
 
-// TOOD: refactor using genericMutation
-const mutateMovement = async ({ movement, _delete }) => {
-  const path = "movements/";
-  let url = `${API_URL_MOVEMENTS}${path}`;
+const mutateObjectWithPath = async ({ basepath, path, object, _delete }) => {
+  let url = `${basepath.replace(/\/+$/, "")}/${path}`;
   let fetch_options = {}
   let headers = {};
-  if(movement.id){
-    url += `${movement.id}`;
+  if(object.id){
+    url += `${object.id}`;
     if(!_delete){ // PUT
       fetch_options.method = "PUT";
-      fetch_options.body = JSON.stringify(movement);
+      fetch_options.body = JSON.stringify(object);
       headers["Content-Type"] = "application/json";
     }else{ // DELETE. No body
       fetch_options.method = "DELETE";
     }
   }else{ // POST
     fetch_options.method = "POST";
-    fetch_options.body = JSON.stringify(movement);
+    fetch_options.body = JSON.stringify(object);
     headers["Content-Type"] = "application/json";
   }
   const apiRes = await authenticatedFetch(url, fetch_options, headers);
@@ -41,4 +38,4 @@ const mutateMovement = async ({ movement, _delete }) => {
   }
 };
 
-export default mutateMovement;
+export default mutateObjectWithPath;
