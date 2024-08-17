@@ -55,6 +55,9 @@ const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
         operation: 1,
         code: 0,
         account: "",
+        price: 0,
+        transaction_cost: 2,
+        quantity: 0,
     });
     return <Form>
         <Form.Group className="mb-1">
