@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { t } from '@lingui/macro';
 
 const MovementsHistory = ({data, slice, categories}) => {
-    const [showAssets, setShowAssets] = useState(sessionStorage.getItem("MovementsHistory.showAssets")??false);
+    const [showAssets, setShowAssets] = useState(localStorage.getItem("MovementsHistory.showAssets")??false);
     const balanceCategoryId = categories.find((cat) => cat.category === "BALANCE")?.id ?? -1;
     const isBalanceMovement = (movement) => movement.category === balanceCategoryId;
     const {i18n} = useLingui();
@@ -84,7 +84,7 @@ const MovementsHistory = ({data, slice, categories}) => {
                 <Form>
                     <Form.Switch label={t`Show assets`} reverse 
                         checked={Boolean(showAssets)} 
-                        onChange={()=>{sessionStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }}
+                        onChange={()=>{localStorage.setItem("MovementsHistory.showAssets", !showAssets); setShowAssets(!showAssets); }}
                        />
                 </Form>
             </div>
