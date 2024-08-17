@@ -5,8 +5,8 @@ export const languages = [
   {locale: "en", name: "English", messages: messages,},
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
-export const API_URL_MOVEMENTS = process.env.REACT_APP_API_URL;
-export const API_URL_TRADINGLOG = process.env.REACT_APP_API_URL_TRADINGLOG;
+
+export const API_URL = process.env.REACT_APP_API_URL;
 
 export const colors = {
   primary: "#66c2a5",

@@ -1,9 +1,9 @@
-import { API_URL_MOVEMENTS } from "../constants";
+import { API_URL } from "../constants";
 import authenticatedFetch from "./authenticatedFetch";
 
 const fetchCategories = async ({ queryKey }) => {
   const path = queryKey[0];
-  const apiRes = await authenticatedFetch(`${API_URL_MOVEMENTS}${path}`);
+  const apiRes = await authenticatedFetch(`${API_URL}/${path}`);
 
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated

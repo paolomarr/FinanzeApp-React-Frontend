@@ -15,7 +15,6 @@ import Feedback from 'react-bootstrap/Feedback';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useState } from "react";
-import { format_ISO_date } from "../_lib/format_locale";
 import mutateOrder from "../queries/mutateOrder";
 
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
@@ -39,14 +38,15 @@ const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
                 if(isDelete){ // DELETE
                 }else if(order.id){// PUT
                 }else { // POST
-                    oldData.orders.push(result);
+                    oldData.push(result);
                 }
             });
         },
         onError: (error, variables, context) => {
-        console.log(variables);
-        console.log(context);
-      }
+            console.log(error);
+            console.log(variables);
+            console.log(context);
+        }
     })
     const insertOrder = () => {
         orderMutation.mutate({order: neworder, isDelete: false});
@@ -77,10 +77,10 @@ const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
             <Form.Control
                 id="date"
                 name="date"
-                type="datetime-local"
+                type="date"
                 className={`form-control ${errors?.date? "is-invalid" : ""}`}
-                value={format_ISO_date(neworder.date ?? new Date())}
-                onChange={(e) => setNeworder({...neworder, date: new Date(e.target.value)})}
+                // value={neworder.date ?? new Date()}
+                onChange={(e) => setNeworder({...neworder, date: e.target.value})}
             />
             <Feedback type='invalid'>{errors?.date}</Feedback>
         </Form.Group>
