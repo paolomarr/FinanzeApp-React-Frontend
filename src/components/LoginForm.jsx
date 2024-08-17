@@ -22,7 +22,7 @@ const LoginForm = ({logout}) => {
     try {
         const username = event.target.elements.username.value;
         const password = event.target.elements.password.value;
-        const results = await authenticate(username, password, null);
+        const results = await authenticate(username, password);
         results.json().then((jres) => {
             sessionStorage.setItem("authToken", jres.token); 
             setUser(username);
