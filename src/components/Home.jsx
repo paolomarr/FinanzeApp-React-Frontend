@@ -111,7 +111,7 @@ const Home = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
 
-    const persistedDataSliceStringyfied = sessionStorage.getItem("Home.dataSliceSpanDuration");
+    const persistedDataSliceStringyfied = localStorage.getItem("Home.dataSliceSpanDuration");
     let persistedDuration = null;
     if(persistedDataSliceStringyfied){
       persistedDuration = JSON.parse(persistedDataSliceStringyfied);
@@ -231,7 +231,7 @@ const Home = () => {
       }
       const newDataSlice = { minDate: changeResult.minValue, maxDate: changeResult.maxValue};
       const durationToPersist = intervalToDuration(new interval(newDataSlice.minDate, newDataSlice.maxDate));
-      sessionStorage.setItem("Home.dataSliceSpanDuration", JSON.stringify(durationToPersist));
+      localStorage.setItem("Home.dataSliceSpanDuration", JSON.stringify(durationToPersist));
       setDataSlice(newDataSlice);
     };
     
