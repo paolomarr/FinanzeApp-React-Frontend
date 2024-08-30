@@ -70,18 +70,27 @@ $expenses_color: $pink-600;
 .stats-bar-totals {
     fill: $secondary;
 }
-.movements-list-category {
-    width: 70%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    &.expenses {
-        color: $expenses_color;
+.movement-list {
+    .category, .amount {
+        &.expenses {
+            color: $expenses_color;
+        }
+    
+        &.earnings {
+            color: $earnings_color;
+        }
     }
-    &.earnings {
-        color: $earnings_color;
+    .category {
+        width: 70%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .amount {
+        font-weight: bold;
     }
 }
+
 .btn-transparent {
     background-color: unset;
     border: unset;

@@ -261,16 +261,16 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
               )}
             </tbody>
           </Table> : slicedMovements.filter((movement, index) => index>=paginationStartIdx && index<paginationEndIdx).map((movement) => {
-            const category_class = "movements-list-category" + (movement.amount >= 0 ? " earnings" : " expenses");
-            return <ListGroup key={`movement_${movement.id}`} variant='flush'>
-              <ListGroup.Item className='border-bottom' onClick={() => onEdit(movement)}>
+            const direction_color_class = (movement.amount >= 0 ? " earnings" : " expenses");
+            return <ListGroup key={`movement_${movement.id}`} variant='flush' className='movement-list'>
+              <ListGroup.Item className='border-bottom item' onClick={() => onEdit(movement)}>
                 <div className='d-flex'>
-                  <div className={`me-auto ${category_class} fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
-                  <div className='small text-secondary'>{format(movement.date, i18n)}</div>
+                  <div className={`me-auto category ${direction_color_class} fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
+                  <div className='date small text-secondary'>{format(movement.date, i18n)}</div>
                 </div>
                 <div className='d-flex'>
-                  <div className='small me-auto'>{movement.description}</div>
-                  <div className='fs-4 fw-semibold'>{parseFloat(movement.amount).toFixed(2)}&nbsp;€</div>
+                  <div className='description small me-auto'>{movement.description}</div>
+                  <div className={`amount ${direction_color_class}`}>{parseFloat(movement.amount).toFixed(2)}&nbsp;€</div>
                 </div>
               </ListGroup.Item>
             </ListGroup>
