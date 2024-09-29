@@ -197,14 +197,14 @@ const AssetsManager = () => {
         queryKey: ["balances"],
         queryFn: fetchMovements,
         retry: (failureCount, error) => {
-        if(error.message === "forbidden"){
-          queryclient.cancelQueries();
-          navigate("/login");
-          return false
-        } else{ 
-          return failureCount-1
-        }
-      }, 
+            if(error.message === "forbidden"){
+                queryclient.cancelQueries();
+                navigate("/login");
+                return false
+            } else{ 
+                return failureCount-1;
+            }
+        }, 
     });
     const [stagingList, setStagingList] = useState([]);
     const addToStagingList = (movement) => {
@@ -237,6 +237,7 @@ const AssetsManager = () => {
                     }
                     queryclient.setQueryData(["balances"], (oldData) => {
                         oldData.push(result);
+                        return oldData;
                     });
                     let copylist = stagingList;
                     copylist[movIdx].success = true;
@@ -246,7 +247,9 @@ const AssetsManager = () => {
                         const index = oldData.findIndex((omovement)=> omovement.id === balanceMov.id);
                         if(index>=0){
                             oldData.splice(index, 1, result);
+                            return oldData;
                         }
+                        return undefined;
                     });
                 }
             }else{ // it was a delete
@@ -256,6 +259,7 @@ const AssetsManager = () => {
                         oldData.splice(index, 1);
                         return oldData;
                     }
+                    return undefined;
                 });
             }
         },

@@ -136,9 +136,9 @@ const Home = () => {
         if(error.message === "forbidden"){
           queryclient.cancelQueries();
           navigate("/login");
-          return false
+          return false;
         } else{ 
-          return failureCount-1
+          return failureCount-1;
         }
       }, 
     });
@@ -149,9 +149,9 @@ const Home = () => {
         if(error.message === "forbidden"){
           queryclient.cancelQueries();
           navigate("/login");
-          return false
+          return false;
         } else{ 
-          return failureCount-1
+          return failureCount-1;
         }
       }, 
     });
@@ -166,9 +166,9 @@ const Home = () => {
         if(error.message === "forbidden"){
           queryclient.cancelQueries();
           navigate("/login");
-          return false
+          return false;
         } else{ 
-          return failureCount-1
+          return failureCount-1;
         }
       },
       enabled: !!categoryResults.data && !!subcategoryResults.data,
