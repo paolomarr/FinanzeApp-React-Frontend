@@ -8,7 +8,7 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight } from "@fortawesome/free-solid-svg-icons"
+import { faCaretDown, faCaretUp, faAnglesLeft, faAnglesRight, faXmark } from "@fortawesome/free-solid-svg-icons"
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons"
 import { t, Trans } from "@lingui/macro";
 import { format } from "../_lib/format_locale";
@@ -232,6 +232,19 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
         <Row className="align-items-end mt-4">
           <Col xs={12} md={6} className="position-relative">
             <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
+              {movementFilter && (
+            <FontAwesomeIcon icon={faXmark}
+              onClick={()=> setMovementFilter("")}
+              style={{
+                position: 'absolute',
+                right: '5%',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                cursor: 'pointer',
+                color: '#888'
+              }}
+            />
+      )}
           </Col>
           <Col xs={12} md={6}>
             <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
