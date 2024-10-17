@@ -8,11 +8,8 @@ import { useState } from 'react';
 import { useRef } from 'react';
 import { useCallback } from 'react';
 import Webcam from 'react-webcam';
-// import ToggleButton from 'react-bootstrap/esm/Button';
+import ToggleButton from 'react-bootstrap/esm/Button';
 import Button from 'react-bootstrap/esm/Button';
-import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
-import { useMutation } from '@tanstack/react-query';
-import mutateReceipt from '../queries/mutateReceipt';
 
 const WebcamComponent = () => {
   const webcamRef = useRef(null);
@@ -73,13 +70,11 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title, fields }) =
       <Modal.Header closeButton><Modal.Title>{title}</Modal.Title></Modal.Header>
       <Modal.Body>
         <div style={{"textAlign": "center"}} className='mb-2'>
-          <ButtonGroup>
-            <Button className='px-4' variant={showCamera ? "outline-secondary" : "secondary"} ><FontAwesomeIcon icon={faPenToSquare} size="lg" onClick={() => setShowCamera(false)}/></Button>
-            <Button className='px-4' variant={showCamera ? "secondary" : "outline-secondary"} ><FontAwesomeIcon icon={faCamera} size="lg" onClick={() => setShowCamera(true)}/></Button>
-          </ButtonGroup>
+          <ToggleButton type='checkbox' className='mx-2' variant="outline-secondary" value="1" checked={!showCamera}><FontAwesomeIcon icon={faPenToSquare} onClick={() => setShowCamera(false)}/></ToggleButton>
+          <ToggleButton type='checkbox' className='mx-2' variant="outline-secondary" value="1" checked={showCamera}><FontAwesomeIcon icon={faCamera} onClick={() => setShowCamera(true)}/></ToggleButton>
         </div>
         { showCamera ? 
-          <WebcamComponent onShotReady={(img) => sendImage(img) }/> :
+          <WebcamComponent /> :
           <MovementForm movement={movement} cancel={innerToggle} onDataReady={onDataReady} errors={errors} fields={fields}/>
         }
       </Modal.Body>
