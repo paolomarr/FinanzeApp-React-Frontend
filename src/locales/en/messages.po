@@ -27,16 +27,16 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
 
-#: src/components/Trading.jsx:87
+#: src/components/Trading.jsx:89
 msgid "Account no."
 msgstr "Account no."
 
 #: src/components/Assets.jsx:141
-#: src/components/Trading.jsx:171
+#: src/components/Trading.jsx:173
 msgid "Add"
 msgstr "Add"
 
-#: src/components/Trading.jsx:113
+#: src/components/Trading.jsx:115
 msgid "Add new stock"
 msgstr "Add new stock"
 
@@ -70,11 +70,11 @@ msgstr "An error occurred while saving data."
 #~ msgid "Are you sure?"
 #~ msgstr "Are you sure?"
 
-#: src/components/Assets.jsx:337
+#: src/components/Assets.jsx:341
 msgid "Assets to be recorded"
 msgstr "Assets to be recorded"
 
-#: src/components/Assets.jsx:358
+#: src/components/Assets.jsx:362
 msgid "Balance record history"
 msgstr "Balance record history"
 
@@ -93,7 +93,7 @@ msgstr "Cancel"
 msgid "Category"
 msgstr "Category"
 
-#: src/components/Trading.jsx:60
+#: src/components/Trading.jsx:62
 msgid "Code"
 msgstr "Code"
 
@@ -120,7 +120,7 @@ msgstr "Data has been saved"
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:152
 #: src/components/MovementsList.jsx:189
-#: src/components/Trading.jsx:73
+#: src/components/Trading.jsx:75
 msgid "Date"
 msgstr "Date"
 
@@ -165,7 +165,7 @@ msgstr "Earnings"
 msgid "Expenses"
 msgstr "Expenses"
 
-#: src/components/MovementsList.jsx:242
+#: src/components/MovementsList.jsx:255
 msgid "filtered out of"
 msgstr "filtered out of"
 
@@ -246,7 +246,7 @@ msgid "Movements overview"
 msgstr "Movements overview"
 
 #. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:242
+#: src/components/MovementsList.jsx:255
 msgid "movementsListFilterStats.of"
 msgstr "of"
 
@@ -254,7 +254,7 @@ msgstr "of"
 #~ msgid "of"
 #~ msgstr "of"
 
-#: src/components/Trading.jsx:118
+#: src/components/Trading.jsx:120
 msgid "Operation"
 msgstr "Operation"
 
@@ -287,7 +287,7 @@ msgstr "Password"
 msgid "Past year"
 msgstr "Past year"
 
-#: src/components/Trading.jsx:133
+#: src/components/Trading.jsx:135
 msgid "Price"
 msgstr "Price"
 
@@ -295,11 +295,11 @@ msgstr "Price"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/Trading.jsx:144
+#: src/components/Trading.jsx:146
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Trading.jsx:271
+#: src/components/Trading.jsx:273
 msgid "Record a new order"
 msgstr "Record a new order"
 
@@ -307,8 +307,8 @@ msgstr "Record a new order"
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
 msgstr "Record your current net worth using the form above or by copying one group of past entries from the list below"
 
-#: src/components/Assets.jsx:275
-#: src/components/Assets.jsx:281
+#: src/components/Assets.jsx:279
+#: src/components/Assets.jsx:285
 #: src/components/MovementForm.jsx:44
 msgid "Save"
 msgstr "Save"
@@ -317,11 +317,11 @@ msgstr "Save"
 msgid "Save and add more"
 msgstr "Save and add more"
 
-#: src/components/Assets.jsx:279
+#: src/components/Assets.jsx:283
 msgid "Saved"
 msgstr "Saved"
 
-#: src/components/Assets.jsx:277
+#: src/components/Assets.jsx:281
 msgid "Saving"
 msgstr "Saving"
 
@@ -358,11 +358,11 @@ msgstr "seconds"
 msgid "Show assets"
 msgstr "Show assets"
 
-#: src/components/MovementsList.jsx:242
+#: src/components/MovementsList.jsx:255
 msgid "Showing"
 msgstr "Showing"
 
-#: src/components/Trading.jsx:100
+#: src/components/Trading.jsx:102
 msgid "Stock"
 msgstr "Stock"
 
@@ -401,7 +401,7 @@ msgstr "Totals"
 msgid "Trading"
 msgstr "Trading"
 
-#: src/components/Trading.jsx:158
+#: src/components/Trading.jsx:160
 msgid "Transaction cost"
 msgstr "Transaction cost"
 
@@ -418,6 +418,6 @@ msgstr "Username"
 msgid "years"
 msgstr "years"
 
-#: src/components/Trading.jsx:217
+#: src/components/Trading.jsx:219
 msgid "Your current trading assets"
 msgstr "Your current trading assets"
