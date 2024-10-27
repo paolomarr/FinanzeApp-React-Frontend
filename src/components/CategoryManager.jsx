@@ -11,17 +11,14 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Trans } from "@lingui/macro";
 
 const EditorPanel = ({ items, label, title, onMutateItem }) => {
-    const [outItem, setOutItem] = useState({
-        id: null,
-        value: "",
-        direction: -1
-    });
-    const itemValueRef = useRef("");
-    const itemDirectionRef = useRef(-1);
+    const defaultItem = {id: null, value:"", direction:-1};
+    const [outItem, setOutItem] = useState(defaultItem);
+    const itemValueRef = useRef(null);
+    const itemDirectionRef = useRef(null);
     const handleEditClick = (item) => {
         setOutItem(item);
-        itemValueRef.current = item[label];
-        itemDirectionRef.current = item.direction;
+        itemValueRef.current.value = item[label] ?? "";
+        itemDirectionRef.current.value = item.direction;
     };
 
     return (
@@ -42,7 +39,6 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                                 id="itemValue"
                                 name="value"
                                 ref={itemValueRef}
-                                value={itemValueRef.current}
                                 onChange={(value) => {
                                     setOutItem({ ...outItem, value: value }); 
                                     // document.getElementById('itemId').value={value}
@@ -54,20 +50,21 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                             <Form.Select 
                             name="direction"
                             ref={itemDirectionRef}
-                            value={itemDirectionRef.current}
                             onChange={(value)=> setOutItem({...outItem, value:value})}>
                                 <option value={1}><Trans>Earnings</Trans></option>
                                 <option value={-1}><Trans>Expenses</Trans></option>
                             </Form.Select>
                         </Form.Group>
                     </Form>
-                    <Button type="button" onClick={() => onMutateItem(outItem)}><Trans>Save</Trans></Button>
+                    { outItem.id ? 
+                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> : null}
+                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={itemValueRef.current.value.length==0}><Trans>Save</Trans></Button>
                 </div>
                 {items.length > 0 ? (
                     <ListGroup variant='flush'>
                         {items.map((item) => {
                             return (
-                                <ListGroup.Item key={item.id}>
+                                <ListGroup.Item key={item.id} active={item.id == outItem.id}>
                                     <FontAwesomeIcon 
                                         icon={faPenToSquare} 
                                         onClick={() => handleEditClick(item)} 
@@ -97,7 +94,7 @@ const CategoryManager = () => {
         queryFn: fetchMovements,
         placeholderData: [],
     });
-
+    
     return (
         <>
             <EditorPanel items={categoryData} label="category" title={t`Categories`} />
