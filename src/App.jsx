@@ -10,6 +10,7 @@ import UserContext from './contexts/UserContext.jsx';
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import MainNavbar from "./components/MainNavbar.jsx";
 import Trading from "./components/Trading.jsx";
+import CategoryManager from "./components/CategoryManager.jsx";
 // import Header from "./components/Header";
 
 const getRouteMap = () => [
@@ -18,6 +19,7 @@ const getRouteMap = () => [
   { path: "/login", title: t`Login`, element: <LoginForm /> },
   { path: "/logout", title: t`Login`, element: <LoginForm logout={true}/> },
   { path: "/trading", title: t`Trading`, element: <Trading /> },
+  { path: "/categories", title: t`Manage categories`, element: <CategoryManager /> },
 ];
 
 // Create a client
