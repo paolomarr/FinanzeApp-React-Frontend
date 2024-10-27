@@ -1,50 +1,56 @@
 import React, { useState } from 'react';
+import Card from 'react-bootstrap/Card';
+import ListGroup from "react-bootstrap/ListGroup";
+import Form from "react-bootstrap/Form"
+import Button from 'react-bootstrap/esm/Button';
+import { t } from '@lingui/macro';
+import { useQuery } from '@tanstack/react-query';
+import fetchMovements from '../queries/fetchMovements';
 
+
+const EditorPanel = ({items, label, title, onMutateItem}) => {
+    const [outItem, setOutItem] = useState({});
+    return <Card className="shadow-lg">
+        <Card.Body>
+            <Card.Title>{title}</Card.Title>
+            <div>
+                <Form>
+                    <input
+                    id="itemId"
+                    name="id" 
+                    hidden
+                    value={outItem.id}
+                    />
+                    <Form.Control 
+                    id="itemName" name="name" value={outItem.value} 
+                    onChange={(value)=> setOutItem({...outItem, value: value})}/>
+                </Form>
+                <Button type="button" onClick={()=> onMutateItem(outItem)} />
+            </div>
+            {items.length > 0 ? <ListGroup variant='flush'>
+                {items.map((item)=>{
+                    return <ListGroup.Item key={item.id}>{item[label]}</ListGroup.Item>
+                })}
+                </ListGroup> : <div>t`No data`</div>
+            }
+        </Card.Body>
+    </Card>
+};
 const CategoryManager = () => {
-    const [categories, setCategories] = useState([]);
-    const [newCategory, setNewCategory] = useState('');
-
-    const addCategory = () => {
-        if (newCategory) {
-            setCategories([...categories, { name: newCategory, id: Date.now() }]);
-            setNewCategory('');
-        }
-    };
-
-    const removeCategory = (id) => {
-        setCategories(categories.filter(category => category.id !== id));
-    };
-
-    const editCategory = (id, updatedName) => {
-        setCategories(categories.map(category => 
-            category.id === id ? { ...category, name: updatedName } : category
-        ));
-    };
-
-    return (
-        <div>
-            <h2>Manage Categories</h2>
-            <input 
-                type="text" 
-                value={newCategory} 
-                onChange={(e) => setNewCategory(e.target.value)} 
-                placeholder="Add new category" 
-            />
-            <button onClick={addCategory}>Add Category</button>
-            <ul>
-                {categories.map(category => (
-                    <li key={category.id}>
-                        <input 
-                            type="text" 
-                            value={category.name} 
-                            onChange={(e) => editCategory(category.id, e.target.value)} 
-                        />
-                        <button onClick={() => removeCategory(category.id)}>Remove</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+    const {data: categoryData} = useQuery({
+        queryKey: ["categories"],
+        queryFn: fetchMovements,
+        placeholderData: [],
+    });
+    const {data: subcategoryData} = useQuery({
+        queryKey: ["subcategories"],
+        queryFn: fetchMovements, 
+        placeholderData: [],
+    });
+    return <>
+        <EditorPanel items={categoryData} label="category" title={t`Categories`} />
+        <EditorPanel items={subcategoryData} label="subcategory" title={t`Subcategories`} />
+    </>
 };
 
 export default CategoryManager;
