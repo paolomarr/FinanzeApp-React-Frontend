@@ -4,11 +4,13 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Button from 'react-bootstrap/esm/Button';
 import { t } from '@lingui/macro';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import fetchMovements from '../queries/fetchMovements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Trans } from "@lingui/macro";
+import mutateCategory from "../queries/mutateCategory";
+import mutateSubcategory from "../queries/mutateSubcategory";
 
 const EditorPanel = ({ items, label, title, onMutateItem }) => {
     const defaultItem = {id: null, value:"", direction:-1};
@@ -45,6 +47,7 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                                 }}
                             />
                         </Form.Group>
+                        { label == "category" ?
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Direction</Form.Label>
                             <Form.Select 
@@ -54,11 +57,12 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                                 <option value={1}><Trans>Earnings</Trans></option>
                                 <option value={-1}><Trans>Expenses</Trans></option>
                             </Form.Select>
-                        </Form.Group>
+                        </Form.Group> : null 
+                        }
                     </Form>
                     { outItem.id ? 
-                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> : null}
-                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={itemValueRef.current.value.length==0}><Trans>Save</Trans></Button>
+                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> : null}{' '}
+                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={itemValueRef.current?.value.length==0 ?? false}><Trans>Save</Trans></Button>
                 </div>
                 {items.length > 0 ? (
                     <ListGroup variant='flush'>
@@ -94,11 +98,39 @@ const CategoryManager = () => {
         queryFn: fetchMovements,
         placeholderData: [],
     });
-    
+    const categoryMutation = useMutation({
+        mutationFn: (category, _delete) => {
+            return mutateCategory({category:category, _delete: _delete});
+        }
+    });
+    const subcategoryMutation = useMutation({
+        mutationFn: (subcategory, _delete) => {
+            return mutateSubcategory({subcategory:subcategory, _delete: _delete});
+        }
+    });
+    const onMutateItem = (item, label) => {
+        var todelete = false;
+        if(item.id){ // edit or delete
+            if(item[label]){ // object label defined, so it's an edit
+                todelete = false;
+            }else{
+                todelete = true;
+            }
+        }
+        var mutator;
+        let mutateArgs = {_delete: todelete};
+        mutateArgs[label] = item;
+        if(label=="category"){
+            mutator = categoryMutation;
+        }else{
+            mutator = subcategoryMutation;
+        }
+        mutator.mutate(mutateArgs);
+    }
     return (
         <>
-            <EditorPanel items={categoryData} label="category" title={t`Categories`} />
-            <EditorPanel items={subcategoryData} label="subcategory" title={t`Subcategories`} />
+            <EditorPanel onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
+            <EditorPanel onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
         </>
     );
 };
