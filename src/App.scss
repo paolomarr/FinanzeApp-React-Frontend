@@ -53,7 +53,12 @@
 // additional colors
 $earnings_color: $primary;
 $expenses_color: $pink-600;
-
+.text-earnings {
+    color: $earnings_color;
+}
+.text-expenses {
+    color: $expenses_color;
+}
 .recharts-line.history-movements-chartline path {
     stroke: $primary;
 }
