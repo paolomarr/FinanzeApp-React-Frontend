@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Card from 'react-bootstrap/Card';
-import ListGroup from "react-bootstrap/ListGroup";
+// import ListGroup from "react-bootstrap/ListGroup";
 import Form from "react-bootstrap/Form";
 import Button from 'react-bootstrap/esm/Button';
 import { t } from '@lingui/macro';
@@ -11,6 +11,8 @@ import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Trans } from "@lingui/macro";
 import mutateCategory from "../queries/mutateCategory";
 import mutateSubcategory from "../queries/mutateSubcategory";
+import Row from 'react-bootstrap/esm/Row';
+import Col from 'react-bootstrap/esm/Col';
 
 const EditorPanel = ({ items, label, title, onMutateItem }) => {
     const defaultItem = {id: null, value:"", direction:-1};
@@ -20,9 +22,12 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
     const handleEditClick = (item) => {
         setOutItem(item);
         itemValueRef.current.value = item[label] ?? "";
-        itemDirectionRef.current.value = item.direction;
+        if(itemDirectionRef.current!=null){
+            itemDirectionRef.current.value = item.direction;
+        }
     };
-
+    const saveDisabled = itemValueRef.current?.value.length==0 ?? false;
+    const saveLabel = outItem.id ? t`Update` : t`Add`;
     return (
         <Card className="shadow-lg">
             <Card.Body>
@@ -38,7 +43,6 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Name</Form.Label>
                             <Form.Control
-                                id="itemValue"
                                 name="value"
                                 ref={itemValueRef}
                                 onChange={(value) => {
@@ -61,24 +65,43 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                         }
                     </Form>
                     { outItem.id ? 
-                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> : null}{' '}
-                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={itemValueRef.current?.value.length==0 ?? false}><Trans>Save</Trans></Button>
+                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}>{saveLabel}</Button> 
+                    : null}{' '}
+                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={saveDisabled}>{saveLabel}</Button>
                 </div>
                 {items.length > 0 ? (
-                    <ListGroup variant='flush'>
-                        {items.map((item) => {
-                            return (
-                                <ListGroup.Item key={item.id} active={item.id == outItem.id}>
-                                    <FontAwesomeIcon 
+                    <div className='mt-2 row row-cols-1 row-cols-md-3 row-cols-lg-4'>
+                        {items.filter((item)=> item.direction != 0 || item[label] != "BALANCE" || item[label].length > 0).map((item)=> {
+                            const color_class = label == "category" ? (item.direction == -1 ? "text-expenses" : "text-earnings") : "";
+                            const active_class = item.id == outItem.id ? "bg-secondary-subtle" : "";
+                            return <div key={item.id} className={`col ${active_class} ${color_class}`}>
+                                <FontAwesomeIcon 
                                         icon={faPenToSquare} 
                                         onClick={() => handleEditClick(item)} 
                                         style={{ cursor: 'pointer', marginRight: '10px' }} 
                                     />
                                     {item[label]}
-                                </ListGroup.Item>
-                            );
+                                </div>
                         })}
-                    </ListGroup>
+                    </div> 
+                    // <ListGroup variant='flush'>
+                    //     {items.map((item) => {
+                    //         const icon = item.direction == -1 ? faRightFromBracket : faRightToBracket;
+                    //         return (
+                    //             <ListGroup.Item key={item.id} active={item.id == outItem.id}>
+                    //                 <FontAwesomeIcon 
+                    //                     icon={faPenToSquare} 
+                    //                     onClick={() => handleEditClick(item)} 
+                    //                     style={{ cursor: 'pointer', marginRight: '10px' }} 
+                    //                 />
+                    //                 {item[label]}
+                    //                 { label == "category" ? 
+                    //                 <FontAwesomeIcon icon={icon} /> : null }
+
+                    //             </ListGroup.Item>
+                    //         );
+                    //     })}
+                    // </ListGroup>
                 ) : (
                     <div>{t`No data`}</div>
                 )}
@@ -129,8 +152,20 @@ const CategoryManager = () => {
     }
     return (
         <>
-            <EditorPanel onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
-            <EditorPanel onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
+            <div className='my-2'>
+                <Row className="justify-content-center">
+                    <Col className='md-8'>
+                        <EditorPanel onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
+                    </Col>
+                </Row>
+            </div>
+            <div className='my-2'>
+                <Row className="justify-content-center">
+                    <Col className='md-8'>
+                        <EditorPanel onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
+                    </Col>
+                </Row>
+            </div>
         </>
     );
 };

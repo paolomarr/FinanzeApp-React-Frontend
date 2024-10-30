@@ -13,16 +13,17 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/Trading.jsx:89
+#: src/components/Trading.jsx:92
 msgid "Account no."
 msgstr "Conto num."
 
 #: src/components/Assets.jsx:141
-#: src/components/Trading.jsx:173
+#: src/components/CategoryManager.jsx:30
+#: src/components/Trading.jsx:176
 msgid "Add"
 msgstr "Aggiungi"
 
-#: src/components/Trading.jsx:115
+#: src/components/Trading.jsx:118
 msgid "Add new stock"
 msgstr "Aggiungi titolo"
 
@@ -48,7 +49,7 @@ msgstr "Valori da registrare"
 msgid "Balance record history"
 msgstr "Storico dei saldi registrati"
 
-#: src/App.jsx:17
+#: src/App.jsx:18
 #: src/components/MainNavbar.jsx:65
 #: src/components/MainNavbar.jsx:88
 msgid "Balance records"
@@ -58,12 +59,16 @@ msgstr "Registro saldi"
 msgid "Cancel"
 msgstr "Annulla"
 
+#: src/components/CategoryManager.jsx:159
+msgid "Categories"
+msgstr "Categorie"
+
 #: src/components/MovementForm.jsx:192
 #: src/components/MovementsList.jsx:198
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/Trading.jsx:62
+#: src/components/Trading.jsx:65
 msgid "Code"
 msgstr "Codice"
 
@@ -86,7 +91,7 @@ msgstr "Dati salvati"
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:152
 #: src/components/MovementsList.jsx:189
-#: src/components/Trading.jsx:75
+#: src/components/Trading.jsx:78
 msgid "Date"
 msgstr "Data"
 
@@ -117,11 +122,13 @@ msgstr "Descrizione"
 msgid "Description cannot be empty"
 msgstr "La descrizione non può essere vuota"
 
+#: src/components/CategoryManager.jsx:62
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:219
 msgid "Earnings"
 msgstr "Entrate"
 
+#: src/components/CategoryManager.jsx:63
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:222
 msgid "Expenses"
@@ -165,14 +172,18 @@ msgstr "Ultimi 6 mesi"
 msgid "Last year"
 msgstr "Ultimo anno"
 
-#: src/App.jsx:18
 #: src/App.jsx:19
+#: src/App.jsx:20
 msgid "Login"
 msgstr "Accedi"
 
 #: src/App.jsx:17
 #~ msgid "Logout"
 #~ msgstr "Esci"
+
+#: src/App.jsx:22
+msgid "Manage categories"
+msgstr "Gestione categorie"
 
 #: src/_lib/format_locale.js:9
 msgid "minutes"
@@ -191,16 +202,20 @@ msgstr "Movimenti"
 msgid "movements in"
 msgstr "movimenti in"
 
-#: src/App.jsx:16
+#: src/App.jsx:17
 msgid "Movements overview"
 msgstr "Riepilogo movimenti"
+
+#: src/components/CategoryManager.jsx:107
+msgid "No data"
+msgstr "Nessun elemento"
 
 #. js-lingui-explicit-id
 #: src/components/MovementsList.jsx:255
 msgid "movementsListFilterStats.of"
 msgstr "di"
 
-#: src/components/Trading.jsx:120
+#: src/components/Trading.jsx:123
 msgid "Operation"
 msgstr "Operazione"
 
@@ -233,7 +248,7 @@ msgstr "Password"
 msgid "Past year"
 msgstr "Anno scorso"
 
-#: src/components/Trading.jsx:135
+#: src/components/Trading.jsx:138
 msgid "Price"
 msgstr "Prezzo"
 
@@ -241,11 +256,11 @@ msgstr "Prezzo"
 msgid "Profile"
 msgstr "Profilo"
 
-#: src/components/Trading.jsx:146
+#: src/components/Trading.jsx:149
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Trading.jsx:273
+#: src/components/Trading.jsx:276
 msgid "Record a new order"
 msgstr "Registra un nuovo ordine"
 
@@ -291,9 +306,13 @@ msgstr "Mostra saldo"
 msgid "Showing"
 msgstr "Visualizzati"
 
-#: src/components/Trading.jsx:102
+#: src/components/Trading.jsx:105
 msgid "Stock"
 msgstr "Titolo"
+
+#: src/components/CategoryManager.jsx:166
+msgid "Subcategories"
+msgstr "Sottocategorie"
 
 #: src/components/MovementForm.jsx:208
 #: src/components/MovementsList.jsx:205
@@ -318,13 +337,17 @@ msgstr "TOTALE"
 msgid "Totals"
 msgstr "Totali"
 
-#: src/App.jsx:20
+#: src/App.jsx:21
 msgid "Trading"
 msgstr "Trading"
 
-#: src/components/Trading.jsx:160
+#: src/components/Trading.jsx:163
 msgid "Transaction cost"
 msgstr "Costo operazione"
+
+#: src/components/CategoryManager.jsx:30
+msgid "Update"
+msgstr "Aggiorna"
 
 #: src/components/MovementModal.jsx:10
 msgid "Update movement data"
@@ -339,6 +362,6 @@ msgstr "Nome utente"
 msgid "years"
 msgstr "anni"
 
-#: src/components/Trading.jsx:219
+#: src/components/Trading.jsx:222
 msgid "Your current trading assets"
 msgstr "I tuoi asset"
