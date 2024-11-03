@@ -65,13 +65,13 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                         }
                     </Form>
                     { outItem.id ? 
-                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}>{saveLabel}</Button> 
+                    <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> 
                     : null}{' '}
                     <Button type="button" onClick={() => onMutateItem(outItem)} disabled={saveDisabled}>{saveLabel}</Button>
                 </div>
                 {items.length > 0 ? (
                     <div className='mt-2 row row-cols-1 row-cols-md-3 row-cols-lg-4'>
-                        {items.filter((item)=> item.direction != 0 || item[label] != "BALANCE" || item[label].length > 0).map((item)=> {
+                        {items.filter((item)=> item.direction != 0 && item[label] != "BALANCE" && item[label].length > 0).map((item)=> {
                             const color_class = label == "category" ? (item.direction == -1 ? "text-expenses" : "text-earnings") : "";
                             const active_class = item.id == outItem.id ? "bg-secondary-subtle" : "";
                             return <div key={item.id} className={`col ${active_class} ${color_class}`}>
