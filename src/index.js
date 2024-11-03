@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 /* The following line can be included in your src/index.js or App.js file */
@@ -11,6 +10,13 @@ import './App.scss';
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { languages } from './constants/index.js';
+import App from "./App.jsx"
+import Home from "./components/Home.jsx"
+import AssetsManager from './components/Assets.jsx';
+import LoginForm from './components/LoginForm.jsx';
+import Trading from './components/Trading.jsx';
+import Settings from './components/Settings.jsx';
+import CategoryManager from './components/CategoryManager.jsx';
 
 // Detect the user's preferred language
 const userLanguages = navigator.languages;
@@ -43,15 +49,30 @@ const queryClient = new QueryClient({
   },
 });
 
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<App />}>
+      <Route index element=<Home /> />
+      <Route path="/assets" element=<AssetsManager /> />
+      <Route path="/login" element=<LoginForm /> />
+      <Route path="/logout" element=<LoginForm logout={true}/> />
+      <Route path="/trading" element=<Trading /> />
+      <Route path="/settings" element=<Settings /> >
+        <Route path='categories' element=<CategoryManager /> />
+      </Route>
+    </Route>
+  )
+);
+
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <I18nProvider i18n={i18n}>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </I18nProvider>
   </React.StrictMode>
 );
