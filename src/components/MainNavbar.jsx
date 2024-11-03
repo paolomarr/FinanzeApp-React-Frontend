@@ -1,7 +1,7 @@
 import { useMediaQuery } from "react-responsive";
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faLanguage, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faLanguage, faRightFromBracket, faSliders } from "@fortawesome/free-solid-svg-icons";
 import Nav from 'react-bootstrap/Nav';
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
@@ -19,6 +19,9 @@ const RightButtonGroup = () => {
         i18n.activate(locale);
     };
     return <ButtonGroup>
+        <Button variant="transparent" href="/settings">
+            <FontAwesomeIcon icon={faSliders} className="text-secondary" size="lg" />
+        </Button>
         <Dropdown as={ButtonGroup}>
             <Dropdown.Toggle variant="transparent">
                 <FontAwesomeIcon icon={faLanguage} className="text-secondary" size="lg"/>
