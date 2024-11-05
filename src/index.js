@@ -17,6 +17,7 @@ import LoginForm from './components/LoginForm.jsx';
 import Trading from './components/Trading.jsx';
 import Settings from './components/Settings.jsx';
 import CategoryManager from './components/CategoryManager.jsx';
+import { t } from '@lingui/macro';
 
 // Detect the user's preferred language
 const userLanguages = navigator.languages;
@@ -49,17 +50,16 @@ const queryClient = new QueryClient({
   },
 });
 
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index element=<Home /> />
-      <Route path="/assets" element=<AssetsManager /> />
-      <Route path="/login" element=<LoginForm /> />
-      <Route path="/logout" element=<LoginForm logout={true}/> />
-      <Route path="/trading" element=<Trading /> />
-      <Route path="/settings" element=<Settings /> >
-        <Route path='categories' element=<CategoryManager /> />
+      <Route index element=<Home /> handle={{ title: () => t`Movements overview`}}/>
+      <Route path="/assets" element=<AssetsManager /> handle={{ title: () => t`Balance records`}}/>
+      <Route path="/login" element=<LoginForm /> handle={{ title: () => t`Login`}}/>
+      <Route path="/logout" element=<LoginForm logout={true}/> handle={{ title: () => t`Login`}}/>
+      <Route path="/trading" element=<Trading /> handle={{ title: () => t`Trading`}}/>
+      <Route path="/settings/*" element=<Settings />handle={{ title: () => t`Settings`}} >
+        <Route path='categories' element=<CategoryManager /> handle={{ title: () => t`Category management`}}/>
       </Route>
     </Route>
   )
