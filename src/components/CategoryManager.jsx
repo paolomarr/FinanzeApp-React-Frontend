@@ -4,7 +4,7 @@ import Card from 'react-bootstrap/Card';
 import Form from "react-bootstrap/Form";
 import Button from 'react-bootstrap/esm/Button';
 import { t } from '@lingui/macro';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import fetchMovements from '../queries/fetchMovements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -15,7 +15,7 @@ import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
 
 const EditorPanel = ({ items, label, title, onMutateItem }) => {
-    const defaultItem = {id: null, value:"", direction:-1};
+    const defaultItem = {id: null, [label]:"", direction:-1};
     const [outItem, setOutItem] = useState(defaultItem);
     const itemValueRef = useRef(null);
     const itemDirectionRef = useRef(null);
@@ -51,9 +51,8 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                             <Form.Control
                                 name="value"
                                 ref={itemValueRef}
-                                onChange={(value) => {
-                                    setOutItem({ ...outItem, value: value }); 
-                                    // document.getElementById('itemId').value={value}
+                                onChange={(event) => {
+                                    setOutItem({ ...outItem, [label]: event.target.value });
                                 }}
                             />
                         </Form.Group>
@@ -63,7 +62,7 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                             <Form.Select 
                             name="direction"
                             ref={itemDirectionRef}
-                            onChange={(value)=> setOutItem({...outItem, value:value})}>
+                            onChange={(event)=> setOutItem({...outItem, direction: event.target.value})}>
                                 <option value={1}><Trans>Earnings</Trans></option>
                                 <option value={-1}><Trans>Expenses</Trans></option>
                             </Form.Select>
@@ -90,24 +89,6 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                                 </div>
                         })}
                     </div> 
-                    // <ListGroup variant='flush'>
-                    //     {items.map((item) => {
-                    //         const icon = item.direction == -1 ? faRightFromBracket : faRightToBracket;
-                    //         return (
-                    //             <ListGroup.Item key={item.id} active={item.id == outItem.id}>
-                    //                 <FontAwesomeIcon 
-                    //                     icon={faPenToSquare} 
-                    //                     onClick={() => handleEditClick(item)} 
-                    //                     style={{ cursor: 'pointer', marginRight: '10px' }} 
-                    //                 />
-                    //                 {item[label]}
-                    //                 { label == "category" ? 
-                    //                 <FontAwesomeIcon icon={icon} /> : null }
-
-                    //             </ListGroup.Item>
-                    //         );
-                    //     })}
-                    // </ListGroup>
                 ) : (
                     <div>{t`No data`}</div>
                 )}
@@ -127,15 +108,33 @@ const CategoryManager = () => {
         queryFn: fetchMovements,
         placeholderData: [],
     });
+    const queryClient = useQueryClient();
     const categoryMutation = useMutation({
-        mutationFn: (category, _delete) => {
-            return mutateCategory({category:category, _delete: _delete});
-        }
-    });
-    const subcategoryMutation = useMutation({
-        mutationFn: (subcategory, _delete) => {
-            return mutateSubcategory({subcategory:subcategory, _delete: _delete});
-        }
+        mutationFn: ({item, label, _delete}) => {
+            let _mutationFunction = mutateCategory;
+            if(label == "subcategory"){
+                _mutationFunction = mutateSubcategory;
+            }
+            return _mutationFunction({[label]:item, _delete: _delete});
+        },
+        onSuccess: (result, {item, label, _delete}) => {
+            const queryKey = label == "category" ? ["categories"] : ["subcategories"];
+            queryClient.setQueryData(queryKey, (oldData) => {
+                if(item.id){ // DELETE or PUT
+                    const itemIdx = oldData.findIndex((oitem)=> oitem.id === item.id);
+                    if(itemIdx>=0){
+                        if(_delete){
+                            oldData.splice(itemIdx, 1); // remove
+                        }else{
+                            oldData.splice(itemIdx, 1, item); // replace
+                        }
+                    }
+                }else { // POST
+                    oldData.push(item);
+                }
+                return oldData;
+            });
+        },
     });
     const onMutateItem = (item, label) => {
         var todelete = false;
@@ -146,15 +145,7 @@ const CategoryManager = () => {
                 todelete = true;
             }
         }
-        var mutator;
-        let mutateArgs = {_delete: todelete};
-        mutateArgs[label] = item;
-        if(label=="category"){
-            mutator = categoryMutation;
-        }else{
-            mutator = subcategoryMutation;
-        }
-        mutator.mutate(mutateArgs);
+        categoryMutation.mutate({item:item, label: label, _delete: todelete});
     }
     return (
         <>
