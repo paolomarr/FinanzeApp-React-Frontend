@@ -31,6 +31,11 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
         if (formRef.current) {
             formRef.current.scrollIntoView({ behavior: 'smooth' });
         }
+        // Focus on the value field and select its text
+        if (itemValueRef.current) {
+            itemValueRef.current.focus();
+            itemValueRef.current.select();
+        }
     };
 
     const saveDisabled = itemValueRef.current?.value.length==0 ?? false;
