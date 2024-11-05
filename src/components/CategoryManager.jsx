@@ -7,22 +7,25 @@ import { t } from '@lingui/macro';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import fetchMovements from '../queries/fetchMovements';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faCircleCheck, faCircleXmark, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Trans } from "@lingui/macro";
 import mutateCategory from "../queries/mutateCategory";
 import mutateSubcategory from "../queries/mutateSubcategory";
 import Row from 'react-bootstrap/esm/Row';
 import Col from 'react-bootstrap/esm/Col';
+// import Alert from 'react-bootstrap/Alert';
 
-const EditorPanel = ({ items, label, title, onMutateItem }) => {
+const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
     const defaultItem = {id: null, [label]:"", direction:-1};
     const [outItem, setOutItem] = useState(defaultItem);
+    const [formChanged, setFormChanged] = useState(false);
     const itemValueRef = useRef(null);
     const itemDirectionRef = useRef(null);
     const formRef = useRef(null); // Reference for the Form
 
     const handleEditClick = (item) => {
         setOutItem(item);
+        setFormChanged(true);
         itemValueRef.current.value = item[label] ?? "";
         if(itemDirectionRef.current!=null){
             itemDirectionRef.current.value = item.direction;
@@ -37,6 +40,18 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
             itemValueRef.current.select();
         }
     };
+    const handleSubmitItem = () => {
+        onMutateItem(outItem);
+        setFormChanged(false);
+    }
+    const SubmitFeedbackComponent = ({errors}) => {
+        {!formChanged && errors ? 
+            (Object.keys(errors).length == 0 ? 
+                <><span className='text-success'><Trans>Saved</Trans></span>{' '}<FontAwesomeIcon icon={faCircleCheck}/></>
+                    : <><span className='text-danger'><Trans>Error</Trans></span>{' '}<FontAwesomeIcon icon={faCircleXmark} /></>
+            ) : null
+        }
+    }
 
     const saveDisabled = itemValueRef.current?.value.length==0 ?? false;
     const saveLabel = outItem.id ? t`Update` : t`Add`;
@@ -53,6 +68,7 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                                 ref={itemValueRef}
                                 onChange={(event) => {
                                     setOutItem({ ...outItem, [label]: event.target.value });
+                                    setFormChanged(true);
                                 }}
                             />
                         </Form.Group>
@@ -62,7 +78,10 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                             <Form.Select 
                             name="direction"
                             ref={itemDirectionRef}
-                            onChange={(event)=> setOutItem({...outItem, direction: event.target.value})}>
+                            onChange={(event)=> {
+                                setOutItem({...outItem, direction: event.target.value})
+                                setFormChanged(true);
+                                }}>
                                 <option value={1}><Trans>Earnings</Trans></option>
                                 <option value={-1}><Trans>Expenses</Trans></option>
                             </Form.Select>
@@ -72,7 +91,8 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                     { outItem.id ? 
                     <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> 
                     : null}{' '}
-                    <Button type="button" onClick={() => onMutateItem(outItem)} disabled={saveDisabled}>{saveLabel}</Button>
+                    <Button type="button" onClick={handleSubmitItem} disabled={saveDisabled}>{saveLabel}</Button>{' '}
+                    <SubmitFeedbackComponent errors={submitErrors}/>
                 </div>
                 {items.length > 0 ? (
                     <div className='mt-2 row row-cols-1 row-cols-md-3 row-cols-lg-4'>
@@ -109,7 +129,9 @@ const CategoryManager = () => {
         placeholderData: [],
     });
     const queryClient = useQueryClient();
-    const categoryMutation = useMutation({
+    const [categoryMutationError, setCategoryMutationError] = useState(null);
+    const [subcategoryMutationError, setSubCategoryMutationError] = useState(null);
+    const { mutate: categoryMutationMutate} = useMutation({
         mutationFn: ({item, label, _delete}) => {
             let _mutationFunction = mutateCategory;
             if(label == "subcategory"){
@@ -130,11 +152,26 @@ const CategoryManager = () => {
                         }
                     }
                 }else { // POST
-                    oldData.push(item);
+                    oldData.push(result);
                 }
                 return oldData;
             });
+            // reset form components fields
+            if(label == "category"){
+                setCatKey(catKey + 1);
+                setCategoryMutationError({});
+            }else{
+                setSubcatKey(subcatKey + 1);
+                setSubCategoryMutationError({});
+            }
         },
+        onError: (error, {label}) => {
+            if(label == "category"){
+                setCategoryMutationError(error);
+            }else{
+                setSubCategoryMutationError(error);
+            }
+        }
     });
     const onMutateItem = (item, label) => {
         var todelete = false;
@@ -145,21 +182,23 @@ const CategoryManager = () => {
                 todelete = true;
             }
         }
-        categoryMutation.mutate({item:item, label: label, _delete: todelete});
+        categoryMutationMutate({item:item, label: label, _delete: todelete});
     }
+    const [catKey, setCatKey] = useState(0);
+    const [subcatKey, setSubcatKey] = useState(0);
     return (
         <>
             <div className='my-2'>
                 <Row className="justify-content-center">
                     <Col className='md-8'>
-                        <EditorPanel onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
+                        <EditorPanel key={catKey} submitErrors={categoryMutationError} onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
                     </Col>
                 </Row>
             </div>
             <div className='my-2'>
                 <Row className="justify-content-center">
                     <Col className='md-8'>
-                        <EditorPanel onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
+                        <EditorPanel key={subcatKey} submitErrors={subcategoryMutationError} onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
                     </Col>
                 </Row>
             </div>
