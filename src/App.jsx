@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation, useMatches } from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import React, { useState } from "react";
 import Footer from "./components/Footer";
@@ -15,14 +15,15 @@ function App() {
   // let location = useLocation();
   // const navigate = useNavigate();
   const loggedUser = useState(null);
-  
-
-  // for (const route of getRouteMap()) {
-  //   if(location.pathname === route.path){
-  //     pageTitle.current = route.title;
-  //     break;
-  //   }
-  // }
+  const matches = useMatches();
+  const location = useLocation();
+  const pathMatching = matches.find((match)=> match.handle && location.pathname.indexOf(match.pathname)>=0);
+  let title = "titolo";
+  if(pathMatching && pathMatching.handle){
+    title = pathMatching.handle.title();
+  }else{
+    console.log("ERROR: could not find a match object that matches current path");
+  }
   return (
     <UserContext.Provider value={loggedUser}>
       <QueryClientProvider client={queryClient}>
@@ -30,7 +31,7 @@ function App() {
         <MainNavbar />
         <Container fluid="sm">
           <div className="text-center">
-            <h1>Titolo</h1>
+            <h1>{title}</h1>
           </div>
           <Outlet />
         </Container>
