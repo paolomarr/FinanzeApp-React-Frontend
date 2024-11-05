@@ -19,20 +19,27 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
     const [outItem, setOutItem] = useState(defaultItem);
     const itemValueRef = useRef(null);
     const itemDirectionRef = useRef(null);
+    const formRef = useRef(null); // Reference for the Form
+
     const handleEditClick = (item) => {
         setOutItem(item);
         itemValueRef.current.value = item[label] ?? "";
         if(itemDirectionRef.current!=null){
             itemDirectionRef.current.value = item.direction;
         }
+        // Scroll to the top of the Form
+        if (formRef.current) {
+            formRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
     };
+
     const saveDisabled = itemValueRef.current?.value.length==0 ?? false;
     const saveLabel = outItem.id ? t`Update` : t`Add`;
     return (
         <Card className="shadow-lg">
             <Card.Body>
                 <Card.Title>{title}</Card.Title>
-                <div>
+                <div ref={formRef}> {/* Attach ref to the div containing the Form */}
                     <Form>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Name</Form.Label>
