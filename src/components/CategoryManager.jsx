@@ -34,12 +34,6 @@ const EditorPanel = ({ items, label, title, onMutateItem }) => {
                 <Card.Title>{title}</Card.Title>
                 <div>
                     <Form>
-                        <input
-                            id="itemId"
-                            name="id"
-                            hidden
-                            value={outItem.id}
-                        />
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Name</Form.Label>
                             <Form.Control
