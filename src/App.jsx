@@ -17,7 +17,7 @@ function App() {
   const loggedUser = useState(null);
   const matches = useMatches();
   const location = useLocation();
-  const pathMatching = matches.find((match)=> match.handle && location.pathname.indexOf(match.pathname)>=0);
+  const pathMatching = matches.findLast((match)=> match.handle && location.pathname.indexOf(match.pathname)>=0);
   let title = "titolo";
   if(pathMatching && pathMatching.handle){
     title = pathMatching.handle.title();
