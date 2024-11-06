@@ -19,6 +19,7 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
     const defaultItem = {id: null, [label]:"", direction:-1};
     const [outItem, setOutItem] = useState(defaultItem);
     const [formChanged, setFormChanged] = useState(false);
+    const [saveDisabled, setSaveDisabled] = useState(true);
     const itemValueRef = useRef(null);
     const itemDirectionRef = useRef(null);
     const formRef = useRef(null); // Reference for the Form
@@ -45,15 +46,24 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
         setFormChanged(false);
     }
     const SubmitFeedbackComponent = ({errors}) => {
-        {!formChanged && errors ? 
-            (Object.keys(errors).length == 0 ? 
-                <><span className='text-success'><Trans>Saved</Trans></span>{' '}<FontAwesomeIcon icon={faCircleCheck}/></>
-                    : <><span className='text-danger'><Trans>Error</Trans></span>{' '}<FontAwesomeIcon icon={faCircleXmark} /></>
-            ) : null
+        let feedBackLabel = "";
+        let feedBackIcon = null;
+        if(formChanged || !errors){
+            return <></>
+        }else{
+            if(Object.keys(errors).length == 0){
+                feedBackLabel = t`Saved`;
+                feedBackIcon = faCircleCheck;
+            }else{
+                feedBackLabel = t`Error`;
+                feedBackIcon = faCircleXmark;
+            }
         }
+        return <>
+                <span className='text-success'>{feedBackLabel}</span>{' '}<FontAwesomeIcon icon={feedBackIcon}/>
+        </>
     }
 
-    const saveDisabled = itemValueRef.current?.value.length==0 ?? false;
     const saveLabel = outItem.id ? t`Update` : t`Add`;
     return (
         <Card className="shadow-lg">
@@ -67,8 +77,10 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
                                 name="value"
                                 ref={itemValueRef}
                                 onChange={(event) => {
-                                    setOutItem({ ...outItem, [label]: event.target.value });
+                                    const value = event.target.value;
+                                    setOutItem({ ...outItem, [label]: value });
                                     setFormChanged(true);
+                                    setSaveDisabled(value.length === 0);
                                 }}
                             />
                         </Form.Group>
