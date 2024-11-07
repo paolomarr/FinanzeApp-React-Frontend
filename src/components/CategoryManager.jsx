@@ -107,7 +107,7 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
                     <SubmitFeedbackComponent errors={submitErrors}/>
                 </div>
                 {items.length > 0 ? (
-                    <div className='mt-2 row row-cols-1 row-cols-md-3 row-cols-lg-4'>
+                    <div className='mt-2 row row-cols-1 row-cols-md-3'>
                         {items.filter((item)=> item.direction != 0 && item[label] != "BALANCE" && item[label].length > 0).map((item)=> {
                             const color_class = label == "category" ? (item.direction == -1 ? "text-expenses" : "text-earnings") : "";
                             const active_class = item.id == outItem.id ? "bg-secondary-subtle" : "";
@@ -202,14 +202,10 @@ const CategoryManager = () => {
         <>
             <div className='my-2'>
                 <Row className="justify-content-center">
-                    <Col className='md-8'>
+                    <Col md={6}>
                         <EditorPanel key={catKey} submitErrors={categoryMutationError} onMutateItem={(item)=> onMutateItem(item, "category")} items={categoryData} label="category" title={t`Categories`} />
                     </Col>
-                </Row>
-            </div>
-            <div className='my-2'>
-                <Row className="justify-content-center">
-                    <Col className='md-8'>
+                    <Col md={6}>
                         <EditorPanel key={subcatKey} submitErrors={subcategoryMutationError} onMutateItem={(item)=> onMutateItem(item, "subcategory")} items={subcategoryData} label="subcategory" title={t`Subcategories`} />
                     </Col>
                 </Row>
