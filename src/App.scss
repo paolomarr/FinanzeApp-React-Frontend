@@ -109,3 +109,12 @@ $expenses_color: $pink-600;
     color: $pink-600;
     }
 }
+.settings-card-item {
+    svg {
+        max-width: 100px;
+        margin-bottom: 1rem;
+        path{
+            fill: $secondary;
+        }
+    }
+}

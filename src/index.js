@@ -16,8 +16,8 @@ import AssetsManager from './components/Assets.jsx';
 import LoginForm from './components/LoginForm.jsx';
 import Trading from './components/Trading.jsx';
 import Settings from './components/Settings.jsx';
-import CategoryManager from './components/CategoryManager.jsx';
 import { t } from '@lingui/macro';
+import CategoryManager from './components/CategoryManager.jsx';
 
 // Detect the user's preferred language
 const userLanguages = navigator.languages;
@@ -58,8 +58,8 @@ const router = createBrowserRouter(
       <Route path="/login" element=<LoginForm /> handle={{ title: () => t`Login`}}/>
       <Route path="/logout" element=<LoginForm logout={true}/> handle={{ title: () => t`Login`}}/>
       <Route path="/trading" element=<Trading /> handle={{ title: () => t`Trading`}}/>
-      <Route path="/settings/*" element=<Settings />handle={{ title: () => t`Settings`}} >
-        <Route path='categories' element=<CategoryManager /> handle={{ title: () => t`Category management`}}/>
+      <Route path="/settings" element=<Settings />handle={{ title: () => t`Settings`}}>
+        <Route path='categories' element=<CategoryManager /> />
       </Route>
     </Route>
   )
