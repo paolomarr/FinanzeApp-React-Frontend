@@ -51,7 +51,13 @@ const MovementsHistory = ({data, slice, categories}) => {
                         if(index>=data.movements.length) break;
                         inner_movement = data.movements[index];
                         const next_date = new Date(inner_movement.date);
-                        if(cur_date.getTime() !== next_date.getTime()){ // next mov could either be a balance or not, as long as the date differs we exit the loop
+                        // the dates of balance items belonging to the same insertion can differ by some ~100ms
+                        // let's check the delta and consider two items be of the same insertion if their date diff is less than
+                        // a set value
+                        const next_ts = next_date.getTime();
+                        const cur_ts = cur_date.getTime();
+                        const diff = Math.abs(next_ts-cur_ts);
+                        if(diff > 2000){ // next mov could either be a balance or not, as long as the date differs we exit the loop
                             break;
                         }
                     }
