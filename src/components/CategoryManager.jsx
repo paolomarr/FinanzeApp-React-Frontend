@@ -74,7 +74,7 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Name</Form.Label>
                             <Form.Control
-                                name="value"
+                                name={label}
                                 ref={itemValueRef}
                                 onChange={(event) => {
                                     const value = event.target.value;
