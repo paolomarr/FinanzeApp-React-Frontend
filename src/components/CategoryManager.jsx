@@ -41,8 +41,13 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
             itemValueRef.current.select();
         }
     };
-    const handleSubmitItem = () => {
-        onMutateItem(outItem);
+    const handleSubmitItem = (_delete) => {
+        let submitItem = outItem;
+        if(_delete){
+            // keep id only, to signal deletion request
+            submitItem = {id: outItem.id};
+        }
+        onMutateItem(submitItem);
         setFormChanged(false);
     }
     const SubmitFeedbackComponent = ({errors}) => {
@@ -104,6 +109,9 @@ const EditorPanel = ({ items, label, title, onMutateItem, submitErrors }) => {
                     <Button type='button' variant='secondary' onClick={() => handleEditClick(defaultItem)}><Trans>Cancel</Trans></Button> 
                     : null}{' '}
                     <Button type="button" onClick={handleSubmitItem} disabled={saveDisabled}>{saveLabel}</Button>{' '}
+                    { outItem.id ? 
+                    <Button type='button' variant='danger' onClick={() => handleSubmitItem(true)}><Trans>Delete</Trans></Button> :null
+                    }
                     <SubmitFeedbackComponent errors={submitErrors}/>
                 </div>
                 {items.length > 0 ? (
