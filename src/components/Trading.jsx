@@ -2,10 +2,10 @@ import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import fetchTradinglog from "../queries/fetchTradinglog";
 import { useNavigate } from "react-router-dom";
 import LoadingDiv from "./LoadingDiv";
-import { format } from "../_lib/format_locale";
+import { format, format_currency } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCashRegister, faClockRotateLeft, faMoneyBillTrendUp, faRotate } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faQuestion, faRotate, faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
@@ -198,23 +198,49 @@ const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
 // };
 const TradingStats = ({orders, stocks, update}) => {
     const {i18n} = useLingui();
-    let stats = {};
+    const TAX_RATE = 0.21;
+    const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
+    let stats = {
+        stocks: {},
+        totalTransactions: 0.0,
+        totalCurrent: 0.0,
+        totalNetGain: 0.0,
+        totalCosts: 0.0,
+        grossGain: function(){ return parseFloat(this.totalCurrent-this.totalTransactions).toFixed(2) },
+        netGain: function(){ return parseFloat(this.totalNetGain).toFixed(2) },
+        grossPercent: function(){ 
+            if(this.totalTransactions==0) return 0.00;
+            return parseFloat(100*this.grossGain()/this.totalTransactions).toFixed(2)
+        },
+        netPercent: function(){ 
+            if(this.totalTransactions==0) return 0.00;
+            return parseFloat(100*this.totalNetGain/this.totalTransactions).toFixed(1)
+        },
+    };
     for (const order of orders) {
         const stock = stocks.find((stock) => stock.id === order.stock);
         if(stock == null) continue; // raise a flag??
-        if(stats[stock.id] === undefined){
-            stats[stock.id] = {count: 0, purhcaseValue: 0, stock: stock};
+        if(stats.stocks[stock.id] === undefined){
+            stats.stocks[stock.id] = {count: 0, purhcaseValue: 0, stock: stock};
         }
-        stats[stock.id].count += order.quantity;
-        stats[stock.id].purhcaseValue += (order.quantity * order.price); // TODO: add transaction cost?
+        stats.stocks[stock.id].count += order.quantity;
+        const orderAmount = order.quantity * order.price;
+        stats.stocks[stock.id].purhcaseValue += orderAmount; // TODO: add transaction cost?
+        stats.totalTransactions += orderAmount;
+        stats.totalCosts += order.transaction_cost;
     }
-    for (const iterstock in stats) { 
-        const statItem = stats[iterstock];
+    for (const iterstock in stats.stocks) { 
+        const statItem = stats.stocks[iterstock];
         const stock = stocks.find((stock) => stock.id === parseInt(iterstock));
         const regular_market_price = parseFloat(stock.regular_market_price);
-        stats[iterstock].currentValue = regular_market_price * statItem.count;
-        stats[iterstock].lastUpdate = new Date(stock.last_price_update);
+        const stockCurVal = regular_market_price * statItem.count;
+        stats.stocks[iterstock].currentValue = stockCurVal;
+        stats.stocks[iterstock].lastUpdate = new Date(stock.last_price_update);
+        stats.totalCurrent += stockCurVal;
+        stats.totalNetGain += getValueAfterTax(stockCurVal-stats.stocks[iterstock].purhcaseValue);
     }
+    const statsGainClass = stats.netGain()>0 ? "text-earnings" : "text-expenses";
+    const statsGainSign = stats.netGain()>=0 ? "+" : "-";
     return <Card className="shadow-lg">
         <Card.Body>
             <Card.Title>
@@ -222,11 +248,24 @@ const TradingStats = ({orders, stocks, update}) => {
                     <Trans>Your current trading assets</Trans>{' '}<FontAwesomeIcon icon={faRotate} className="text-secondary ms-auto" onClick={()=>update()}/>
                 </div>
             </Card.Title>
-            <ListGroup variant="flush">{ Object.keys(stats).map((stockid) => {
-            const stockData = stats[stockid];
-            const curVal = parseFloat(stockData.currentValue).toFixed(2);
-            const purVal = parseFloat(stockData.purhcaseValue).toFixed(2);
-            const gainVal = parseFloat(100*(curVal - purVal)/purVal).toFixed(1);
+            <div className="row stats-summary align-items-center justify-content-center">
+                <div className="col-5 col-md-3 text-center">
+                    <div className="fs-4 bold"><FontAwesomeIcon icon={faCashRegister} /> {format_currency(stats.totalTransactions)}</div>
+                    <div className="small text-secondary">Commissions {format_currency(stats.totalCosts)}</div>
+                    <div className="fs-4 bold"><FontAwesomeIcon icon={faMoneyBillTrendUp}/> {format_currency(stats.totalCurrent)}</div>
+                </div>
+                <div className="col-5 col-md-3 text-center">
+                    <div className={`fs-1 bold ${statsGainClass}`}>
+                        <FontAwesomeIcon icon={faScaleUnbalanced} /> {statsGainSign}{stats.netPercent()}%
+                    </div>
+                </div>                
+            </div>
+            <ListGroup variant="flush">{ Object.keys(stats.stocks).map((stockid) => {
+            const stockData = stats.stocks[stockid];
+            const curVal = format_currency(stockData.currentValue);
+            const purVal = format_currency(stockData.purhcaseValue);
+            const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
+            const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
             const gainClass = gainVal > 0 ? "gain" : "loss";
             const gainSign = gainVal > 0 ? "+" : "";
             return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
@@ -237,8 +276,8 @@ const TradingStats = ({orders, stocks, update}) => {
                     </div>
                     <div className="small text-secondary">{stockData.stock.name}</div>
                     <div className="d-flex m-2 align-items-end">
-                        <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}{"€"}<br />
-                            <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}{"€"}
+                        <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}<br />
+                            <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}
                         </div>
                         <div className="small text-secondary ms-auto">
                             <FontAwesomeIcon icon={faClockRotateLeft} />{' '}{format(stockData.lastUpdate, i18n)}
@@ -250,9 +289,56 @@ const TradingStats = ({orders, stocks, update}) => {
         </Card.Body>
     </Card>
 };
+const TradingOrdersListComponent = ({orders, stocks, operations}) => {
+    const {i18n} = useLingui();
+    return <Card className="shadow-lg">
+        <Card.Body>
+            <Card.Title>
+                <div className="d-flex align-items-center">
+                    <Trans>Your past orders</Trans>
+                </div>
+            </Card.Title>
+            <ListGroup variant="flush">
+                { orders.map((order) => {
+                    const dateStr = format(order.date, i18n);
+                    const operation = operations.find((item)=>item.id === order.operation);
+                    let operationIcon = faQuestion;
+                    let operationClass = "";
+                    let gainSign = ""
+                    if(operation){
+                        if(operation.operation === "BUY"){
+                            operationIcon = faBasketShopping;
+                            operationClass = "text-expenses";
+                            gainSign = "-";
+                        }else if(operation.operation === "SELL"){
+                            operationIcon = faHandHoldingDollar;
+                            operationClass = "text-earnings";
+                        }
+                    }
+                    const stock = stocks.find((stock)=>stock.id === order.stock);
+                    const stockSymStr = stock?.symbol?? "?";
+                    const stockNameStr = stock?.name?? "?";
+                    return <ListGroup.Item key={`order_${order.id}`}>
+                        <div className={`d-flex mt-2 align-items-baseline ${operationClass}`}>
+                            <div className="pe-2">{dateStr}</div>
+                            <div className="pe-2"><FontAwesomeIcon icon={operationIcon} /></div>
+                        </div>
+                        <div className={`d-flex mt-2 align-items-baseline ${operationClass}`}>
+                            <div className="fs-4 pe-2">{stockSymStr}</div>
+                            <div className="pe-2 small">{' '}&times;{order.quantity}</div>
+                            <div className="fw-bold trading-gain ms-auto fs-4">{gainSign}{parseFloat(order.quantity * order.price).toFixed(2)}</div>
+                        </div>
+                        <div className="small text-secondary">{stockNameStr}</div>
+                    </ListGroup.Item>
+                })}
+            </ListGroup>
+        </Card.Body>
+    </Card>
+};
 const Trading = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
+    const [showOrders, setShowOrders] = useState(false);
     const [stockQuery, orderQuery, quotesQuery, operations] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
@@ -285,9 +371,18 @@ const Trading = () => {
                 <TradingStats orders={orderQuery.data} stocks={stockQuery.data} />
             </div>
         </div>
-        <div className="row jusftify-content-center">
+        <div className="row justify-content-center">
             <div className="col-md-8">
                 {/* <TradingHistory orders={orderQuery.data.toReversed()} stocks={stockQuery.data} quotes={quotesQuery.data} /> */}
+            </div>
+        </div>
+        <div className="row justify-content-center">
+            <div className="col-md-8" id="#ordersBlock">
+                <a href="#ordersBlock" onClick={()=>setShowOrders(!showOrders)}><Trans>Show orders</Trans></a>
+                {showOrders ?
+                    <TradingOrdersListComponent orders={orderQuery.data} stocks={stockQuery.data} operations={operations.data}/>
+                    : null
+                }
             </div>
         </div>
     </div>
