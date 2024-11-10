@@ -16,6 +16,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useState } from "react";
 import mutateOrder from "../queries/mutateOrder";
+import mutateQuotes from "../queries/mutateQuotes";
 
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
     if(error.message === "forbidden"){
@@ -241,11 +242,18 @@ const TradingStats = ({orders, stocks, update}) => {
     }
     const statsGainClass = stats.netGain()>0 ? "text-earnings" : "text-expenses";
     const statsGainSign = stats.netGain()>=0 ? "+" : "-";
+    const [rotateSpinning, setRotateSpinning] = useState(false);
+    const [showDetails, setShowDetails] = useState(false);
+    const showDetailsLinkStr = showDetails ? t`Hide details` : t`Show details`;
     return <Card className="shadow-lg">
         <Card.Body>
             <Card.Title>
                 <div className="d-flex align-items-center">
-                    <Trans>Your current trading assets</Trans>{' '}<FontAwesomeIcon icon={faRotate} className="text-secondary ms-auto" onClick={()=>update()}/>
+                    <Trans>Your current trading stats</Trans>{' '}
+                    <FontAwesomeIcon icon={faRotate} 
+                        spin={rotateSpinning} 
+                        className="text-secondary ms-auto" 
+                        onClick={()=>{setRotateSpinning(true); update(); } }/>
                 </div>
             </Card.Title>
             <div className="row stats-summary align-items-center justify-content-center">
@@ -260,32 +268,43 @@ const TradingStats = ({orders, stocks, update}) => {
                     </div>
                 </div>                
             </div>
-            <ListGroup variant="flush">{ Object.keys(stats.stocks).map((stockid) => {
-            const stockData = stats.stocks[stockid];
-            const curVal = format_currency(stockData.currentValue);
-            const purVal = format_currency(stockData.purhcaseValue);
-            const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
-            const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
-            const gainClass = gainVal > 0 ? "gain" : "loss";
-            const gainSign = gainVal > 0 ? "+" : "";
-            return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
-                    <div className="d-flex mt-2 align-items-baseline">
-                        <div className="fs-4 pe-2">{stockData.stock.symbol}</div>
-                        <div className="pe-2 small">{' '}&times;{stockData.count}</div>
-                        <div className={`fw-bold trading-gain ms-auto fs-4 ${gainClass}`}>{gainSign}{gainVal}{'%'}</div>
-                    </div>
-                    <div className="small text-secondary">{stockData.stock.name}</div>
-                    <div className="d-flex m-2 align-items-end">
-                        <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}<br />
-                            <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}
+            <div className="row">
+                <div className="col text-center">
+                    <a href="#detailsBlock" onClick={()=>setShowDetails(!showDetails)}>
+                        {showDetailsLinkStr}
+                    </a>
+                </div>
+            </div>
+            <div className="row">
+            { showDetails ?
+                <ListGroup variant="flush" id="detailsBlock">{ Object.keys(stats.stocks).map((stockid) => {
+                const stockData = stats.stocks[stockid];
+                const curVal = format_currency(stockData.currentValue);
+                const purVal = format_currency(stockData.purhcaseValue);
+                const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
+                const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
+                const gainClass = gainVal > 0 ? "gain" : "loss";
+                const gainSign = gainVal > 0 ? "+" : "";
+                return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
+                        <div className="d-flex mt-2 align-items-baseline">
+                            <div className="fs-4 pe-2">{stockData.stock.symbol}</div>
+                            <div className="pe-2 small">{' '}&times;{stockData.count}</div>
+                            <div className={`fw-bold trading-gain ms-auto fs-4 ${gainClass}`}>{gainSign}{gainVal}{'%'}</div>
                         </div>
-                        <div className="small text-secondary ms-auto">
-                            <FontAwesomeIcon icon={faClockRotateLeft} />{' '}{format(stockData.lastUpdate, i18n)}
+                        <div className="small text-secondary">{stockData.stock.name}</div>
+                        <div className="d-flex m-2 align-items-end">
+                            <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}<br />
+                                <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}
+                            </div>
+                            <div className="small text-secondary ms-auto">
+                                <FontAwesomeIcon icon={faClockRotateLeft} />{' '}{format(stockData.lastUpdate, i18n)}
+                            </div>
                         </div>
-                    </div>
-                </ListGroup.Item>
-                })}
-            </ListGroup>
+                    </ListGroup.Item>
+                    })}
+                </ListGroup>
+            :null}
+            </div>
         </Card.Body>
     </Card>
 };
@@ -339,6 +358,7 @@ const Trading = () => {
     const queryclient = useQueryClient();
     const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
+    const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
     const [stockQuery, orderQuery, quotesQuery, operations] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
@@ -347,6 +367,34 @@ const Trading = () => {
             {queryKey: ["operations"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
         ]
     });
+    const [statsKey, setStatsKey] = useState(0);
+    const queryClient = useQueryClient();
+    const quoteMutation = useMutation({
+        mutationFn: ({stocks}) => { // `stocks` value must be a list of stock symbols
+            return mutateQuotes({quotes: {symbols: stocks}})
+        },
+        onSuccess: ({stocks, quotes, errors}) => {
+            if(!errors){
+                queryClient.setQueryData(["quotes"], (oldQuotes)=>{
+                    oldQuotes += quotes;
+                    return oldQuotes;
+                });
+                queryClient.setQueryData(["stocks"], (oldStocks)=>{
+                    stocks.map((newStock)=> {
+                        const oldStockToUpdateIndex = oldStocks.findIndex((s)=> newStock.id === s.id);
+                        if(oldStockToUpdateIndex>=0){
+                            oldStocks.splice(oldStockToUpdateIndex, 1, oldStocks[oldStockToUpdateIndex]);
+                        }
+                    });
+                    return oldStocks;
+                })
+            }// else ??
+            setStatsKey(1+statsKey); // this stops the rotate icon spinning
+        },
+        onError: () => {
+            setStatsKey(1+statsKey);
+        },
+    })
     if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operations.isLoading){
         return <LoadingDiv />
     }
@@ -368,7 +416,12 @@ const Trading = () => {
         </div>
         <div className="row justify-content-center">
             <div className="col-md-8">
-                <TradingStats orders={orderQuery.data} stocks={stockQuery.data} />
+                <TradingStats 
+                    key={statsKey}
+                    orders={orderQuery.data} 
+                    stocks={stockQuery.data} 
+                    update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
+                    />
             </div>
         </div>
         <div className="row justify-content-center">
@@ -377,12 +430,16 @@ const Trading = () => {
             </div>
         </div>
         <div className="row justify-content-center">
-            <div className="col-md-8" id="#ordersBlock">
-                <a href="#ordersBlock" onClick={()=>setShowOrders(!showOrders)}><Trans>Show orders</Trans></a>
-                {showOrders ?
-                    <TradingOrdersListComponent orders={orderQuery.data} stocks={stockQuery.data} operations={operations.data}/>
-                    : null
-                }
+            <div className="col-md-8 text-center" id="#ordersBlock">
+                <a href="#ordersBlock" onClick={()=>setShowOrders(!showOrders)}>{showOrdersLinkStr}</a>
+            </div>
+        </div>
+        <div className="row justify-content-center">
+            <div className="col-md-8">
+            {showOrders ?
+                <TradingOrdersListComponent orders={orderQuery.data} stocks={stockQuery.data} operations={operations.data}/>
+                : null
+            }
             </div>
         </div>
     </div>
