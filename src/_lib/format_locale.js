@@ -59,3 +59,7 @@ export function format_ISO_date(date) {
     // const second = date.getUTCSecond();
     return `${year}-${month}-${day}T${hour}:${minute}`;
 }
+export function format_currency(value, symbol='€') {
+    let fixedTwoDigits = parseFloat(value).toFixed(2);
+    return `${fixedTwoDigits}${symbol}`;
+}
