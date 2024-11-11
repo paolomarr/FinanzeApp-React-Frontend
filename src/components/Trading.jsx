@@ -27,30 +27,10 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
         return failureCount-1;
     }
 };
-const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
+const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
     const [errors] = useState(null);
-    const queryclient = useQueryClient();
-    const orderMutation = useMutation({
-        mutationFn: ({order, isDelete}) => {
-            mutateOrder({order: order, _delete: isDelete});
-        },
-        onSuccess: (result, {order, isDelete}) => {
-            queryclient.setQueryData(["orders"], (oldData) => {
-                if(isDelete){ // DELETE
-                }else if(order.id){// PUT
-                }else { // POST
-                    oldData.push(result);
-                }
-            });
-        },
-        onError: (error, variables, context) => {
-            console.log(error);
-            console.log(variables);
-            console.log(context);
-        }
-    })
     const insertOrder = () => {
-        orderMutation.mutate({order: neworder, isDelete: false});
+        onMutateOrder(neworder, false);
     };
     const [neworder, setNeworder] = useState({
         operation: 1,
@@ -116,7 +96,7 @@ const OrderInsertionForm = ({stocks, operations, onAddNewStock}) => {
                     {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
                         return <option key={stock.id} value={stock.id}>{`${stock.symbol} - ${stock.name}`}</option>
                     }))}
-                        <option value={-2} onClick={() => onAddNewStock()}>{t`Add new stock`}</option>
+                        <option value={-2}>{t`Add new stock`}</option>
                 </Form.Select>
             </Col>
             <Col xs="4">
@@ -344,7 +324,7 @@ const TradingOrdersListComponent = ({orders, stocks, operations}) => {
                         </div>
                         <div className={`d-flex mt-2 align-items-baseline ${operationClass}`}>
                             <div className="fs-4 pe-2">{stockSymStr}</div>
-                            <div className="pe-2 small">{' '}&times;{order.quantity}</div>
+                            <div className="pe-2 small">{' '}{format_currency(order.price)}&times;{order.quantity}</div>
                             <div className="fw-bold trading-gain ms-auto fs-4">{gainSign}{parseFloat(order.quantity * order.price).toFixed(2)}</div>
                         </div>
                         <div className="small text-secondary">{stockNameStr}</div>
@@ -369,6 +349,33 @@ const Trading = () => {
     });
     const [statsKey, setStatsKey] = useState(0);
     const queryClient = useQueryClient();
+    const orderMutation = useMutation({
+        mutationFn: ({order, _delete}) => {
+            return mutateOrder({order:order, _delete: _delete});
+        },
+        onSuccess: (result, {order, _delete}) => {
+            let mutandumIndex;
+            if(order.id && result.id){ // DELETE or PUT
+                mutandumIndex = orderQuery.data.findIndex((order)=> order.id === result.id);
+                if(_delete){
+                    queryClient.setQueryData(["orders"], (oldOrders)=>{
+                        oldOrders.splice(mutandumIndex, 1);
+                        return oldOrders;
+                    });
+                }else{
+                    queryClient.setQueryData(["orders"], (oldOrders)=>{
+                        oldOrders.splice(mutandumIndex, 1, result);
+                        return oldOrders;
+                    });
+                }
+            }else{ // POST
+                queryClient.setQueryData(["orders"], (oldOrders)=>{
+                    oldOrders.unshift(result);
+                    return oldOrders;
+                });
+            }
+        }
+    });
     const quoteMutation = useMutation({
         mutationFn: ({stocks}) => { // `stocks` value must be a list of stock symbols
             return mutateQuotes({quotes: {symbols: stocks}})
@@ -408,7 +415,9 @@ const Trading = () => {
                     <Card className="shadow-lg" bg="primary">
                         <Card.Body>
                             <Card.Title><Trans>Record a new order</Trans></Card.Title>
-                            <OrderInsertionForm operations={operations.data} stocks={stockQuery.data} />
+                            <OrderInsertionForm operations={operations.data} stocks={stockQuery.data} 
+                                onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete})}
+                                />
                         </Card.Body>
                     </Card>
                 </Col>
