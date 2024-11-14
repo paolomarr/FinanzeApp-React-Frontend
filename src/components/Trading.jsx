@@ -5,7 +5,7 @@ import LoadingDiv from "./LoadingDiv";
 import { format, format_currency } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faQuestion, faRotate, faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faPenSquare, faQuestion, faRotate, faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
@@ -14,7 +14,7 @@ import Button from 'react-bootstrap/Button';
 import Feedback from 'react-bootstrap/Feedback';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
 
@@ -27,7 +27,7 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
         return failureCount-1;
     }
 };
-const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
+const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
     const [errors] = useState(null);
     const insertOrder = () => {
         onMutateOrder(neworder, false);
@@ -40,6 +40,25 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
         transaction_cost: 2,
         quantity: 0,
     });
+    const orderCodeRef = useRef(null);
+    const orderDateRef = useRef(null);
+    const orderAccountRef = useRef(null);
+    const orderStockRef = useRef(null);
+    const orderOperationRef = useRef(null);
+    const orderPriceRef = useRef(null);
+    const orderQuantityRef = useRef(null);
+    const orderTransactionCostRef = useRef(null);
+    if(editOrder && neworder != editOrder){
+        setNeworder(editOrder);
+        orderCodeRef.current.value = editOrder.code;
+        orderDateRef.current.value = editOrder.date;
+        orderAccountRef.current.value = editOrder.account;
+        orderStockRef.current.value = editOrder.stock;
+        orderOperationRef.current.value = editOrder.operation;
+        orderPriceRef.current.value = editOrder.price;
+        orderQuantityRef.current.value = editOrder.quantity;
+        orderTransactionCostRef.current.value = editOrder.transaction_cost;
+    }
     return <Form>
         <Form.Group className="mb-1">
             <Form.Label htmlFor="code">
@@ -49,8 +68,8 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 id="code"
                 name="code"
                 className={`${errors?.code? "is-invalid" : ""}`}
-                value={neworder.abs_amount}
-                onChange={(e) => setNeworder({...neworder, code: e.target.value})}
+                ref={orderCodeRef}
+                // onChange={(e) => setNeworder({...neworder, code: e.target.value})}
                 />
             <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
         </Form.Group>
@@ -62,6 +81,7 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 id="date"
                 name="date"
                 type="date"
+                ref={orderDateRef}
                 className={`form-control ${errors?.date? "is-invalid" : ""}`}
                 // value={neworder.date ?? new Date()}
                 onChange={(e) => setNeworder({...neworder, date: e.target.value})}
@@ -75,8 +95,9 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
             <Form.Control 
                 id="account"
                 name="account"
+                ref={orderAccountRef}
                 className={`form-control ${errors?.account? "is-invalid" : ""}`}
-                value={neworder.account}
+                // value={neworder.account}
                 onChange={(e) => setNeworder({...neworder, account: e.target.value})}
             />
         </Form.Group>
@@ -88,11 +109,13 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 <Form.Select
                     id="stock"
                     name="stock"
+                    ref={orderStockRef}
                     type="select"
                     className={`${errors?.stock? "is-invalid" : ""}`}
                     onChange={(e) => setNeworder({...neworder, stock: e.target.value})}
-                    value={neworder.stock}>
-                        <option value={-1}></option>
+                    // value={neworder.stock}
+                    >
+                        <option value={0}></option>
                     {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
                         return <option key={stock.id} value={stock.id}>{`${stock.symbol} - ${stock.name}`}</option>
                     }))}
@@ -106,8 +129,9 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 <Form.Select
                     id="operation"
                     name="operation"
+                    ref={orderOperationRef}
                     >
-                    <option value={1}></option>
+                    <option value={0}></option>
                     {!operations || operations.length <= 0 ? (null) : (operations.map((operation) => {
                     return <option key={operation.id} value={operation.id}>{operation.operation}</option>
                     }))}
@@ -120,9 +144,10 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 <Form.Control
                     id="price"
                     name="price"
+                    ref={orderPriceRef}
                     type="number"
                     className={`${errors?.price? "is-invalid" : ""}`}
-                    value={neworder.price}
+                    // value={neworder.price}
                     onChange={(e) => setNeworder({...neworder, price: e.target.value})}
                 />
             </Col>
@@ -131,9 +156,10 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 <Form.Control
                     id="quantity"
                     name="quantity"
+                    ref={orderQuantityRef}
                     type="number"
                     className={`${errors?.quantity? "is-invalid" : ""}`}
-                    value={neworder.quantity}
+                    // value={neworder.quantity}
                     onChange={(e) => setNeworder({...neworder, quantity: e.target.value})}
                 />
             </Col>
@@ -146,9 +172,10 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder}) => {
                 <Form.Control 
                     id="transaction_cost"
                     name="transaction_cost"
+                    ref={orderTransactionCostRef}
                     type="number"
                     className={`form-control ${errors?.transaction_cost? "is-invalid" : ""}`}
-                    value={neworder.transaction_cost}
+                    // value={neworder.transaction_cost}
                     onChange={(e) => setNeworder({...neworder, transaction_cost: e.target.value})}
                 />
             </Col>
@@ -288,7 +315,7 @@ const TradingStats = ({orders, stocks, update}) => {
         </Card.Body>
     </Card>
 };
-const TradingOrdersListComponent = ({orders, stocks, operations}) => {
+const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClicked}) => {
     const {i18n} = useLingui();
     return <Card className="shadow-lg">
         <Card.Body>
@@ -321,6 +348,7 @@ const TradingOrdersListComponent = ({orders, stocks, operations}) => {
                         <div className={`d-flex mt-2 align-items-baseline ${operationClass}`}>
                             <div className="pe-2">{dateStr}</div>
                             <div className="pe-2"><FontAwesomeIcon icon={operationIcon} /></div>
+                            <div className="ms-auto"><FontAwesomeIcon icon={faPenSquare} onClick={()=>onOrderEditClicked(order)} /></div>
                         </div>
                         <div className={`d-flex mt-2 align-items-baseline ${operationClass}`}>
                             <div className="fs-4 pe-2">{stockSymStr}</div>
@@ -347,6 +375,7 @@ const Trading = () => {
             {queryKey: ["operations"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
         ]
     });
+    const [editOrder, setEditOrder] = useState(null);
     const [statsKey, setStatsKey] = useState(0);
     const queryClient = useQueryClient();
     const orderMutation = useMutation({
@@ -402,6 +431,14 @@ const Trading = () => {
             setStatsKey(1+statsKey);
         },
     })
+    const orderInsertionFormRef = useRef(null);
+    const handleOrderEditClicked = (order) => {
+        // Scroll to the top of the Form
+        if (orderInsertionFormRef.current) {
+            orderInsertionFormRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+        setEditOrder(order);
+    };
     if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operations.isLoading){
         return <LoadingDiv />
     }
@@ -409,14 +446,16 @@ const Trading = () => {
         return <div>Error</div>
     }
     return <div className="container-sm">
-        <div className="my-2">
+        <div className="my-2" ref={orderInsertionFormRef}>
             <Row className="justify-content-center" md={2}>
                 <Col>
                     <Card className="shadow-lg" bg="primary">
                         <Card.Body>
                             <Card.Title><Trans>Record a new order</Trans></Card.Title>
                             <OrderInsertionForm operations={operations.data} stocks={stockQuery.data} 
-                                onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete})}
+                                onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete}
+                                )}
+                                editOrder={editOrder}
                                 />
                         </Card.Body>
                     </Card>
@@ -446,7 +485,12 @@ const Trading = () => {
         <div className="row justify-content-center">
             <div className="col-md-8">
             {showOrders ?
-                <TradingOrdersListComponent orders={orderQuery.data} stocks={stockQuery.data} operations={operations.data}/>
+                <TradingOrdersListComponent orders={orderQuery.data} 
+                    stocks={stockQuery.data} 
+                    operations={operations.data} 
+                    onOrderEditClicked={handleOrderEditClicked}
+                    
+                />
                 : null
             }
             </div>
