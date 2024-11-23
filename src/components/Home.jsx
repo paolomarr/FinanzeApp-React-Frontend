@@ -259,7 +259,11 @@ const Home = () => {
           subcategories={subcategoryResults.data}
           onEdit={(movement) => setShowModal({show: true, movement: movement})}/>
         <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
-        <MovementModal showModal={showModal} toggleModal={toggleModal} onDataReady={(movement, todelete, tocontinue) => mutation.mutate({movement: movement, _delete: todelete, _continue: tocontinue})} />
+        <MovementModal 
+          showModal={showModal}
+          onMovementUpdate={(newMovement)=>setShowModal({...showModal, movement:newMovement})}
+          toggleModal={toggleModal} 
+          onDataReady={(movement, todelete, tocontinue) => mutation.mutate({movement: movement, _delete: todelete, _continue: tocontinue})} />
       </>
     )
 }

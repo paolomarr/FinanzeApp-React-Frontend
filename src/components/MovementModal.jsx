@@ -1,6 +1,6 @@
 import Modal from 'react-bootstrap/Modal';
 import MovementForm from "./MovementForm";
-import { t } from "@lingui/macro";
+import { t, Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import { faCamera, faUpload, faXmark, faCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -14,10 +14,29 @@ import ButtonGroup from 'react-bootstrap/esm/ButtonGroup';
 import { useMutation } from '@tanstack/react-query';
 import mutateReceipt from '../queries/mutateReceipt';
 
-const WebcamComponent = ({ onShotReady }) => {
+const WebcamComponent = ({ onScanResultReady }) => {
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [imgLoading, setImgLoading] = useState(false);
+  const [isScanError, setIsScanError] = useState(false);
+  const imageMutation = useMutation({
+    mutationFn: mutateReceipt,
+    // TODO: handle errors and response
+    onSuccess: (result) => {
+      if(result.warning){ // parsing failed
+        console.log(result.warning);
+        setIsScanError(true);
+      }else{
+        onScanResultReady({...result, date: new Date(result.date)});
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+    onSettled: () => {
+      setImgLoading(false);
+    }
+  });
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
@@ -31,7 +50,7 @@ const WebcamComponent = ({ onShotReady }) => {
       bareImgB64 = imgSrc.slice(index+b64marker.length);
     }
     // console.log("Sending image: base64: " + bareImgB64.substring(0, 20) + "..." + bareImgB64.substring(bareImgB64.length-10));
-    onShotReady(bareImgB64);
+    imageMutation.mutate({imgBase64: bareImgB64})
     setImgLoading(true);
   };
   return (
@@ -39,12 +58,26 @@ const WebcamComponent = ({ onShotReady }) => {
       { imgSrc ? 
         <div className='position-relative'>
           <img src={imgSrc} alt='The shot you took'/> 
-          <div className='position-absolute bottom-0 start-50 opacity-75 translate-middle'>
-            <Button className='mx-1' variant='secondary' onClick={() => setImgSrc(null)}><FontAwesomeIcon icon={faXmark} /></Button>
-            <Button className='mx-1' variant='success' onClick={()=> uploadImage()}><FontAwesomeIcon icon={faUpload} /></Button>
+          <div className='position-absolute  opacity-75 bottom-0 start-50 translate-middle-x w-75 text-center'>
+            { isScanError ? <>
+            {/* <div><Button  className='mx-1' variant='secondary' onClick={() => {setIsScanError(false); setImgSrc(null); }}><FontAwesomeIcon icon={faRotateLeft} /></Button></div> */}
+            <div className="alert alert-secondary" role="alert">
+              <small>
+                <Trans>Could not parse the receipt content.</Trans>
+                <br/>
+                <Trans><Button  className='mx-1' variant='secondary' onClick={() => {setIsScanError(false); setImgSrc(null); }}>Try again</Button></Trans>
+              </small>
+            </div>
+            </>
+            : <>
+                <Button className='mx-1' variant='secondary' onClick={() => setImgSrc(null)}><FontAwesomeIcon icon={faXmark} /></Button>
+                <Button className='mx-1' variant='success' onClick={()=> uploadImage()}><FontAwesomeIcon icon={faUpload} /></Button>
+              </>
+            }
           </div>
+          { imgLoading ? <FontAwesomeIcon className='position-absolute top-50 start-50 translate-middle' icon={faSpinner} spin /> : null }
         </div>
-      :
+        :
       <div className='position-relative'>
         <Webcam className='w-100'
           audio={false}
@@ -56,13 +89,12 @@ const WebcamComponent = ({ onShotReady }) => {
           size="2xl" 
           style={{"color": "#f25a50"}}
           onClick={capture}/>
-        { imgLoading ? <FontAwesomeIcon className='position-absolute bottom-50 start-50 translate-middle' icon={faSpinner} spin /> : null }
       </div>
       }
     </>
   )
 }
-const MovementModal = ({ showModal, toggleModal, onDataReady, title, fields }) => {
+const MovementModal = ({ showModal, onMovementUpdate, toggleModal, onDataReady, title, fields }) => {
   const {show, movement, errors} = showModal;
   if(!title){
     title = showModal.movement ? t`Update movement data` : t`Insert new movement`;
@@ -72,23 +104,13 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title, fields }) =
     setShowCamera(false);
     toggleModal();
   };
-  const [webcamComponentKey, setWebcamComponentKey] = useState(0);
-  const imageMutation = useMutation({
-    mutationFn: mutateReceipt,
-    // TODO: handle errors and response
-    onSuccess: (result) => {
-      console.log(result);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-    onSettled: () => {
-      setWebcamComponentKey(webcamComponentKey+1); // resets component's loading state
-    }
-  });
-  const sendImage = (imgdata) => {
-    imageMutation.mutate({imgBase64: imgdata});
-  }
+  const updateMovementFromCameraResult = (result) => {
+    console.log(result);
+    onMovementUpdate(result);
+    setShowCamera(false);
+  };
+  
+  
   return (
     <Modal show={show} onHide={innerToggle}>
       <Modal.Header closeButton><Modal.Title>{title}</Modal.Title></Modal.Header>
@@ -100,7 +122,7 @@ const MovementModal = ({ showModal, toggleModal, onDataReady, title, fields }) =
           </ButtonGroup>
         </div>
         { showCamera ? 
-          <WebcamComponent key={webcamComponentKey} onShotReady={(img) => sendImage(img) }/> :
+          <WebcamComponent onScanResultReady={updateMovementFromCameraResult}/> :
           <MovementForm movement={movement} cancel={innerToggle} onDataReady={onDataReady} errors={errors} fields={fields}/>
         }
       </Modal.Body>
