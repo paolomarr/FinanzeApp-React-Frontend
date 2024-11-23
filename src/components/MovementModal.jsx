@@ -24,8 +24,14 @@ const WebcamComponent = ({ onShotReady }) => {
   }, [webcamRef, setImgSrc]);
   const uploadImage = () => {
     if(null==imgSrc) return;
-    console.log("Sending image: base64: " + imgSrc.substring(0, 10) + "..." + imgSrc.substring(imgSrc.length-10));
-    onShotReady(imgSrc);
+    const b64marker = "base64,"
+    let bareImgB64 = imgSrc;
+    const index = imgSrc.indexOf(b64marker);
+    if(index>=0){
+      bareImgB64 = imgSrc.slice(index+b64marker.length);
+    }
+    // console.log("Sending image: base64: " + bareImgB64.substring(0, 20) + "..." + bareImgB64.substring(bareImgB64.length-10));
+    onShotReady(bareImgB64);
     setImgLoading(true);
   };
   return (
