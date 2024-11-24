@@ -3,7 +3,7 @@ import MovementForm from "./MovementForm";
 import { t, Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
-import { faCamera, faUpload, faXmark, faCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faCamera, faUpload, faXmark, faCircle, faSpinner, faCameraRotate } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useCallback } from 'react';
@@ -16,6 +16,11 @@ import mutateReceipt from '../queries/mutateReceipt';
 
 const WebcamComponent = ({ onScanResultReady }) => {
   const webcamRef = useRef(null);
+  // const _cameras_constraints_map = {
+  //   REAR_CAMERA: "environment",
+  //   FRONT_CAMERA: "user"
+  // };
+  const [isFrontCamera, setIsFrontCamera] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
   const [imgLoading, setImgLoading] = useState(false);
   const [isScanError, setIsScanError] = useState(false);
@@ -53,6 +58,7 @@ const WebcamComponent = ({ onScanResultReady }) => {
     imageMutation.mutate({imgBase64: bareImgB64})
     setImgLoading(true);
   };
+  const videoConstraints = {exact: isFrontCamera ? "user" : "environment"};
   return (
     <>
       { imgSrc ? 
@@ -65,7 +71,7 @@ const WebcamComponent = ({ onScanResultReady }) => {
               <small>
                 <Trans>Could not parse the receipt content.</Trans>
                 <br/>
-                <Trans><Button  className='mx-1' variant='secondary' onClick={() => {setIsScanError(false); setImgSrc(null); }}>Try again</Button></Trans>
+                <Button  className='mx-1' variant='secondary' onClick={() => {setIsScanError(false); setImgSrc(null); }}><Trans>Try again</Trans></Button>
               </small>
             </div>
             </>
@@ -83,12 +89,20 @@ const WebcamComponent = ({ onScanResultReady }) => {
           audio={false}
           ref={webcamRef}
           screenshotFormat="image/jpeg"
+          videoConstraints={videoConstraints}
         />
-        <FontAwesomeIcon className='position-absolute bottom-0 start-50 translate-middle opacity-75' 
-          icon={faCircle} 
-          size="2xl" 
-          style={{"color": "#f25a50"}}
-          onClick={capture}/>
+        <div className='bg-secondary bottom-0 opacity-75 p-1 position-absolute px-3 rounded-2 start-50 translate-middle'>
+
+          <FontAwesomeIcon
+            icon={faCircle} 
+            size="2xl" 
+            style={{"color": "#f25a50"}}
+            onClick={capture}/>
+          <FontAwesomeIcon
+            icon={faCameraRotate}
+            size="2xl" 
+            onClick={()=> setIsFrontCamera(!isFrontCamera)}/>
+        </div>
       </div>
       }
     </>
