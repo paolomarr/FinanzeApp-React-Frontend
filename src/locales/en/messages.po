@@ -27,6 +27,10 @@ msgstr ""
 #~ msgid "{title}"
 #~ msgstr "{title}"
 
+#: src/components/MovementModal.jsx:68
+#~ msgid "<0>Try again</0>"
+#~ msgstr "<0>Try again</0>"
+
 #: src/components/MovementsList.jsx:79
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
@@ -36,7 +40,7 @@ msgid "Account no."
 msgstr "Account no."
 
 #: src/components/Assets.jsx:141
-#: src/components/CategoryManager.jsx:30
+#: src/components/CategoryManager.jsx:67
 #: src/components/Trading.jsx:176
 msgid "Add"
 msgstr "Add"
@@ -83,17 +87,18 @@ msgstr "Assets to be recorded"
 msgid "Balance record history"
 msgstr "Balance record history"
 
-#: src/App.jsx:18
-#: src/components/MainNavbar.jsx:65
-#: src/components/MainNavbar.jsx:88
+#: src/components/MainNavbar.jsx:68
+#: src/components/MainNavbar.jsx:91
+#: src/index.js:57
 msgid "Balance records"
 msgstr "Balance records"
 
+#: src/components/CategoryManager.jsx:104
 #: src/components/MovementForm.jsx:56
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/CategoryManager.jsx:159
+#: src/components/CategoryManager.jsx:206
 msgid "Categories"
 msgstr "Categories"
 
@@ -113,6 +118,10 @@ msgstr "Confirm"
 #: src/components/Assets.jsx:71
 msgid "Copy items"
 msgstr "Copy items"
+
+#: src/components/MovementModal.jsx:66
+msgid "Could not parse the receipt content."
+msgstr "Could not parse the receipt content."
 
 #: src/components/Home.jsx:41
 msgid "Current month"
@@ -164,13 +173,17 @@ msgstr "Description"
 msgid "Description cannot be empty"
 msgstr "Description cannot be empty"
 
-#: src/components/CategoryManager.jsx:62
+#: src/components/CategoryManager.jsx:97
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:219
 msgid "Earnings"
 msgstr "Earnings"
 
-#: src/components/CategoryManager.jsx:63
+#: src/components/CategoryManager.jsx:58
+msgid "Error"
+msgstr "Error"
+
+#: src/components/CategoryManager.jsx:98
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:222
 msgid "Expenses"
@@ -201,12 +214,12 @@ msgstr "hours"
 msgid "Incomes"
 msgstr "Incomes"
 
-#: src/components/MovementModal.jsx:10
+#: src/components/MovementModal.jsx:100
 msgid "Insert new movement"
 msgstr "Insert new movement"
 
 #: src/components/Header.jsx:46
-#: src/components/MainNavbar.jsx:27
+#: src/components/MainNavbar.jsx:30
 msgid "Languages"
 msgstr "Languages"
 
@@ -222,8 +235,8 @@ msgstr "Last 6 months"
 msgid "Last year"
 msgstr "Last year"
 
-#: src/App.jsx:19
-#: src/App.jsx:20
+#: src/index.js:58
+#: src/index.js:59
 msgid "Login"
 msgstr "Login"
 
@@ -231,7 +244,7 @@ msgstr "Login"
 #~ msgid "Logout"
 #~ msgstr "Logout"
 
-#: src/App.jsx:22
+#: src/components/Settings.jsx:18
 msgid "Manage categories"
 msgstr "Manage categories"
 
@@ -247,8 +260,8 @@ msgstr "months"
 #~ msgid "Movement list"
 #~ msgstr "Movement list"
 
-#: src/components/MainNavbar.jsx:58
-#: src/components/MainNavbar.jsx:82
+#: src/components/MainNavbar.jsx:61
+#: src/components/MainNavbar.jsx:85
 msgid "Movements"
 msgstr "Movements"
 
@@ -256,11 +269,11 @@ msgstr "Movements"
 msgid "movements in"
 msgstr "movements in"
 
-#: src/App.jsx:17
+#: src/index.js:56
 msgid "Movements overview"
 msgstr "Movements overview"
 
-#: src/components/CategoryManager.jsx:107
+#: src/components/CategoryManager.jsx:125
 msgid "No data"
 msgstr "No data"
 
@@ -337,6 +350,7 @@ msgid "Save and add more"
 msgstr "Save and add more"
 
 #: src/components/Assets.jsx:283
+#: src/components/CategoryManager.jsx:55
 msgid "Saved"
 msgstr "Saved"
 
@@ -369,11 +383,15 @@ msgstr "seconds"
 #~ msgid "Select subcategory"
 #~ msgstr "Select subcategory"
 
+#: src/index.js:61
+msgid "Settings"
+msgstr "Settings"
+
 #: src/components/MovementsList.jsx:88
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/MovementsHistory.jsx:85
+#: src/components/MovementsHistory.jsx:91
 msgid "Show assets"
 msgstr "Show assets"
 
@@ -385,7 +403,7 @@ msgstr "Showing"
 msgid "Stock"
 msgstr "Stock"
 
-#: src/components/CategoryManager.jsx:166
+#: src/components/CategoryManager.jsx:213
 msgid "Subcategories"
 msgstr "Subcategories"
 
@@ -420,7 +438,7 @@ msgstr "TOTAL"
 msgid "Totals"
 msgstr "Totals"
 
-#: src/App.jsx:21
+#: src/index.js:60
 msgid "Trading"
 msgstr "Trading"
 
@@ -428,11 +446,15 @@ msgstr "Trading"
 msgid "Transaction cost"
 msgstr "Transaction cost"
 
-#: src/components/CategoryManager.jsx:30
+#: src/components/MovementModal.jsx:68
+msgid "Try again"
+msgstr "Try again"
+
+#: src/components/CategoryManager.jsx:67
 msgid "Update"
 msgstr "Update"
 
-#: src/components/MovementModal.jsx:10
+#: src/components/MovementModal.jsx:100
 msgid "Update movement data"
 msgstr "Update movement data"
 

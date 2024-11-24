@@ -18,7 +18,7 @@ msgid "Account no."
 msgstr "Conto num."
 
 #: src/components/Assets.jsx:141
-#: src/components/CategoryManager.jsx:30
+#: src/components/CategoryManager.jsx:67
 #: src/components/Trading.jsx:176
 msgid "Add"
 msgstr "Aggiungi"
@@ -49,17 +49,18 @@ msgstr "Valori da registrare"
 msgid "Balance record history"
 msgstr "Storico dei saldi registrati"
 
-#: src/App.jsx:18
-#: src/components/MainNavbar.jsx:65
-#: src/components/MainNavbar.jsx:88
+#: src/components/MainNavbar.jsx:68
+#: src/components/MainNavbar.jsx:91
+#: src/index.js:57
 msgid "Balance records"
 msgstr "Registro saldi"
 
+#: src/components/CategoryManager.jsx:104
 #: src/components/MovementForm.jsx:56
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/components/CategoryManager.jsx:159
+#: src/components/CategoryManager.jsx:206
 msgid "Categories"
 msgstr "Categorie"
 
@@ -79,6 +80,10 @@ msgstr "Conferma"
 #: src/components/Assets.jsx:71
 msgid "Copy items"
 msgstr "Copia valori"
+
+#: src/components/MovementModal.jsx:66
+msgid "Could not parse the receipt content."
+msgstr "Lettura della ricevuta non riuscita."
 
 #: src/components/Home.jsx:41
 msgid "Current month"
@@ -122,13 +127,17 @@ msgstr "Descrizione"
 msgid "Description cannot be empty"
 msgstr "La descrizione non può essere vuota"
 
-#: src/components/CategoryManager.jsx:62
+#: src/components/CategoryManager.jsx:97
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:219
 msgid "Earnings"
 msgstr "Entrate"
 
-#: src/components/CategoryManager.jsx:63
+#: src/components/CategoryManager.jsx:58
+msgid "Error"
+msgstr "Errore"
+
+#: src/components/CategoryManager.jsx:98
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:222
 msgid "Expenses"
@@ -151,12 +160,12 @@ msgstr "ore"
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/MovementModal.jsx:10
+#: src/components/MovementModal.jsx:100
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
 #: src/components/Header.jsx:46
-#: src/components/MainNavbar.jsx:27
+#: src/components/MainNavbar.jsx:30
 msgid "Languages"
 msgstr "Lingue"
 
@@ -172,8 +181,8 @@ msgstr "Ultimi 6 mesi"
 msgid "Last year"
 msgstr "Ultimo anno"
 
-#: src/App.jsx:19
-#: src/App.jsx:20
+#: src/index.js:58
+#: src/index.js:59
 msgid "Login"
 msgstr "Accedi"
 
@@ -181,7 +190,7 @@ msgstr "Accedi"
 #~ msgid "Logout"
 #~ msgstr "Esci"
 
-#: src/App.jsx:22
+#: src/components/Settings.jsx:18
 msgid "Manage categories"
 msgstr "Gestione categorie"
 
@@ -193,8 +202,8 @@ msgstr "minuti"
 msgid "months"
 msgstr "mesi"
 
-#: src/components/MainNavbar.jsx:58
-#: src/components/MainNavbar.jsx:82
+#: src/components/MainNavbar.jsx:61
+#: src/components/MainNavbar.jsx:85
 msgid "Movements"
 msgstr "Movimenti"
 
@@ -202,11 +211,11 @@ msgstr "Movimenti"
 msgid "movements in"
 msgstr "movimenti in"
 
-#: src/App.jsx:17
+#: src/index.js:56
 msgid "Movements overview"
 msgstr "Riepilogo movimenti"
 
-#: src/components/CategoryManager.jsx:107
+#: src/components/CategoryManager.jsx:125
 msgid "No data"
 msgstr "Nessun elemento"
 
@@ -279,6 +288,7 @@ msgid "Save and add more"
 msgstr "Salva e continua"
 
 #: src/components/Assets.jsx:283
+#: src/components/CategoryManager.jsx:55
 msgid "Saved"
 msgstr "Salvato"
 
@@ -298,7 +308,11 @@ msgstr "Cerca movimenti"
 msgid "seconds"
 msgstr "secondi"
 
-#: src/components/MovementsHistory.jsx:85
+#: src/index.js:61
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/components/MovementsHistory.jsx:91
 msgid "Show assets"
 msgstr "Mostra saldo"
 
@@ -310,7 +324,7 @@ msgstr "Visualizzati"
 msgid "Stock"
 msgstr "Titolo"
 
-#: src/components/CategoryManager.jsx:166
+#: src/components/CategoryManager.jsx:213
 msgid "Subcategories"
 msgstr "Sottocategorie"
 
@@ -337,7 +351,7 @@ msgstr "TOTALE"
 msgid "Totals"
 msgstr "Totali"
 
-#: src/App.jsx:21
+#: src/index.js:60
 msgid "Trading"
 msgstr "Trading"
 
@@ -345,11 +359,15 @@ msgstr "Trading"
 msgid "Transaction cost"
 msgstr "Costo operazione"
 
-#: src/components/CategoryManager.jsx:30
+#: src/components/MovementModal.jsx:68
+msgid "Try again"
+msgstr "Riprova"
+
+#: src/components/CategoryManager.jsx:67
 msgid "Update"
 msgstr "Aggiorna"
 
-#: src/components/MovementModal.jsx:10
+#: src/components/MovementModal.jsx:100
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
