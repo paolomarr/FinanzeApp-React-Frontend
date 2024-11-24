@@ -58,7 +58,7 @@ const WebcamComponent = ({ onScanResultReady }) => {
     imageMutation.mutate({imgBase64: bareImgB64})
     setImgLoading(true);
   };
-  const videoConstraints = {exact: isFrontCamera ? "user" : "environment"};
+  const videoConstraints = {facingMode: isFrontCamera ? "user" : "environment"};
   return (
     <>
       { imgSrc ? 
