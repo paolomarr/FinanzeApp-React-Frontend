@@ -4,7 +4,7 @@ import Alert from 'react-bootstrap/Alert';
 import Feedback from 'react-bootstrap/Feedback';
 import { useQuery } from "@tanstack/react-query";
 import fetchCategories from "../queries/fetchCategories";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import { format_ISO_date } from "../_lib/format_locale";
 import FormGroup from 'react-bootstrap/esm/FormGroup';
@@ -77,7 +77,15 @@ const FormButtonSet = ({movement, deleteConfirmState, submitter, deleter}) => {
 }
 
 const MovementForm = ({movement, onDataReady, errors, fields}) => {
-    
+    const _initialMovement = () => {
+      return {
+        date: new Date(),
+        abs_amount: 0,
+        description: "",
+        category: -1,
+        subcategory: -1,
+      };
+    };
     if(movement?.date){
       if(typeof movement.date == 'string'){
         movement.date = new Date(movement.date);
@@ -89,27 +97,26 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
     const subcategories = subcatresults?.data ?? [];
     const [showSuccess, setShowSuccess] = useState(true);
     const [showFail, setShowFail] = useState(true);
-    const [newmovement, setNewmovement] = useState(movement ?? {
-      date: new Date(),
-      abs_amount: 0,
-      description: "",
-      category: -1,
-    });
-    
+    const [newmovement, setNewmovement] = useState(movement ?? _initialMovement());
+    const movementFormRef = useRef(null);
     const [deleteConfirmState, setDeleteConfirmState] = useState(0);
     const updateNewMovement = (update) => {
       if(update.subcategory <0)  delete update.subcategory;
       setNewmovement({...newmovement, ...update});
     }
     const cleanUpForm = () => {
+      const resetMovement = _initialMovement();
       setShowSuccess(true);
       setShowFail(true);
-      setNewmovement({
-       date: new Date(),
-        abs_amount: 0,
-        description: "",
-        category: -1,
-      });
+      setNewmovement(resetMovement);
+      const inputs = movementFormRef.current?.elements;
+      if(inputs){
+        inputs["date"].value = format_ISO_date(resetMovement.date);
+        inputs["abs_amount"].value = resetMovement.abs_amount;
+        inputs["description"].value = resetMovement.description;
+        inputs["category"].value = resetMovement.category;
+        inputs["subcategory"].value = resetMovement.subcategory;
+      }
     }
     const submitDelete = (stepUp) => {
       if(!stepUp){
@@ -143,7 +150,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
 
     return (
       <>
-      <Form id="movementForm" onSubmit={(e) => e.preventDefault()} className="mb-2">
+      <Form ref={movementFormRef} onSubmit={(e) => e.preventDefault()} className="mb-2">
         {movement ? 
           <Form.Control type="hidden" name="id" value={movement.id} /> : null
         }
@@ -156,7 +163,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             name="date"
             type="datetime-local"
             className={`form-control ${errors?.date? "is-invalid" : ""}`}
-            value={format_ISO_date(newmovement.date)}
+            value={format_ISO_date(movement?.date ?? new Date())}
             onChange={(e) => updateNewMovement({date: new Date(e.target.value)})}
           />
           <Feedback type='invalid'>{errors?.date}</Feedback>
@@ -170,7 +177,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
                 name="abs_amount"
                 type="number"
                 className={`${errors?.abs_amount? "is-invalid" : ""}`}
-                value={newmovement.abs_amount}
+                value={movement?.abs_amount}
                 onChange={(e) => updateNewMovement({abs_amount: e.target.value})}
                 />
           <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
@@ -182,7 +189,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             name="description" 
             type="text" 
             className={`${errors?.description? "is-invalid" : ""}`}
-            value={newmovement.description}
+            value={movement?.description}
             onChange={(e) => updateNewMovement({description: e.target.value})}
             required
             />
@@ -196,7 +203,8 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             type="select" 
             className={`${errors?.category? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({category: e.target.value})}
-            value={newmovement.category}>
+            value={movement?.category}
+            >
             <option value={-1}></option>
             {!categories || categories.length <= 0 ? (null) : (categories.map((cat) => {
               return <option key={cat.id} value={cat.id}>{cat.category}</option>
@@ -212,7 +220,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             type="select" 
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
-            // value={newmovement.subcategory}
+            value={movement?.subcategory}
             >
             <option value={-1}>{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {

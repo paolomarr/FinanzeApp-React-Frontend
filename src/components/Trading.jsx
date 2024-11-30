@@ -243,7 +243,9 @@ const TradingStats = ({orders, stocks, update}) => {
         const regular_market_price = parseFloat(stock.regular_market_price);
         const stockCurVal = regular_market_price * statItem.count;
         stats.stocks[iterstock].currentValue = stockCurVal;
-        stats.stocks[iterstock].lastUpdate = new Date(stock.last_price_update);
+        const lpu_date = new Date(stock.last_price_update);
+        stats.stocks[iterstock].lastUpdate = lpu_date;
+        stats.lastCurrentPriceUpdate = stats.lastCurrentPriceUpdate ? Math.max(stats.lastCurrentPriceUpdate, lpu_date) : lpu_date;
         stats.totalCurrent += stockCurVal;
         stats.totalNetGain += getValueAfterTax(stockCurVal-stats.stocks[iterstock].purhcaseValue);
     }
@@ -255,12 +257,17 @@ const TradingStats = ({orders, stocks, update}) => {
     return <Card className="shadow-lg">
         <Card.Body>
             <Card.Title>
-                <div className="d-flex align-items-center">
-                    <Trans>Your current trading stats</Trans>{' '}
-                    <FontAwesomeIcon icon={faRotate} 
-                        spin={rotateSpinning} 
-                        className="text-secondary ms-auto" 
-                        onClick={()=>{setRotateSpinning(true); update(); } }/>
+                <div className="row align-items-center text-center">
+                    <div className="col-12 col-md-auto">
+                        <Trans>Your current trading stats</Trans>{' '}
+                    </div>
+                    <div className="col-12 col-md-auto">
+                        <span className="small text-secondary"><Trans>Updated</Trans>{' '}{format(stats.lastCurrentPriceUpdate, i18n)}</span>{' '}
+                        <FontAwesomeIcon icon={faRotate}
+                            spin={rotateSpinning}
+                            className="text-secondary ms-auto"
+                            onClick={()=>{setRotateSpinning(true); update(); } }/>
+                    </div>
                 </div>
             </Card.Title>
             <div className="row stats-summary align-items-center justify-content-center">
