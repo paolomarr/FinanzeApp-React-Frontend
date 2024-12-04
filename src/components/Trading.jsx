@@ -204,7 +204,7 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
 //     };
 //     return <></>
 // };
-const TradingStats = ({orders, stocks, update}) => {
+const TradingStats = ({orders, stocks, operations, update}) => {
     const {i18n} = useLingui();
     const TAX_RATE = 0.21;
     const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
@@ -231,8 +231,11 @@ const TradingStats = ({orders, stocks, update}) => {
         if(stats.stocks[stock.id] === undefined){
             stats.stocks[stock.id] = {count: 0, purhcaseValue: 0, stock: stock};
         }
-        stats.stocks[stock.id].count += order.quantity;
-        const orderAmount = order.quantity * order.price;
+        let signedQuantity = order.quantity;
+        const orderDirection = operations.find((op) => op.id === order.operation)?.operation;
+        if(orderDirection === "SELL")   signedQuantity *= -1;
+        const orderAmount = signedQuantity * order.price;
+        stats.stocks[stock.id].count += signedQuantity;
         stats.stocks[stock.id].purhcaseValue += orderAmount; // TODO: add transaction cost?
         stats.totalTransactions += orderAmount;
         stats.totalCosts += order.transaction_cost;
@@ -374,7 +377,7 @@ const Trading = () => {
     const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
     const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
-    const [stockQuery, orderQuery, quotesQuery, operations] = useQueries({
+    const [stockQuery, orderQuery, quotesQuery, operationsQuery] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
             {queryKey: ["orders"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
@@ -446,10 +449,10 @@ const Trading = () => {
         }
         setEditOrder(order);
     };
-    if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operations.isLoading){
+    if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operationsQuery.isLoading){
         return <LoadingDiv />
     }
-    if(stockQuery.isError || orderQuery.isError || quotesQuery.isError || operations.isError){
+    if(stockQuery.isError || orderQuery.isError || quotesQuery.isError || operationsQuery.isError){
         return <div>Error</div>
     }
     return <div className="container-sm">
@@ -459,7 +462,7 @@ const Trading = () => {
                     <Card className="shadow-lg" bg="primary">
                         <Card.Body>
                             <Card.Title><Trans>Record a new order</Trans></Card.Title>
-                            <OrderInsertionForm operations={operations.data} stocks={stockQuery.data} 
+                            <OrderInsertionForm operations={operationsQuery.data} stocks={stockQuery.data} 
                                 onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete}
                                 )}
                                 editOrder={editOrder}
@@ -475,6 +478,7 @@ const Trading = () => {
                     key={statsKey}
                     orders={orderQuery.data} 
                     stocks={stockQuery.data} 
+                    operations={operationsQuery.data}
                     update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
                     />
             </div>
@@ -494,7 +498,7 @@ const Trading = () => {
             {showOrders ?
                 <TradingOrdersListComponent orders={orderQuery.data} 
                     stocks={stockQuery.data} 
-                    operations={operations.data} 
+                    operations={operationsQuery.data} 
                     onOrderEditClicked={handleOrderEditClicked}
                     
                 />
