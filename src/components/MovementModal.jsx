@@ -31,12 +31,16 @@ const WebcamComponent = ({ onScanResultReady }) => {
       if(result.warning){ // parsing failed
         console.log(result.warning);
         setIsScanError(true);
+        // MOCK
+        // onScanResultReady({description: "MOCKED DATA", date: new Date() + 24*60*60, abs_amount: 666.66}); // mock with tomorrow date
       }else{
         onScanResultReady({...result, date: new Date(result.date)});
       }
     },
     onError: (error) => {
       console.log(error);
+      // MOCK
+      // onScanResultReady({description: "MOCKED DATA", date: new Date() + 24*60*60, abs_amount: 666.66}); // mock with tomorrow date
     },
     onSettled: () => {
       setImgLoading(false);
@@ -66,7 +70,6 @@ const WebcamComponent = ({ onScanResultReady }) => {
           <img src={imgSrc} alt='The shot you took'/> 
           <div className='position-absolute  opacity-75 bottom-0 start-50 translate-middle-x w-75 text-center'>
             { isScanError ? <>
-            {/* <div><Button  className='mx-1' variant='secondary' onClick={() => {setIsScanError(false); setImgSrc(null); }}><FontAwesomeIcon icon={faRotateLeft} /></Button></div> */}
             <div className="alert alert-secondary" role="alert">
               <small>
                 <Trans>Could not parse the receipt content.</Trans>

@@ -23,14 +23,16 @@ const MovementsHistory = ({data, slice, categories}) => {
             }
             return ret;
         });
-        // take the latest BALANCE record, which is a group of N>=1 movements and SUM their values. This will be the baseline
-        const latestDate = new Date(balance_movements[balance_movements.length-1].date);
-        balance_movements.filter((movement) => {
-            const mdate = new Date(movement.date);
-            return mdate.getTime() === latestDate.getTime();
-        }).forEach(movement => {
-            balance += movement.abs_amount;
-        });
+        if(balance_movements.length > 0){ 
+            // take the latest BALANCE record, which is a group of N>=1 movements and SUM their values. This will be the baseline
+            const latestDate = new Date(balance_movements[balance_movements.length-1].date);
+            balance_movements.filter((movement) => {
+                const mdate = new Date(movement.date);
+                return mdate.getTime() === latestDate.getTime();
+            }).forEach(movement => {
+                balance += movement.abs_amount;
+            });
+        }
         let cumulative = balance>0? balance : baselineVal; //baseline value
 
         for(let index=0; index<data.movements.length; index++){
@@ -62,15 +64,6 @@ const MovementsHistory = ({data, slice, categories}) => {
                         }
                     }
                     balance = inner_balance;
-
-                    // const prev_mov = data.movements[index-1];
-                    // const prev_date = new Date(prev_mov.date);
-                    // if(isBalanceMovement(prev_mov) && prev_date.getTime() === mDate.getTime()){
-                    //     // let prev_chartData = chartData[chartData.length-2];
-                    //     balance += movement.abs_amount;
-                    // }else{
-                    //     balance = movement.abs_amount; // the first of the BALANCE items group for a given date
-                    // }
                 }
             }else{
                 cumulative += movement.amount
