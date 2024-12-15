@@ -294,30 +294,33 @@ const TradingStats = ({orders, stocks, operations, update}) => {
             </div>
             <div className="row">
             { showDetails ?
-                <ListGroup variant="flush" id="detailsBlock">{ Object.keys(stats.stocks).map((stockid) => {
-                const stockData = stats.stocks[stockid];
-                const curVal = format_currency(stockData.currentValue);
-                const purVal = format_currency(stockData.purhcaseValue);
-                const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
-                const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
-                const gainClass = gainVal > 0 ? "gain" : "loss";
-                const gainSign = gainVal > 0 ? "+" : "";
-                return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
-                        <div className="d-flex mt-2 align-items-baseline">
-                            <div className="fs-4 pe-2">{stockData.stock.symbol}</div>
-                            <div className="pe-2 small">{' '}&times;{stockData.count}</div>
-                            <div className={`fw-bold trading-gain ms-auto fs-4 ${gainClass}`}>{gainSign}{gainVal}{'%'}</div>
-                        </div>
-                        <div className="small text-secondary">{stockData.stock.name}</div>
-                        <div className="d-flex m-2 align-items-end">
-                            <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}<br />
-                                <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}
-                            </div>
-                            <div className="small text-secondary ms-auto">
-                                <FontAwesomeIcon icon={faClockRotateLeft} />{' '}{format(stockData.lastUpdate, i18n)}
-                            </div>
-                        </div>
-                    </ListGroup.Item>
+                <ListGroup variant="flush" id="detailsBlock">{ 
+                    Object.keys(stats.stocks)
+                        .filter((stockid)=>stats.stocks[stockid].count>0)
+                        .map((stockid) => {
+                            const stockData = stats.stocks[stockid];
+                            const curVal = format_currency(stockData.currentValue);
+                            const purVal = format_currency(stockData.purhcaseValue);
+                            const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
+                            const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
+                            const gainClass = gainVal > 0 ? "gain" : "loss";
+                            const gainSign = gainVal > 0 ? "+" : "";
+                            return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
+                                    <div className="d-flex mt-2 align-items-baseline">
+                                        <div className="fs-4 pe-2">{stockData.stock.symbol}</div>
+                                        <div className="pe-2 small">{' '}&times;{stockData.count}</div>
+                                        <div className={`fw-bold trading-gain ms-auto fs-4 ${gainClass}`}>{gainSign}{gainVal}{'%'}</div>
+                                    </div>
+                                    <div className="small text-secondary">{stockData.stock.name}</div>
+                                    <div className="d-flex m-2 align-items-end">
+                                        <div className="pe-2"><FontAwesomeIcon icon={faCashRegister} />{' '}{purVal}<br />
+                                            <FontAwesomeIcon icon={faMoneyBillTrendUp} />{" "}{curVal}
+                                        </div>
+                                        <div className="small text-secondary ms-auto">
+                                            <FontAwesomeIcon icon={faClockRotateLeft} />{' '}{format(stockData.lastUpdate, i18n)}
+                                        </div>
+                                    </div>
+                                </ListGroup.Item>
                     })}
                 </ListGroup>
             :null}
