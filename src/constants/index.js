@@ -6,7 +6,14 @@ export const languages = [
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
 
-export const API_URL = process.env.REACT_APP_API_URL;
+export const API_URL = process.env.BACKEND_API_BASE;
+
+export const API_ENDPOINTS = {
+  movements: new URL("movements", API_URL),
+  tradinglog: new URL("tradinglog", API_URL),
+  tokenauth: new URL("api-token-auth", API_URL),
+  scanreceipt: new URL("scan-receipt", API_URL),
+}
 
 export const colors = {
   primary: "#66c2a5",

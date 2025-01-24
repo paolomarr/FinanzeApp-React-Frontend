@@ -3,7 +3,7 @@ import authenticatedFetch from "./authenticatedFetch";
 
 const fetchCategories = async ({ queryKey }) => {
   const path = queryKey[0];
-  const apiRes = await authenticatedFetch(`${API_URL}/${path}`);
+  const apiRes = await authenticatedFetch(new URL(path, API_URL));
 
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated
