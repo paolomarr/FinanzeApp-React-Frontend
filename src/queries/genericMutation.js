@@ -1,7 +1,6 @@
 import authenticatedFetch from "./authenticatedFetch";
 
-const mutateObjectWithPath = async ({ basepath, path, object, _delete }) => {
-  let url = `${basepath.replace(/\/+$/, "")}/${path}`;
+export const mutateObjectWithUrl = async ({url, object, _delete}) => {
   let fetch_options = {}
   let headers = {};
   if(object.id){
@@ -26,7 +25,7 @@ const mutateObjectWithPath = async ({ basepath, path, object, _delete }) => {
     }else if(apiRes.status > 400){
       throw new Error("forbidden", {cause: apiRes.status});
     }else{
-      throw new Error("unknown", {cause: `${path} list could not be fetched`});
+      throw new Error("unknown", {cause: `${url.pathname} could not be fetched`});
     }
   }
 
@@ -37,5 +36,9 @@ const mutateObjectWithPath = async ({ basepath, path, object, _delete }) => {
     return apiRes;
   }
 };
+export const mutateObjectWithPath = async ({ basepath, path, object, _delete }) => {
+  let url = `${basepath.replace(/\/+$/, "")}/${path}`;
+  return mutateObjectWithUrl({url, object, _delete})
+};
 
-export default mutateObjectWithPath;
+// export default mutateObjectWithPath;

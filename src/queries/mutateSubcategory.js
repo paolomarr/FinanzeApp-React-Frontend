@@ -1,8 +1,10 @@
-import { API_URL } from "../constants";
-import mutateObjectWithPath from "./genericMutation";
+import { API_ENDPOINTS } from "../constants";
+import { mutateObjectWithUrl } from "./genericMutation";
 
 const mutateSubcategory = async ({ subcategory, _delete }) => {
-    return mutateObjectWithPath({basepath: API_URL, path: "subcategories/", object: subcategory, _delete: _delete});
+    var url = API_ENDPOINTS.movements;
+    url.pathname += "/subcategories/";
+    return mutateObjectWithUrl({url: url, object: subcategory, _delete: _delete});
 };
 
 export default mutateSubcategory;
