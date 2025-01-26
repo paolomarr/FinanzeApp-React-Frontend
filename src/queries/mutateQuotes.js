@@ -1,8 +1,11 @@
-import mutateObjectWithPath from "./genericMutation";
-import { API_URL } from "../constants";
+import {mutateObjectWithUrl} from "./genericMutation";
+import { API_ENDPOINTS } from "../constants";
 
 const mutateQuotes = async ({ quotes: quotesData, _delete }) => {
-    return mutateObjectWithPath({basepath: API_URL, path: "quotes/", object: quotesData, _delete: _delete});
+    var url = API_ENDPOINTS.tradinglog;
+    url.pathname += "/quotest/";
+    
+    return mutateObjectWithUrl({url: url, object: quotesData, _delete: _delete});
 };
 
 export default mutateQuotes;

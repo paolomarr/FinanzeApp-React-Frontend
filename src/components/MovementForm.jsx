@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
 import Feedback from 'react-bootstrap/Feedback';
 import { useQuery } from "@tanstack/react-query";
-import fetchCategories from "../queries/fetchCategories";
+import fetchMovements from "../queries/fetchMovements";
 import { useState } from "react";
 import { t, Trans } from "@lingui/macro";
 import { format_ISO_date } from "../_lib/format_locale";
@@ -90,9 +90,9 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
         movement.date = new Date(movement.date);
       }
     }
-    const catresults = useQuery(["categories"], fetchCategories);
+    const catresults = useQuery(["categories"], fetchMovements);
     const categories = catresults?.data ?? [];
-    const subcatresults = useQuery(["subcategories"], fetchCategories);
+    const subcatresults = useQuery(["subcategories"], fetchMovements);
     const subcategories = subcatresults?.data ?? [];
     const [showSuccess, setShowSuccess] = useState(true);
     const [showFail, setShowFail] = useState(true);
