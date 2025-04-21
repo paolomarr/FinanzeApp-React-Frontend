@@ -148,7 +148,7 @@ msgid "filtered out of"
 msgstr "filtrati da"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:241
+#: src/components/Home.jsx:234
 msgid "date.from"
 msgstr "dal"
 
@@ -156,7 +156,7 @@ msgstr "dal"
 msgid "Hide details"
 msgstr "Nascondi dettagli"
 
-#: src/components/Trading.jsx:379
+#: src/components/Trading.jsx:382
 msgid "Hide orders"
 msgstr "Nascondi ordini"
 
@@ -164,7 +164,7 @@ msgstr "Nascondi ordini"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:102
+#: src/components/Home.jsx:91
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -215,7 +215,7 @@ msgstr "mesi"
 msgid "Movements"
 msgstr "Movimenti"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:75
 msgid "movements in"
 msgstr "movimenti in"
 
@@ -248,7 +248,7 @@ msgstr "Altri ricavi"
 msgid "Other out."
 msgstr "Altre spese"
 
-#: src/components/Home.jsx:101
+#: src/components/Home.jsx:90
 msgid "Outcomes"
 msgstr "Uscite"
 
@@ -277,7 +277,7 @@ msgstr "Profilo"
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Trading.jsx:464
+#: src/components/Trading.jsx:467
 msgid "Record a new order"
 msgstr "Registra un nuovo ordine"
 
@@ -304,7 +304,7 @@ msgstr "Salvato"
 msgid "Saving"
 msgstr "In caricamento"
 
-#: src/components/Home.jsx:103
+#: src/components/Home.jsx:92
 msgid "Saving rate"
 msgstr "Saving rate"
 
@@ -320,7 +320,7 @@ msgstr "secondi"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: src/components/MovementsHistory.jsx:84
+#: src/components/MovementsHistory.jsx:87
 msgid "Show assets"
 msgstr "Mostra saldo"
 
@@ -328,7 +328,7 @@ msgstr "Mostra saldo"
 msgid "Show details"
 msgstr "Mostra dettagli"
 
-#: src/components/Trading.jsx:379
+#: src/components/Trading.jsx:382
 msgid "Show orders"
 msgstr "Mostra ordini"
 
@@ -355,7 +355,7 @@ msgid "login_form_submit"
 msgstr "Accedi"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:242
+#: src/components/Home.jsx:235
 msgid "date.to"
 msgstr "al"
 
@@ -408,6 +408,6 @@ msgstr "anni"
 msgid "Your current trading stats"
 msgstr "Statistiche trading"
 
-#: src/components/Trading.jsx:334
+#: src/components/Trading.jsx:337
 msgid "Your past orders"
 msgstr "Ordini recenti"

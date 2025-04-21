@@ -23,7 +23,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const MovementsStats = ({data, slice, categories}) => {
+const MovementsStats = ({data, categories}) => {
     const percent_cutin = 0.02;
     let earningData = {
       earnings: [],
@@ -35,21 +35,21 @@ const MovementsStats = ({data, slice, categories}) => {
     let incomes = 0;
     let outcomes = 0;
     let statsCategories = {};
-    if(data) {
+    if(data?.filtered?.movements) {
       let outliers = {
         incomes: {category: t`Other in.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: 1},
         outcomes: {category: t`Other out.` + ` (<${100*percent_cutin}%)`, sum: 0, percent: 0, direction: -1},
       }
-      for (const movement of data.movements) {
+      for (const movement of data.filtered.movements) {
         if(movement.amount == 0.0){ // filter out BALANCE-type movements
           continue
         }
-        if(slice){
-          const mDate = new Date(movement.date);
-          if(mDate < slice.minDate || mDate > slice.maxDate){
-            continue;
-          }
-        }
+        // if(slice){
+        //   const mDate = new Date(movement.date);
+        //   if(mDate < slice.minDate || mDate > slice.maxDate){
+        //     continue;
+        //   }
+        // }
         if(movement.amount>0){   
           incomes += movement.abs_amount;
         }else {

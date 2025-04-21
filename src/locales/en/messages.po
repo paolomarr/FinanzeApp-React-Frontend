@@ -198,7 +198,7 @@ msgstr "filtered out of"
 #~ msgstr "found"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:241
+#: src/components/Home.jsx:234
 msgid "date.from"
 msgstr "From"
 
@@ -210,7 +210,7 @@ msgstr "From"
 msgid "Hide details"
 msgstr "Hide details"
 
-#: src/components/Trading.jsx:379
+#: src/components/Trading.jsx:382
 msgid "Hide orders"
 msgstr "Hide orders"
 
@@ -218,9 +218,9 @@ msgstr "Hide orders"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:102
+#: src/components/Home.jsx:91
 msgid "Incomes"
-msgstr "Incomes"
+msgstr "Earnings"
 
 #: src/components/MovementModal.jsx:117
 msgid "Insert new movement"
@@ -273,7 +273,7 @@ msgstr "months"
 msgid "Movements"
 msgstr "Movements"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:75
 msgid "movements in"
 msgstr "movements in"
 
@@ -310,9 +310,9 @@ msgstr "Other in."
 msgid "Other out."
 msgstr "Other out."
 
-#: src/components/Home.jsx:101
+#: src/components/Home.jsx:90
 msgid "Outcomes"
-msgstr "Outcomes"
+msgstr "Expenses"
 
 #: src/components/MovementsList.jsx:96
 msgid "Page size"
@@ -339,7 +339,7 @@ msgstr "Profile"
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Trading.jsx:464
+#: src/components/Trading.jsx:467
 msgid "Record a new order"
 msgstr "Record a new order"
 
@@ -366,7 +366,7 @@ msgstr "Saved"
 msgid "Saving"
 msgstr "Saving"
 
-#: src/components/Home.jsx:103
+#: src/components/Home.jsx:92
 msgid "Saving rate"
 msgstr "Saving rate"
 
@@ -399,7 +399,7 @@ msgstr "Settings"
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/MovementsHistory.jsx:84
+#: src/components/MovementsHistory.jsx:87
 msgid "Show assets"
 msgstr "Show assets"
 
@@ -407,7 +407,7 @@ msgstr "Show assets"
 msgid "Show details"
 msgstr "Show details"
 
-#: src/components/Trading.jsx:379
+#: src/components/Trading.jsx:382
 msgid "Show orders"
 msgstr "Show orders"
 
@@ -438,7 +438,7 @@ msgstr "Submit"
 #~ msgstr "Submit"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:242
+#: src/components/Home.jsx:235
 msgid "date.to"
 msgstr "to"
 
@@ -495,6 +495,6 @@ msgstr "years"
 msgid "Your current trading stats"
 msgstr "Your current trading stats"
 
-#: src/components/Trading.jsx:334
+#: src/components/Trading.jsx:337
 msgid "Your past orders"
 msgstr "Your past orders"
