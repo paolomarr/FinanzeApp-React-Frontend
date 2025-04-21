@@ -44,26 +44,15 @@ const CustomRanges = {
   last12: {range: {min: sub(new Date(), {months:12}), max: new Date()}, name: msg`Last year`},
   pastYear: {range: {min: startOfYear(sub(new Date(), {years:1})), max: endOfYear(sub(new Date(), {years:1}))}, name: msg`Past year`},
 };
-const MovementSummary = ({data, slice, onSetRange}) => {
+const MovementSummary = ({data, onSetRange}) => {
   const {i18n} = useLingui();
-  const today = new Date();
-  // const past_year_start = new Date(today.getFullYear() - 1, 0, 1);
-  // const past_year_end = add(past_year_start, {years:1});
   let outcomes = 0;
   let incomes = 0;
   let nMovements = 0;
-  let minDate = today;
-  let maxDate = 0;
-  if(data){
-    for (const movement of data.movements) {
-      const mDate = new Date(movement.date);
-      if(slice){
-        if(mDate < slice.minDate || mDate > slice.maxDate){
-          continue;
-        }
-      }
-      minDate = Math.min(minDate, mDate);
-      maxDate = Math.max(maxDate, mDate);
+  let minDate = new Date(data?.minDate);
+  let maxDate = new Date(data?.maxDate);
+  if(data?.filtered?.movements){
+    for (const movement of data.filtered.movements) {
       nMovements+=1;
       if(movement.amount > 0){
         incomes += movement.abs_amount;
@@ -160,7 +149,10 @@ const Home = () => {
       return {...data, movements: ascMovements};
     };
     const movementResults = useQuery({
-      queryKey: ["movements", {all: true}],
+      queryKey: ["movements", {
+        all: true, 
+        datefrom: dataSlice.minDate, 
+        dateto: dataSlice.maxDate,}],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
         if(error.message === "forbidden"){
@@ -168,6 +160,7 @@ const Home = () => {
           navigate("/login");
           return false;
         } else{ 
+          console.log(`'movements query error: ${error.message}`);
           return failureCount-1;
         }
       },
@@ -243,8 +236,8 @@ const Home = () => {
         </h3>
         <MovementSummary data={movementResults.data} slice={dataSlice} onSetRange={(range) => onSliderChange({min: dataSlice.minDate, max: dataSlice.maxDate, minValue: range.min, maxValue: range.max})}></MovementSummary>
         <TimeSpanSlider 
-          min={new Date(movementResults.data.minDate)} 
-          max={new Date(movementResults.data.maxDate)} 
+          min={new Date(movementResults.data.alltime.minDate)} 
+          max={new Date(movementResults.data.alltime.maxDate)} 
           start={dataSlice.minDate} 
           end={dataSlice.maxDate} 
           steps={100} 
@@ -253,8 +246,8 @@ const Home = () => {
         <MovementsStats data={movementResults.data} categories={categoryResults.data} slice={dataSlice}
         />
         <MovementsList 
-          movements={movementResults.data.movements}
-          slice={dataSlice}
+          movements={movementResults.data.filtered.movements}
+          // slice={dataSlice}
           categories={categoryResults.data}
           subcategories={subcategoryResults.data}
           onEdit={(movement) => setShowModal({show: true, movement: movement})}/>

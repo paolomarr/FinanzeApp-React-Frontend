@@ -5,7 +5,7 @@ import { useLingui } from '@lingui/react';
 import { useState } from 'react';
 import { t } from '@lingui/macro';
 
-const MovementsHistory = ({data, slice, categories}) => {
+const MovementsHistory = ({data, categories}) => {
     const [showAssets, setShowAssets] = useState(localStorage.getItem("MovementsHistory.showAssets")??false);
     const balanceCategoryId = categories.find((cat) => cat.category === "BALANCE")?.id ?? -1;
     const isBalanceMovement = (movement) => movement.category === balanceCategoryId;
@@ -13,14 +13,15 @@ const MovementsHistory = ({data, slice, categories}) => {
     const baselineVal = data?.baseline?.at(1) ?? 0.;
     let chartData = [];
     let balance = 0;
-    if(data){
+    if(data?.filtered?.movements) {
+        const _movements = data.filtered.movements;
         // select BALANCE movements recorder BEFORE slice.minDate
-        const balance_movements = data.movements.filter((movement) => {
+        const balance_movements = _movements.filter((movement) => {
             let ret = isBalanceMovement(movement);
-            if(slice){
-                const mdate = new Date(movement.date);
-                ret &= mdate <= slice.minDate;
-            }
+            // if(slice){
+            //     const mdate = new Date(movement.date);
+            //     ret &= mdate <= slice.minDate;
+            // }
             return ret;
         });
         if(balance_movements.length > 0){ 
@@ -35,14 +36,15 @@ const MovementsHistory = ({data, slice, categories}) => {
         }
         let cumulative = balance>0? balance : baselineVal; //baseline value
 
-        for(let index=0; index<data.movements.length; index++){
-            const movement = data.movements.at(index);
+        for(let index=0; index<_movements.length; index++){
+            const movement = _movements.at(index);
             const mDate = new Date(movement.date);
-            if(slice && mDate.getTime()<slice.minDate){
-                continue;
-            }
+            // if(slice && mDate.getTime()<slice.minDate){
+            //     continue;
+            // }
             if(isBalanceMovement(movement)){ // this means category.direction == 0, i.e. this is a 'BALANCE' type movement
-                if(index>0 && (!slice || slice.minDate<=mDate)){
+                if(index>0){
+                // if(index>0 && (!slice || slice.minDate<=mDate)){
                     // BALANCE movements come in blocks of N>=1 entries with the same exact date. We need to sort-of group them into one chart point
                     let inner_movement = movement;
                     let inner_balance = 0;
@@ -50,8 +52,8 @@ const MovementsHistory = ({data, slice, categories}) => {
                         const cur_date = new Date(inner_movement.date);
                         inner_balance += inner_movement.abs_amount;
                         index++;
-                        if(index>=data.movements.length) break;
-                        inner_movement = data.movements[index];
+                        if(index>=_movements.length) break;
+                        inner_movement = _movements[index];
                         const next_date = new Date(inner_movement.date);
                         // the dates of balance items belonging to the same insertion can differ by some ~100ms
                         // let's check the delta and consider two items be of the same insertion if their date diff is less than
@@ -68,13 +70,14 @@ const MovementsHistory = ({data, slice, categories}) => {
             }else{
                 cumulative += movement.amount
             }
-            if(slice){
-                if(mDate <= slice.maxDate){
-                    chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance}) 
-                }
-            }else{
-                chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance})  
-            }
+            // if(slice){
+            //     if(mDate <= slice.maxDate){
+            //         chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance}) 
+            //     }
+            // }else{
+            //     chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance})  
+            // }
+            chartData.push({"date": (mDate).getTime(), "cumulative": cumulative, "balance": balance})  
         }
     }
     return (
