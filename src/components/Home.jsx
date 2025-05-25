@@ -49,8 +49,8 @@ const MovementSummary = ({data, onSetRange}) => {
   let outcomes = 0;
   let incomes = 0;
   let nMovements = 0;
-  let minDate = new Date(data?.minDate);
-  let maxDate = new Date(data?.maxDate);
+  let minDate = new Date(data?.filtered.minDate);
+  let maxDate = new Date(data?.filtered.maxDate);
   if(data?.filtered?.movements){
     for (const movement of data.filtered.movements) {
       nMovements+=1;
