@@ -144,15 +144,17 @@ const Home = () => {
         }
       }, 
     });
-    const reverseDataMovements = (data) => {
-      let ascMovements = data.movements?.toSorted((a,b)=> a.date>b.date ? 1 : -1); // reversed because movements come date desc-ordered
-      return {...data, movements: ascMovements};
-    };
+    // const reverseDataMovements = (data) => {
+    //   let ascMovements = data.filtered.movements?.toSorted((a,b)=> a.date>b.date ? 1 : -1); // reversed because movements come date desc-ordered
+    //   return {...data, filtered: {...data.filtered, movements: ascMovements}};
+    // };
     const movementResults = useQuery({
       queryKey: ["movements", {
         all: true, 
         datefrom: dataSlice.minDate, 
-        dateto: dataSlice.maxDate,}],
+        dateto: dataSlice.maxDate,
+        sort_field: "date",
+      }],
       queryFn: fetchMovements,
       retry: (failureCount, error) => {
         if(error.message === "forbidden"){
@@ -165,7 +167,7 @@ const Home = () => {
         }
       },
       enabled: !!categoryResults.data && !!subcategoryResults.data,
-      select: reverseDataMovements,
+      // select: reverseDataMovements,
     });
     const mutation = useMutation({
       mutationFn: ({movement, _delete}) => {
@@ -191,7 +193,8 @@ const Home = () => {
             }  
           }else{ // it's been a POST
             oldData.movements.push(result);
-            return reverseDataMovements(oldData);
+            // return reverseDataMovements(oldData);
+            return oldData;
           }
         });
       },

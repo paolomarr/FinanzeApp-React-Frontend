@@ -22,9 +22,14 @@ const fetchMovements = async ({ queryKey }) => {
       query.append("subcategory", queryParamsObject.subcategory);
     }
     if(queryParamsObject.description){
-      query.append("description", queryParamsObject.description);
+      query.append("description", queryParamsObject.description); 
     }
-    
+    if(queryParamsObject.sort_field){
+      query.append("sort_field", queryParamsObject.sort_field);
+    }
+    if(queryParamsObject.sort_dir){
+      query.append("sort_dir", queryParamsObject.sort_dir);
+    }
   }
   const apiRes = await authenticatedFetch(`${API_ENDPOINTS.movements}/${path}?${query.toString()}`);
   
