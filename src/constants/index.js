@@ -6,16 +6,16 @@ export const languages = [
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
 
-export const API_URL = new URL(process.env.REACT_APP_BACKEND_API_BASE);
+export const API_URL_STRING = process.env.REACT_APP_BACKEND_API_BASE;
 
 const generateURLAppendingPath = (path) => {
   if (!path) {
-    return API_URL;
+    return new URL(API_URL_STRING);
   }
-  const origin = API_URL.origin;
-  const basepath = API_URL.pathname.replace(/\/$/, ''); // starts with a slash
-  const finalpath = `${basepath}/${path.replace(/^\//, '')}`; // remove leading slash from path, if any
-  const url = new URL(finalpath, origin);
+  const origin = API_URL_STRING.replace(/\/$/, ''); // remove trailing slash if any
+  const noLeadingSlashPath = path.replace(/^\//, ''); // remove leading slash from path, if any
+  const finalpath = `${origin}/${noLeadingSlashPath}`;
+  const url = new URL(finalpath);
   return url;
 }
 export const API_ENDPOINTS = {
