@@ -8,7 +8,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { msg, t } from "@lingui/macro"
 import { Trans } from "@lingui/react";
 import TimeSpanSlider from "./TimeSpanSlider";
-import { interval, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
+import { interval, add, sub, startOfMonth, startOfYear, endOfYear } from "date-fns";
 import { intervalToDuration} from "date-fns";
 import { format, formatDuration } from "../_lib/format_locale"
 import { useLingui } from "@lingui/react";
@@ -152,7 +152,7 @@ const Home = () => {
       queryKey: ["movements", {
         all: true, 
         datefrom: dataSlice.minDate, 
-        dateto: dataSlice.maxDate,
+        dateto: add(dataSlice.maxDate, {days: 1}), // add one day to include the last day
         sort_field: "date",
       }],
       queryFn: fetchMovements,
