@@ -4,7 +4,7 @@ const authenticate = async (user, password) => {
   const fd = new FormData();
   fd.set("username", user);
   fd.set("password", password);
-  let url = API_ENDPOINTS.tokenauth;
+  let url = API_ENDPOINTS.tokenauth();
 
   const result = await fetch(url, {
       method: "POST",

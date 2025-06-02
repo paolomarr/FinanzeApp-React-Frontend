@@ -174,29 +174,31 @@ const Home = () => {
         setShowModal({...showModal, errors: null});
         return mutateMovement({movement, _delete});
       },
-      onSuccess: (result, {movement, _delete, _continue}) => {
+      onSuccess: (result, {_continue}) => {
+      // onSuccess: (result, {movement, _delete, _continue}) => {
         // remove movement from showModal object
         setShowModal({...showModal, show: _continue, movement: null, errors: {}})
-        // update data
-        queryclient.setQueryData(["movements", {all: true}], (oldData) => {
-          if(_delete){ // it's been a DELETE
-            const index = oldData.movements.findIndex((omovement)=> omovement.id === movement.id);
-            if(index>=0){
-              oldData.movements.splice(index, 1);
-              return oldData;
-            }
-          }else if(movement.id){ // it's been a PUT
-            const index = oldData.movements.findIndex((omovement)=> omovement.id === movement.id);
-            if(index>=0){
-              oldData.movements.splice(index, 1, result);
-              return oldData;
-            }  
-          }else{ // it's been a POST
-            oldData.movements.push(result);
-            // return reverseDataMovements(oldData);
-            return oldData;
-          }
-        });
+        queryclient.invalidateQueries(["movements"]);
+        // // update data
+        // queryclient.setQueriesData(["movements"], (oldData) => {
+        //   if(_delete){ // it's been a DELETE
+        //     const index = oldData.filtered.movements.findIndex((omovement)=> omovement.id === movement.id);
+        //     if(index>=0){
+        //       oldData.filtered.movements.splice(index, 1);
+        //       return oldData;
+        //     }
+        //   }else if(movement.id){ // it's been a PUT
+        //     const index = oldData.filtered.movements.findIndex((omovement)=> omovement.id === movement.id);
+        //     if(index>=0){
+        //       oldData.filtered.movements.splice(index, 1, result);
+        //       return oldData;
+        //     }  
+        //   }else{ // it's been a POST
+        //     oldData.filtered.movements.push(result);
+        //     // return reverseDataMovements(oldData);
+        //     return oldData;
+        //   }
+        // });
       },
       onError: (error, variables, context) => {
         console.log(variables);
