@@ -31,7 +31,13 @@ const fetchMovements = async ({ queryKey }) => {
       query.append("sort_dir", queryParamsObject.sort_dir);
     }
   }
-  const apiRes = await authenticatedFetch(`${API_ENDPOINTS.movements}/${path}?${query.toString()}`);
+  const movementsBase = API_ENDPOINTS.movements().toString();
+  const queryString = query.toString();
+  const fetchUrl = `${movementsBase}/${path}?${queryString}`;
+  /* remove double slashes, except the one after the protocol */
+  const cleanFetchUrl = fetchUrl.replace(/([^:]\/)\/+/g, "$1");
+  console.debug(`fetchMovements: fetching ${cleanFetchUrl}`);
+  const apiRes = await authenticatedFetch(cleanFetchUrl);
   
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated

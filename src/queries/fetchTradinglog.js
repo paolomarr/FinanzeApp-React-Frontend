@@ -7,7 +7,7 @@ const fetchTradinglog = async ({ queryKey }) => {
   if(queryKey.length>1){
     query = new URLSearchParams(queryKey[1]);
   }
-  const apiRes = await authenticatedFetch(`${API_ENDPOINTS.tradinglog}/${path}?${query.toString()}`);
+  const apiRes = await authenticatedFetch(`${API_ENDPOINTS.tradinglog()}/${path}?${query.toString()}`);
   
   if (!apiRes.ok) {
     if(apiRes.status >= 400){ // unauthenticated
