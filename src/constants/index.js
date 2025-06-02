@@ -6,13 +6,23 @@ export const languages = [
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
 
-export const API_URL = process.env.REACT_APP_BACKEND_API_BASE;
+export const API_URL = new URL(process.env.REACT_APP_BACKEND_API_BASE);
 
+const generateURLAppendingPath = (path) => {
+  if (!path) {
+    return API_URL;
+  }
+  const origin = API_URL.origin;
+  const basepath = API_URL.pathname.replace(/\/$/, ''); // starts with a slash
+  const finalpath = `${basepath}/${path.replace(/^\//, '')}`; // remove leading slash from path, if any
+  const url = new URL(finalpath, origin);
+  return url;
+}
 export const API_ENDPOINTS = {
-  movements: () => new URL("movements", API_URL),
-  tradinglog: () => new URL("tradinglog", API_URL),
-  tokenauth: () => new URL("api-token-auth/", API_URL),
-  scanreceipt: () => new URL("scan-receipt", API_URL),
+  movements: () => generateURLAppendingPath("movements"),
+  tradinglog: () => generateURLAppendingPath("tradinglog"),
+  tokenauth: () => generateURLAppendingPath("api-token-auth/"),
+  scanreceipt: () => generateURLAppendingPath("scan-receipt"),
 }
 
 export const colors = {
