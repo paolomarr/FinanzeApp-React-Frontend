@@ -422,21 +422,22 @@ const Trading = () => {
         mutationFn: ({stocks}) => { // `stocks` value must be a list of stock symbols
             return mutateQuotes({quotes: {symbols: stocks}})
         },
-        onSuccess: ({stocks, quotes, errors}) => {
+        onSuccess: ({errors}) => {
             if(!errors){
-                queryClient.setQueryData(["quotes"], (oldQuotes)=>{
-                    oldQuotes += quotes;
-                    return oldQuotes;
-                });
-                queryClient.setQueryData(["stocks"], (oldStocks)=>{
-                    stocks.map((newStock)=> {
-                        const oldStockToUpdateIndex = oldStocks.findIndex((s)=> newStock.id === s.id);
-                        if(oldStockToUpdateIndex>=0){
-                            oldStocks.splice(oldStockToUpdateIndex, 1, oldStocks[oldStockToUpdateIndex]);
-                        }
-                    });
-                    return oldStocks;
-                })
+                queryClient.invalidateQueries(["stocks", "quotes"]);
+                // queryClient.setQueryData(["quotes"], (oldQuotes)=>{
+                //     oldQuotes += quotes;
+                //     return oldQuotes;
+                // });
+                // queryClient.setQueryData(["stocks"], (oldStocks)=>{
+                //     stocks.map((newStock)=> {
+                //         const oldStockToUpdateIndex = oldStocks.findIndex((s)=> newStock.id === s.id);
+                //         if(oldStockToUpdateIndex>=0){
+                //             oldStocks.splice(oldStockToUpdateIndex, 1, oldStocks[oldStockToUpdateIndex]);
+                //         }
+                //     });
+                //     return oldStocks;
+                // })
             }// else ??
             setStatsKey(1+statsKey); // this stops the rotate icon spinning
         },
