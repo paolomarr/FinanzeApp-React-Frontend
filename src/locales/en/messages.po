@@ -35,17 +35,17 @@ msgstr ""
 #~ msgid "Abs. amount"
 #~ msgstr "Abs. amount"
 
-#: src/components/Trading.jsx:93
+#: src/components/Trading.jsx:145
 msgid "Account no."
 msgstr "Account no."
 
 #: src/components/Assets.jsx:141
 #: src/components/CategoryManager.jsx:67
-#: src/components/Trading.jsx:184
+#: src/components/Trading.jsx:236
 msgid "Add"
 msgstr "Add"
 
-#: src/components/Trading.jsx:122
+#: src/components/Trading.jsx:174
 msgid "Add new stock"
 msgstr "Add new stock"
 
@@ -107,7 +107,7 @@ msgstr "Categories"
 msgid "Category"
 msgstr "Category"
 
-#: src/components/Trading.jsx:65
+#: src/components/Trading.jsx:117
 msgid "Code"
 msgstr "Code"
 
@@ -138,7 +138,7 @@ msgstr "Data has been saved"
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:159
 #: src/components/MovementsList.jsx:189
-#: src/components/Trading.jsx:78
+#: src/components/Trading.jsx:130
 msgid "Date"
 msgstr "Date"
 
@@ -198,7 +198,7 @@ msgstr "filtered out of"
 #~ msgstr "found"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:234
+#: src/components/Home.jsx:239
 msgid "date.from"
 msgstr "From"
 
@@ -206,11 +206,11 @@ msgstr "From"
 #~ msgid "From"
 #~ msgstr "From"
 
-#: src/components/Trading.jsx:259
+#: src/components/Trading.jsx:311
 msgid "Hide details"
 msgstr "Hide details"
 
-#: src/components/Trading.jsx:382
+#: src/components/Trading.jsx:434
 msgid "Hide orders"
 msgstr "Hide orders"
 
@@ -285,6 +285,10 @@ msgstr "Movements overview"
 msgid "No data"
 msgstr "No data"
 
+#: src/components/Trading.jsx:37
+msgid "No historical data available"
+msgstr "No historical data available"
+
 #. js-lingui-explicit-id
 #: src/components/MovementsList.jsx:255
 msgid "movementsListFilterStats.of"
@@ -294,7 +298,7 @@ msgstr "of"
 #~ msgid "of"
 #~ msgstr "of"
 
-#: src/components/Trading.jsx:127
+#: src/components/Trading.jsx:179
 msgid "Operation"
 msgstr "Operation"
 
@@ -327,7 +331,15 @@ msgstr "Password"
 msgid "Past year"
 msgstr "Past year"
 
-#: src/components/Trading.jsx:143
+#: src/components/Trading.jsx:50
+msgid "Portfolio History"
+msgstr "Portfolio History"
+
+#: src/components/Trading.jsx:73
+msgid "Portfolio Value"
+msgstr "Portfolio Value"
+
+#: src/components/Trading.jsx:195
 msgid "Price"
 msgstr "Price"
 
@@ -335,11 +347,11 @@ msgstr "Price"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/components/Trading.jsx:155
+#: src/components/Trading.jsx:207
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Trading.jsx:467
+#: src/components/Trading.jsx:520
 msgid "Record a new order"
 msgstr "Record a new order"
 
@@ -399,15 +411,15 @@ msgstr "Settings"
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/MovementsHistory.jsx:87
+#: src/components/MovementsHistory.jsx:60
 msgid "Show assets"
 msgstr "Show assets"
 
-#: src/components/Trading.jsx:259
+#: src/components/Trading.jsx:311
 msgid "Show details"
 msgstr "Show details"
 
-#: src/components/Trading.jsx:382
+#: src/components/Trading.jsx:434
 msgid "Show orders"
 msgstr "Show orders"
 
@@ -415,7 +427,7 @@ msgstr "Show orders"
 msgid "Showing"
 msgstr "Showing"
 
-#: src/components/Trading.jsx:107
+#: src/components/Trading.jsx:159
 msgid "Stock"
 msgstr "Stock"
 
@@ -438,7 +450,7 @@ msgstr "Submit"
 #~ msgstr "Submit"
 
 #. js-lingui-explicit-id
-#: src/components/Home.jsx:235
+#: src/components/Home.jsx:240
 msgid "date.to"
 msgstr "to"
 
@@ -458,7 +470,7 @@ msgstr "Totals"
 msgid "Trading"
 msgstr "Trading"
 
-#: src/components/Trading.jsx:170
+#: src/components/Trading.jsx:222
 msgid "Transaction cost"
 msgstr "Transaction cost"
 
@@ -474,7 +486,7 @@ msgstr "Update"
 msgid "Update movement data"
 msgstr "Update movement data"
 
-#: src/components/Trading.jsx:268
+#: src/components/Trading.jsx:320
 msgid "Updated"
 msgstr "Updated"
 
@@ -491,10 +503,10 @@ msgstr "years"
 #~ msgid "Your current trading assets"
 #~ msgstr "Your current trading assets"
 
-#: src/components/Trading.jsx:265
+#: src/components/Trading.jsx:317
 msgid "Your current trading stats"
 msgstr "Your current trading stats"
 
-#: src/components/Trading.jsx:337
+#: src/components/Trading.jsx:389
 msgid "Your past orders"
 msgstr "Your past orders"
