@@ -14,7 +14,7 @@ import MovementsStats from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
-  const recentMovements = movements?.slice(0, 5) || [];
+  const recentMovements = movements?.slice(-5) || [];
   
   return (
     <Card className="h-100">
@@ -81,7 +81,7 @@ const StatsWidget = ({ data, monthsBack = 3 }) => {
         <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
       </Card.Header>
       <Card.Body>
-        <div className="row text-center h3">
+        <div className="row text-center fs-3">
           <div className="col-6 mb-2">
             <div className="text-muted">{t`Incomes`}</div>
             <div className="text-success">+{parseFloat(incomes).toFixed(2)}€</div>
