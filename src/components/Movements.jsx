@@ -3,10 +3,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from "../queries/mutateMovement";
 import { Navigate, useNavigate } from "react-router-dom";
-import { t } from "@lingui/macro"
 import { sub, add } from "date-fns";
-import { format } from "../_lib/format_locale"
-import { useLingui } from "@lingui/react";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
@@ -14,7 +11,6 @@ import { Container } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
 
 const Movements = () => {
-  const {i18n} = useLingui();
   const queryclient = useQueryClient();
   const navigate = useNavigate();
   const monthsBack = 12; // Show more data on full page

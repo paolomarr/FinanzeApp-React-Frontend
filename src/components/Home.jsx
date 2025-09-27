@@ -14,7 +14,7 @@ import MovementsStats from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
-  const recentMovements = movements?.slice(0, 10) || [];
+  const recentMovements = movements?.slice(0, 5) || [];
   
   return (
     <Card className="h-100">
@@ -47,7 +47,7 @@ const StatsWidget = ({ data, monthsBack = 3 }) => {
         <Card.Header>
           <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
         </Card.Header>
-        <Card.Body className="text-center">
+        <Card.Body className="text-center align-content-center">
           <p>{t`No data available`}</p>
         </Card.Body>
       </Card>
@@ -214,11 +214,10 @@ const Home = () => {
 
   return (
     <Container fluid>
-      <h2 className="text-center mb-4">{t`Dashboard`}</h2>
       
       <Row className="g-3">
         {/* Stats Widget */}
-        <Col xs={12} xl={4}>
+        <Col xs={12} xl={5}>
           <StatsWidget 
             data={movementResults.data} 
             categories={categoryResults.data}
@@ -227,7 +226,7 @@ const Home = () => {
         </Col>
         
         {/* Recent Movements Widget */}
-        <Col xs={12} xl={8}>
+        <Col xs={12} xl={7}>
           <RecentMovementsWidget 
             movements={movementResults.data?.filtered?.movements}
             categories={categoryResults.data}

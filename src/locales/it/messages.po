@@ -13,23 +13,38 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/Trading.jsx:145
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:239
+#~ msgid "date.from"
+#~ msgstr "dal"
+
+#. js-lingui-explicit-id
+#: src/components/Home.jsx:240
+#~ msgid "date.to"
+#~ msgstr "al"
+
+#: src/components/Trading.jsx:93
 msgid "Account no."
 msgstr "Conto num."
 
 #: src/components/Assets.jsx:141
 #: src/components/CategoryManager.jsx:67
-#: src/components/Trading.jsx:236
+#: src/components/Trading.jsx:184
 msgid "Add"
 msgstr "Aggiungi"
 
-#: src/components/Trading.jsx:174
+#: src/components/Trading.jsx:122
 msgid "Add new stock"
 msgstr "Aggiungi titolo"
+
+#: src/index.js:58
+msgid "All Movements"
+msgstr "Tutti i movimenti"
 
 #: src/components/Assets.jsx:115
 #: src/components/MovementForm.jsx:173
 #: src/components/MovementsList.jsx:195
+#: src/components/MovementsList.jsx:207
 msgid "Amount"
 msgstr "Importo"
 
@@ -49,9 +64,9 @@ msgstr "Valori da registrare"
 msgid "Balance record history"
 msgstr "Storico dei saldi registrati"
 
-#: src/components/MainNavbar.jsx:68
-#: src/components/MainNavbar.jsx:91
-#: src/index.js:57
+#: src/components/MainNavbar.jsx:75
+#: src/components/MainNavbar.jsx:104
+#: src/index.js:59
 msgid "Balance records"
 msgstr "Registro saldi"
 
@@ -65,11 +80,11 @@ msgid "Categories"
 msgstr "Categorie"
 
 #: src/components/MovementForm.jsx:199
-#: src/components/MovementsList.jsx:198
+#: src/components/MovementsList.jsx:210
 msgid "Category"
 msgstr "Categoria"
 
-#: src/components/Trading.jsx:117
+#: src/components/Trading.jsx:65
 msgid "Code"
 msgstr "Codice"
 
@@ -86,8 +101,12 @@ msgid "Could not parse the receipt content."
 msgstr "Lettura della ricevuta non riuscita."
 
 #: src/components/Home.jsx:41
-msgid "Current month"
-msgstr "Mese corrente"
+#~ msgid "Current month"
+#~ msgstr "Mese corrente"
+
+#: src/components/Home.jsx:217
+msgid "Dashboard"
+msgstr "Dashboard"
 
 #: src/components/MovementForm.jsx:239
 msgid "Data has been saved"
@@ -96,7 +115,8 @@ msgstr "Dati salvati"
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:159
 #: src/components/MovementsList.jsx:189
-#: src/components/Trading.jsx:130
+#: src/components/MovementsList.jsx:201
+#: src/components/Trading.jsx:78
 msgid "Date"
 msgstr "Data"
 
@@ -120,6 +140,7 @@ msgstr "Eliminazione in corso"
 #: src/components/Assets.jsx:128
 #: src/components/MovementForm.jsx:186
 #: src/components/MovementsList.jsx:194
+#: src/components/MovementsList.jsx:206
 msgid "Description"
 msgstr "Descrizione"
 
@@ -138,33 +159,34 @@ msgid "Error"
 msgstr "Errore"
 
 #: src/components/CategoryManager.jsx:98
+#: src/components/Home.jsx:82
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:222
 msgid "Expenses"
 msgstr "Spese"
 
-#: src/components/MovementsList.jsx:255
+#: src/components/MovementsList.jsx:270
 msgid "filtered out of"
 msgstr "filtrati da"
 
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:239
-msgid "date.from"
-msgstr "dal"
-
-#: src/components/Trading.jsx:311
+#: src/components/Trading.jsx:259
 msgid "Hide details"
 msgstr "Nascondi dettagli"
 
-#: src/components/Trading.jsx:434
+#: src/components/Trading.jsx:382
 msgid "Hide orders"
 msgstr "Nascondi ordini"
+
+#: src/components/MainNavbar.jsx:61
+#: src/components/MainNavbar.jsx:92
+msgid "Home"
+msgstr "Home"
 
 #: src/_lib/format_locale.js:8
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:91
+#: src/components/Home.jsx:78
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -177,20 +199,25 @@ msgstr "Inserisci un nuovo movimento"
 msgid "Languages"
 msgstr "Lingue"
 
+#: src/components/Home.jsx:48
+#: src/components/Home.jsx:73
+msgid "Last {monthsBack} months"
+msgstr "Ultimi {monthsBack} mesi"
+
 #: src/components/Home.jsx:42
-msgid "Last 3 months"
-msgstr "Ultimi 3 mesi"
+#~ msgid "Last 3 months"
+#~ msgstr "Ultimi 3 mesi"
 
 #: src/components/Home.jsx:43
-msgid "Last 6 months"
-msgstr "Ultimi 6 mesi"
+#~ msgid "Last 6 months"
+#~ msgstr "Ultimi 6 mesi"
 
 #: src/components/Home.jsx:44
-msgid "Last year"
-msgstr "Ultimo anno"
+#~ msgid "Last year"
+#~ msgstr "Ultimo anno"
 
-#: src/index.js:58
-#: src/index.js:59
+#: src/index.js:60
+#: src/index.js:61
 msgid "Login"
 msgstr "Accedi"
 
@@ -210,16 +237,16 @@ msgstr "minuti"
 msgid "months"
 msgstr "mesi"
 
-#: src/components/MainNavbar.jsx:61
-#: src/components/MainNavbar.jsx:85
+#: src/components/MainNavbar.jsx:68
+#: src/components/MainNavbar.jsx:98
 msgid "Movements"
 msgstr "Movimenti"
 
 #: src/components/Home.jsx:75
-msgid "movements in"
-msgstr "movimenti in"
+#~ msgid "movements in"
+#~ msgstr "movimenti in"
 
-#: src/index.js:56
+#: src/index.js:57
 msgid "Movements overview"
 msgstr "Riepilogo movimenti"
 
@@ -227,16 +254,20 @@ msgstr "Riepilogo movimenti"
 msgid "No data"
 msgstr "Nessun elemento"
 
+#: src/components/Home.jsx:51
+msgid "No data available"
+msgstr "Nessun dato disponibile"
+
 #: src/components/Trading.jsx:37
-msgid "No historical data available"
-msgstr ""
+#~ msgid "No historical data available"
+#~ msgstr "Nessun dato disponibile"
 
 #. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:255
+#: src/components/MovementsList.jsx:270
 msgid "movementsListFilterStats.of"
 msgstr "di"
 
-#: src/components/Trading.jsx:179
+#: src/components/Trading.jsx:127
 msgid "Operation"
 msgstr "Operazione"
 
@@ -253,10 +284,10 @@ msgid "Other out."
 msgstr "Altre spese"
 
 #: src/components/Home.jsx:90
-msgid "Outcomes"
-msgstr "Uscite"
+#~ msgid "Outcomes"
+#~ msgstr "Uscite"
 
-#: src/components/MovementsList.jsx:96
+#: src/components/MovementsList.jsx:98
 msgid "Page size"
 msgstr "Dim. pagina"
 
@@ -266,18 +297,18 @@ msgid "Password"
 msgstr "Password"
 
 #: src/components/Home.jsx:45
-msgid "Past year"
-msgstr "Anno scorso"
+#~ msgid "Past year"
+#~ msgstr "Anno scorso"
 
 #: src/components/Trading.jsx:50
-msgid "Portfolio History"
-msgstr ""
+#~ msgid "Portfolio History"
+#~ msgstr "Storico Portfolio"
 
 #: src/components/Trading.jsx:73
-msgid "Portfolio Value"
-msgstr ""
+#~ msgid "Portfolio Value"
+#~ msgstr "Valore Portfolio"
 
-#: src/components/Trading.jsx:195
+#: src/components/Trading.jsx:143
 msgid "Price"
 msgstr "Prezzo"
 
@@ -285,11 +316,15 @@ msgstr "Prezzo"
 msgid "Profile"
 msgstr "Profilo"
 
-#: src/components/Trading.jsx:207
+#: src/components/Trading.jsx:155
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Trading.jsx:520
+#: src/components/Home.jsx:25
+msgid "Recent Movements"
+msgstr "Ultimi movimenti"
+
+#: src/components/Trading.jsx:468
 msgid "Record a new order"
 msgstr "Registra un nuovo ordine"
 
@@ -317,10 +352,14 @@ msgid "Saving"
 msgstr "In caricamento"
 
 #: src/components/Home.jsx:92
-msgid "Saving rate"
-msgstr "Saving rate"
+#~ msgid "Saving rate"
+#~ msgstr "Saving rate"
 
-#: src/components/MovementsList.jsx:234
+#: src/components/Home.jsx:86
+msgid "Saving Rate"
+msgstr "Saving Rate"
+
+#: src/components/MovementsList.jsx:247
 msgid "Search movements"
 msgstr "Cerca movimenti"
 
@@ -328,7 +367,7 @@ msgstr "Cerca movimenti"
 msgid "seconds"
 msgstr "secondi"
 
-#: src/index.js:61
+#: src/index.js:63
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -336,19 +375,28 @@ msgstr "Impostazioni"
 msgid "Show assets"
 msgstr "Mostra saldo"
 
-#: src/components/Trading.jsx:311
+#: src/components/Trading.jsx:259
 msgid "Show details"
 msgstr "Mostra dettagli"
 
-#: src/components/Trading.jsx:434
+#: src/components/Trading.jsx:382
 msgid "Show orders"
 msgstr "Mostra ordini"
 
-#: src/components/MovementsList.jsx:255
+#: src/components/MovementsList.jsx:270
 msgid "Showing"
 msgstr "Visualizzati"
 
-#: src/components/Trading.jsx:159
+#: src/components/Home.jsx:100
+msgid "Spending by Category"
+msgstr "Categorie di spesa"
+
+#: src/components/Home.jsx:48
+#: src/components/Home.jsx:73
+msgid "Statistics"
+msgstr "Statistiche"
+
+#: src/components/Trading.jsx:107
 msgid "Stock"
 msgstr "Titolo"
 
@@ -357,7 +405,7 @@ msgid "Subcategories"
 msgstr "Sottocategorie"
 
 #: src/components/MovementForm.jsx:216
-#: src/components/MovementsList.jsx:205
+#: src/components/MovementsList.jsx:217
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
@@ -365,11 +413,6 @@ msgstr "Sottocategoria"
 #: src/components/LoginForm.jsx:73
 msgid "login_form_submit"
 msgstr "Accedi"
-
-#. js-lingui-explicit-id
-#: src/components/Home.jsx:240
-msgid "date.to"
-msgstr "al"
 
 #: src/components/Assets.jsx:170
 msgid "TOTAL"
@@ -379,11 +422,11 @@ msgstr "TOTALE"
 msgid "Totals"
 msgstr "Totali"
 
-#: src/index.js:60
+#: src/index.js:62
 msgid "Trading"
 msgstr "Trading"
 
-#: src/components/Trading.jsx:222
+#: src/components/Trading.jsx:170
 msgid "Transaction cost"
 msgstr "Costo operazione"
 
@@ -399,7 +442,7 @@ msgstr "Aggiorna"
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
-#: src/components/Trading.jsx:320
+#: src/components/Trading.jsx:268
 msgid "Updated"
 msgstr "Aggiornato"
 
@@ -416,10 +459,10 @@ msgstr "anni"
 #~ msgid "Your current trading assets"
 #~ msgstr "I tuoi asset"
 
-#: src/components/Trading.jsx:317
+#: src/components/Trading.jsx:265
 msgid "Your current trading stats"
 msgstr "Statistiche trading"
 
-#: src/components/Trading.jsx:389
+#: src/components/Trading.jsx:337
 msgid "Your past orders"
 msgstr "Ordini recenti"
