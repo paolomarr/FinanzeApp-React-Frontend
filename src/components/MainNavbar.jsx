@@ -58,6 +58,13 @@ const OffcanvasNavbar = () => {
                             <NavLink to="/" end
                             className={({isActive}) => "nav-link" + (isActive ? " active" : "")}
                             onClick={() => setShow(false)}>
+                                <Trans>Home</Trans>
+                            </NavLink>
+                        </Nav.Item>
+                        <Nav.Item>
+                            <NavLink to="/movements" end
+                            className={({isActive}) => "nav-link" + (isActive ? " active" : "")}
+                            onClick={() => setShow(false)}>
                                 <Trans>Movements</Trans>
                             </NavLink>
                         </Nav.Item>
@@ -81,6 +88,12 @@ const StandardNavbar = () => {
             <Nav variant="underline">
                 <Nav.Item>
                     <NavLink to="/" end
+                    className={({isActive}) => "nav-link" + (isActive ? " active" : "")}>
+                        <Trans>Home</Trans>
+                    </NavLink>
+                </Nav.Item>
+                <Nav.Item>
+                    <NavLink to="/movements" end
                     className={({isActive}) => "nav-link" + (isActive ? " active" : "")}>
                         <Trans>Movements</Trans>
                     </NavLink>
