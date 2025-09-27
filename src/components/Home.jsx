@@ -18,13 +18,21 @@ const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, o
   
   return (
     <Card className="h-100">
-      <Card.Header 
-        style={{cursor: 'pointer'}} 
-        onClick={() => onNavigate('/movements')}
-      >
+      <Card.Header className="d-flex justify-content-between align-items-center">
         <Card.Title className="mb-0">{t`Recent Movements`}</Card.Title>
+        <small>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate('/movements');
+            }}
+            className="border-0 bg-transparent text-primary text-decoration-underline"
+          >
+            {t`Show all`}
+          </button>
+        </small>
       </Card.Header>
-      <Card.Body className="p-0" style={{cursor: 'pointer'}} onClick={() => onNavigate('/movements')}>
+      <Card.Body className="p-0">
         <MovementsList 
           movements={recentMovements}
           categories={categories}
