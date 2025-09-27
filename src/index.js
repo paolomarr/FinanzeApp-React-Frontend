@@ -18,6 +18,7 @@ import Trading from './components/Trading.jsx';
 import Settings from './components/Settings.jsx';
 import { t } from '@lingui/macro';
 import CategoryManager from './components/CategoryManager.jsx';
+import Movements from './components/Movements.jsx';
 
 // Detect the user's preferred language
 const userLanguages = navigator.languages;
@@ -54,6 +55,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index element=<Home /> handle={{ title: () => t`Movements overview`}}/>
+      <Route path="/movements" element=<Movements /> handle={{ title: () => t`All Movements`}}/>
       <Route path="/assets" element=<AssetsManager /> handle={{ title: () => t`Balance records`}}/>
       <Route path="/login" element=<LoginForm /> handle={{ title: () => t`Login`}}/>
       <Route path="/logout" element=<LoginForm logout={true}/> handle={{ title: () => t`Login`}}/>

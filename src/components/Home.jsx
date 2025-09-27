@@ -13,15 +13,18 @@ import MovementsList from "./MovementsList";
 import MovementsStats from "./MovementStats";
 
 // Recent Movements Widget
-const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit }) => {
+const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
   const recentMovements = movements?.slice(0, 10) || [];
   
   return (
     <Card className="h-100">
-      <Card.Header>
+      <Card.Header 
+        style={{cursor: 'pointer'}} 
+        onClick={() => onNavigate('/movements')}
+      >
         <Card.Title className="mb-0">{t`Recent Movements`}</Card.Title>
       </Card.Header>
-      <Card.Body className="p-0">
+      <Card.Body className="p-0" style={{cursor: 'pointer'}} onClick={() => onNavigate('/movements')}>
         <MovementsList 
           movements={recentMovements}
           categories={categories}
@@ -29,6 +32,7 @@ const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit })
           onEdit={onEdit}
           slice={null}
           isWidget={true}
+          compact={true}
         />
       </Card.Body>
     </Card>
@@ -229,6 +233,7 @@ const Home = () => {
             categories={categoryResults.data}
             subcategories={subcategoryResults.data}
             onEdit={(movement) => setShowModal({show: true, movement: movement})}
+            onNavigate={(path) => navigate(path)}
           />
         </Col>
       </Row>

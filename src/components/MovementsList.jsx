@@ -16,11 +16,11 @@ import { useLingui } from "@lingui/react";
 import { startOfDay, endOfDay } from "date-fns";
 import { useMediaQuery } from "react-responsive";
 
-function MovementsListTableHeader({fields, sort, onSort}) {
+function MovementsListTableHeader({fields, sort, onSort, compact = false}) {
     return (
       <thead>
         <tr className="align-top">
-          <th></th>
+          {!compact && <th></th>}
           {fields.map((field) => {
             let style = {color: "#cccccc",};
             let icon = faCaretDown;
@@ -42,12 +42,14 @@ function MovementsListTableHeader({fields, sort, onSort}) {
     );
 }
 
-const MovementsListTableItem = ({movement, fields, edit}) => {
+const MovementsListTableItem = ({movement, fields, edit, compact = false}) => {
     return (
       <tr key={movement.id} data-id={movement.id}>
-          <td className="list-item-edit">
-            <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
-          </td>
+          {!compact && (
+            <td className="list-item-edit">
+              <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
+            </td>
+          )}
         {fields.map((field) => {
           const key = `${field.column}_${movement.id}`;
           const extra_class = field.className ?? "";
@@ -135,7 +137,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false, compact = false}) => {
     const {i18n} = useLingui();
     const [sort, setSort] = useState({
       field: "date",
@@ -181,7 +183,17 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
       return ret;
     };
     
-    const fields = [
+    const fields = compact ? [
+      {
+        column: "date",
+        name: t`Date`,
+        format: (date) => {
+          return format(new Date(date), i18n);
+        },
+      },
+      { column: "description", name: t`Description` },
+      { column: "amount", name: t`Amount`, format: (val) => val.toFixed(2) + "€", className: "text-end" },
+    ] : [
       // {column:"id", name: "id"},
       // {column:"user", name: "User"},
       {
@@ -261,7 +273,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
         )}
         { !isMobile ?
           <Table responsive="sm">
-            <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
+            <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting} compact={compact}/>
             <tbody>
               {!slicedMovements || slicedMovements.length <= 0 ? (
                 <tr>
@@ -272,7 +284,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
               ) : (
                 slicedMovements.filter((movement, index) => index>=paginationStartIdx && index<paginationEndIdx).map((movement) => {
                   return (
-                  <MovementsListTableItem key={movement.id} movement={movement} fields={fields} edit={() => onEdit(movement)} />
+                  <MovementsListTableItem key={movement.id} movement={movement} fields={fields} edit={() => onEdit(movement)} compact={compact} />
                   )}
                   )
               )}
