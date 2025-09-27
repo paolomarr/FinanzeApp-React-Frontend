@@ -135,14 +135,14 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, onEdit, slice}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false}) => {
     const {i18n} = useLingui();
     const [sort, setSort] = useState({
       field: "date",
       direction: -1
     });
     const [pagination, setPagination] = useState({
-      size: 50,
+      size: isWidget ? (movements?.length || 10) : 50,
       page: 0
     });
     const [movementFilter, setMovementFilter] = useState("");
@@ -229,32 +229,36 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice}) =>
 
     return (
       <>
-        <Row className="align-items-end mt-4">
-          <Col xs={12} md={6} className="position-relative">
-            <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
-              {movementFilter && (
-            <FontAwesomeIcon icon={faXmark}
-              onClick={()=> setMovementFilter("")}
-              style={{
-                position: 'absolute',
-                right: '5%',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                cursor: 'pointer',
-                color: '#888'
-              }}
-            />
-      )}
-          </Col>
-          <Col xs={12} md={6}>
-            <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
-          </Col>
-        </Row>
-        <Row className='filter-stats'>
-          <Col className='text-center small'>
-            <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}<Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}<Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
-          </Col>
-        </Row>
+        {!isWidget && (
+          <Row className="align-items-end mt-4">
+            <Col xs={12} md={6} className="position-relative">
+              <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
+                {movementFilter && (
+              <FontAwesomeIcon icon={faXmark}
+                onClick={()=> setMovementFilter("")}
+                style={{
+                  position: 'absolute',
+                  right: '5%',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  cursor: 'pointer',
+                  color: '#888'
+                }}
+              />
+        )}
+            </Col>
+            <Col xs={12} md={6}>
+              <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
+            </Col>
+          </Row>
+        )}
+        {!isWidget && (
+          <Row className='filter-stats'>
+            <Col className='text-center small'>
+              <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}<Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}<Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
+            </Col>
+          </Row>
+        )}
         { !isMobile ?
           <Table responsive="sm">
             <MovementsListTableHeader fields={fields} sort={sort} onSort={switchSorting}/>
