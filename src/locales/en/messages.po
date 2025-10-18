@@ -143,8 +143,8 @@ msgstr "Could not parse the receipt content."
 #~ msgstr "Current month"
 
 #: src/components/Home.jsx:217
-msgid "Dashboard"
-msgstr "Dashboard"
+#~ msgid "Dashboard"
+#~ msgstr "Dashboard"
 
 #: src/components/MovementForm.jsx:239
 msgid "Data has been saved"
@@ -205,7 +205,7 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/CategoryManager.jsx:98
-#: src/components/Home.jsx:82
+#: src/components/Home.jsx:90
 #: src/components/MovementStats.jsx:99
 #: src/components/MovementStats.jsx:222
 msgid "Expenses"
@@ -240,7 +240,7 @@ msgstr "Home"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:78
+#: src/components/Home.jsx:86
 msgid "Incomes"
 msgstr "Earnings"
 
@@ -253,8 +253,8 @@ msgstr "Insert new movement"
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:48
-#: src/components/Home.jsx:73
+#: src/components/Home.jsx:56
+#: src/components/Home.jsx:81
 msgid "Last {monthsBack} months"
 msgstr "Last {monthsBack} months"
 
@@ -312,7 +312,7 @@ msgstr "Movements overview"
 msgid "No data"
 msgstr "No data"
 
-#: src/components/Home.jsx:51
+#: src/components/Home.jsx:59
 msgid "No data available"
 msgstr "No data available"
 
@@ -382,7 +382,7 @@ msgstr "Profile"
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Home.jsx:25
+#: src/components/Home.jsx:22
 msgid "Recent Movements"
 msgstr "Recent Movements"
 
@@ -417,7 +417,7 @@ msgstr "Saving"
 #~ msgid "Saving rate"
 #~ msgstr "Saving rate"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:94
 msgid "Saving Rate"
 msgstr "Saving Rate"
 
@@ -450,6 +450,10 @@ msgstr "Settings"
 #~ msgid "Show"
 #~ msgstr "Show"
 
+#: src/components/Home.jsx:31
+msgid "Show all"
+msgstr "Show all"
+
 #: src/components/MovementsHistory.jsx:60
 msgid "Show assets"
 msgstr "Show assets"
@@ -466,12 +470,12 @@ msgstr "Show orders"
 msgid "Showing"
 msgstr "Showing"
 
-#: src/components/Home.jsx:100
+#: src/components/Home.jsx:108
 msgid "Spending by Category"
 msgstr "Spending by Category"
 
-#: src/components/Home.jsx:48
-#: src/components/Home.jsx:73
+#: src/components/Home.jsx:56
+#: src/components/Home.jsx:81
 msgid "Statistics"
 msgstr "Statistics"
 

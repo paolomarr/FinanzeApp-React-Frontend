@@ -2,7 +2,7 @@
 FROM node:21-alpine
 
 ARG version_info
-ENV REACT_APP_VERSION_INFO=${version_info}
+ENV VITE_VERSION_INFO=${version_info}
 # This is required in low-memory environments (possibly need to setup swap)
 ENV NODE_OPTIONS=--max_old_space_size=2048
 

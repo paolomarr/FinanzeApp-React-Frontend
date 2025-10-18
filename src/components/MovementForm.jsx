@@ -220,7 +220,7 @@ const MovementForm = ({movement, onDataReady, errors, fields}) => {
             type="select" 
             className={`${errors?.subcategory? "is-invalid" : ""}`}
             onChange={(e) => updateNewMovement({subcategory: e.target.value})}
-            value={newmovement.subcategory}
+            value={newmovement.subcategory??-1}
             >
             <option value={-1}>{"("}<Trans>optional</Trans>{")"}</option>
             {subcategories.map((cat) => {

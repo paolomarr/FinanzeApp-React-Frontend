@@ -1,5 +1,5 @@
-const { API_ENDPOINTS } = require("../constants");
-const { mutateObjectWithUrl } = require("./genericMutation");
+import { API_ENDPOINTS } from "../constants";
+import { mutateObjectWithUrl } from "./genericMutation";
 
 const mutateReceipt = async ({imgBase64}) => {
     const payload = {

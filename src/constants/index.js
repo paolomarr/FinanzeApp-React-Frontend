@@ -1,12 +1,13 @@
-import { messages } from "../locales/en/messages.js";
-import { messages as itMessages } from "../locales/it/messages.js";
+import { messages } from "../locales/en/messages.mjs";
+import { messages as itMessages } from "../locales/it/messages.mjs";
+
 
 export const languages = [
   {locale: "en", name: "English", messages: messages,},
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
 
-export const API_URL_STRING = process.env.VITE_BACKEND_API_BASE;
+export const API_URL_STRING = import.meta.env.VITE_BACKEND_API_BASE;
 
 const generateURLAppendingPath = (path) => {
   if (!path) {
@@ -34,7 +35,7 @@ export const colors = {
   secondary_A00: "#AAA",
 };
 
-export const ENVIRONMENT = process.env.NODE_ENV
+export const ENVIRONMENT = import.meta.env.NODE_ENV
 export const isDevelopment = () => ENVIRONMENT === 'development';
 export const debuglog = (message) => {
   if(isDevelopment()){
