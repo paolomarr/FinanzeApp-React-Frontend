@@ -6,7 +6,7 @@ export const languages = [
   {locale: "it", name: "Italiano", messages: itMessages},
 ];
 
-export const API_URL_STRING = process.env.REACT_APP_BACKEND_API_BASE;
+export const API_URL_STRING = process.env.VITE_BACKEND_API_BASE;
 
 const generateURLAppendingPath = (path) => {
   if (!path) {
