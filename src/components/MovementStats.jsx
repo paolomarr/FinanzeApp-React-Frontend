@@ -44,12 +44,6 @@ const MovementsStats = ({data, categories}) => {
         if(movement.amount == 0.0){ // filter out BALANCE-type movements
           continue
         }
-        // if(slice){
-        //   const mDate = new Date(movement.date);
-        //   if(mDate < slice.minDate || mDate > slice.maxDate){
-        //     continue;
-        //   }
-        // }
         if(movement.amount>0){   
           incomes += movement.abs_amount;
         }else {
