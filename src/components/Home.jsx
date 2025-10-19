@@ -10,7 +10,7 @@ import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
-import MovementsStats from "./MovementStats";
+import MovementStats2 from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
@@ -101,16 +101,31 @@ const StatsWidget = ({ data, monthsBack = 3 }) => {
 };
 
 // Categories Chart Widget
-const CategoriesWidget = ({ data, categories }) => {
+const SpendingCategoriesWidget = ({ data, categories }) => {
+  // filter only expenses-type categories and set a new 'amount' field
+  const expenseCategories = categories.filter((cat) => cat.direction === -1).map((cat) => {
+    return {
+      ...cat,
+      amount: 0
+    }
+  });
+  // loop over data.filtered.movements and sum by categories, piling up into expenseCategories
+  for (const movement of data.filtered.movements) {
+    const cat = expenseCategories.find((cat) => cat.id === movement.category);
+    if (cat) {
+      cat.amount += movement.abs_amount;
+    }
+  }
+  
+
   return (
     <Card className="h-100">
       <Card.Header>
         <Card.Title className="mb-0">{t`Spending by Category`}</Card.Title>
       </Card.Header>
       <Card.Body>
-        <MovementsStats 
-          data={data} 
-          categories={categories}
+        <MovementStats2 
+          data={expenseCategories}
         />
       </Card.Body>
     </Card>
@@ -248,7 +263,7 @@ const Home = () => {
       <Row className="g-3 mt-3">
         {/* Categories Chart Widget */}
         <Col xs={12}>
-          <CategoriesWidget 
+          <SpendingCategoriesWidget 
             data={movementResults.data} 
             categories={categoryResults.data}
           />

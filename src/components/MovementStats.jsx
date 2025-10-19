@@ -23,6 +23,48 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+const MovementStats2 = ({data, valueKey = "amount", labelKey = "category"}) => {
+  return (
+    <>
+      <ResponsiveContainer
+          height="100%"
+          width="100%"
+      >
+        <BarChart
+          accessibilityLayer
+          barCategoryGap="10%"
+          barGap={4}
+          data={data}
+          syncMethod="index"
+          width={500}
+        >
+          <Bar
+            dataKey={valueKey}
+            fill="#aebbae"
+          >
+            <LabelList
+              dataKey={valueKey}
+              position="insideLeft"
+            />
+            <LabelList
+              dataKey="category"
+              position="right"
+            />
+          </Bar>
+          <XAxis
+            dataKey={valueKey}
+            type="number"
+          />
+          <YAxis
+            dataKey={labelKey}
+            hide
+            type="category"
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </>
+  )
+};
 const MovementsStats = ({data, categories}) => {
     const percent_cutin = 0.02;
     let earningData = {
@@ -222,4 +264,4 @@ const MovementsStats = ({data, categories}) => {
     )
 };
 
-export default MovementsStats
+export default MovementStats2
