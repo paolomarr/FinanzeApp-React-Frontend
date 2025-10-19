@@ -4,6 +4,7 @@ import Col from 'react-bootstrap/Col';
 
 import { useMediaQuery } from 'react-responsive'
 import { t } from "@lingui/macro";
+import { parse } from 'date-fns';
 // import { colors } from '../constants';
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -23,32 +24,61 @@ const CustomTooltip = ({ active, payload, label }) => {
   return null;
 };
 
-const MovementStats2 = ({data, valueKey = "amount", labelKey = "category"}) => {
+const MovementStats2 = ({data, valueKey = "amount", labelKey = "category", cutoff=1.0}) => {
+  const total = data.reduce((acc, item) => acc + item[valueKey], 0);
+  var acc = 0;
+  var cuttedOff = [];
+  for(var item of data){
+    acc += item[valueKey];
+    if(acc/total < cutoff){
+      cuttedOff.push(item);
+    }else{
+      break;
+    }
+  }
+  if(total - acc > 0){
+    cuttedOff.push({[labelKey]: "Other", [valueKey]: total - acc});
+  }
   return (
     <>
       <ResponsiveContainer
-          height="100%"
+          height={50*cuttedOff.length}
           width="100%"
       >
         <BarChart
           accessibilityLayer
           barCategoryGap="10%"
           barGap={4}
-          data={data}
+          barSize={30}
+          data={cuttedOff}
+          // height={300}
+          layout="vertical"
+          margin={{
+            bottom: 5,
+            left: 20,
+            right: 30,
+            top: 5
+          }}
           syncMethod="index"
           width={500}
         >
           <Bar
             dataKey={valueKey}
-            fill="#aebbae"
+            // fill="#aebbae"
+            className="stats-bar-expenses"
           >
+            {/* {
+              data.map((item) => (
+                <Cell key={`cat_${item.id}`} />
+              ))
+            } */}
             <LabelList
-              dataKey={valueKey}
+              dataKey={(item) => parseFloat(item[valueKey]).toFixed(2)}
+              position="insideRight"
+              />
+            <LabelList
+              dataKey={labelKey}
               position="insideLeft"
-            />
-            <LabelList
-              dataKey="category"
-              position="right"
             />
           </Bar>
           <XAxis

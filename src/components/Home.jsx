@@ -124,11 +124,10 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
         <Card.Title className="mb-0">{t`Spending by Category`}</Card.Title>
       </Card.Header>
       <Card.Body>
-        <div style={{ height: '300px' }}>
           <MovementStats2 
-            data={expenseCategories}
+            data={expenseCategories.toSorted((a, b) => b.amount - a.amount)}
+            cutoff={0.9}
           />
-        </div>
       </Card.Body>
     </Card>
   );
