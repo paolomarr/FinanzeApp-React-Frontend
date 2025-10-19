@@ -8,7 +8,7 @@ import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
 import MovementStats2 from "./MovementStats";
 
@@ -106,17 +106,23 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
   const expenseCategories = categories.filter((cat) => cat.direction === -1).map((cat) => {
     return {
       ...cat,
-      amount: 0
+      amount: 0,
+      percent: function(total){
+        return this.amount / total;
+      },
     }
   });
+  var total = 0;
   // loop over data.filtered.movements and sum by categories, piling up into expenseCategories
   for (const movement of data.filtered.movements) {
     const cat = expenseCategories.find((cat) => cat.id === movement.category);
     if (cat) {
       cat.amount += movement.abs_amount;
+      total += movement.abs_amount;
     }
   }
   
+  const percent_cutoff = 0.05;
 
   return (
     <Card className="h-100">
@@ -124,10 +130,25 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
         <Card.Title className="mb-0">{t`Spending by Category`}</Card.Title>
       </Card.Header>
       <Card.Body>
-          <MovementStats2 
-            data={expenseCategories.toSorted((a, b) => b.amount - a.amount)}
-            cutoff={0.9}
-          />
+        <ListGroup  variant='flush' className='movement-list'>
+        {expenseCategories.filter(cat => cat.percent(total) >= percent_cutoff).toSorted((a, b) => b.amount - a.amount).map((cat) => {
+          return (
+              <ListGroup.Item key={`${cat.category}`} className='border-bottom item'>
+                <div className="row align-items-center">
+                  <div className="col-8">
+                    <div className="category fw-bold">{cat.category}</div>
+                    <div className='small me-auto'>{cat.amount.toFixed(2)}&nbsp;€</div>
+                  </div>
+                  <div className="col-4 text-end">
+                    <div className="amount expenses">{parseFloat(cat.amount*100/total).toFixed(2)}%</div>
+                  </div>
+                </div>
+                
+              </ListGroup.Item>
+            )
+          })
+        }
+      </ListGroup>
       </Card.Body>
     </Card>
   );
