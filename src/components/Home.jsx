@@ -124,9 +124,11 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
         <Card.Title className="mb-0">{t`Spending by Category`}</Card.Title>
       </Card.Header>
       <Card.Body>
-        <MovementStats2 
-          data={expenseCategories}
-        />
+        <div style={{ height: '300px' }}>
+          <MovementStats2 
+            data={expenseCategories}
+          />
+        </div>
       </Card.Body>
     </Card>
   );
