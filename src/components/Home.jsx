@@ -10,7 +10,6 @@ import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
-import MovementStats2 from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
