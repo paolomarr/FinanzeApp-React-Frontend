@@ -24,6 +24,7 @@ export const API_ENDPOINTS = {
   tradinglog: () => generateURLAppendingPath("tradinglog"),
   tokenauth: () => generateURLAppendingPath("api-token-auth/"),
   scanreceipt: () => generateURLAppendingPath("scan-receipt"),
+  voice: () => generateURLAppendingPath("voice/voice/"), // trailing slash is important as django backend expects it when POSTing
 }
 
 export const colors = {
