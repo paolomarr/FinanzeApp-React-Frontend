@@ -1,5 +1,20 @@
 #!/bin/bash
- 
+
+function _stderrecho() {
+    echo "$1" >&2
+}
+function info() {
+    _stderrecho "[INFO] $1"
+}
+
+function warning() {
+    _stderrecho "[WARNING] $1"
+}
+
+function error() {
+    _stderrecho "[ERROR] $1"
+}
+
  SCRIPT_ROOT=`cd $(dirname $0); pwd`
  FE_ENV_FILE=${SCRIPT_ROOT}/.env
  
