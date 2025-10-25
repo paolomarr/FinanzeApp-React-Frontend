@@ -24,3 +24,4 @@ yarn-error.log*
 src/locales/**/*.js
 .env
 .aider*
+dist/

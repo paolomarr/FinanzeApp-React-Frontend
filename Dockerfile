@@ -23,7 +23,8 @@ COPY ./.env ./index.html ./vite.config.js ./
 
 # Build translations and app
 RUN npm run compile && \
-    npm run build
+    npm run build && \
+    npm install -g serve
 
 
-CMD ["npx", "serve", "-s", "build", "-l", "3000"]
+CMD ["serve", "-s", "dist"]
