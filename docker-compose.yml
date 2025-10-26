@@ -1,6 +1,6 @@
 services:
 
-  react_frontend:
+  frontend:
     build:
       dockerfile: ./Dockerfile
       tags:

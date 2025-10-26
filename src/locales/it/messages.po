@@ -86,7 +86,7 @@ msgstr "Conferma"
 msgid "Copy items"
 msgstr "Copia valori"
 
-#: src/components/MovementModal.jsx:75
+#: src/components/MovementModal.jsx:182
 msgid "Could not parse the receipt content."
 msgstr "Lettura della ricevuta non riuscita."
 
@@ -130,9 +130,13 @@ msgstr "Descrizione"
 msgid "Description cannot be empty"
 msgstr "La descrizione non può essere vuota"
 
+#: src/components/MovementModal.jsx:94
+msgid "Dismiss"
+msgstr "Chiudi"
+
 #: src/components/CategoryManager.jsx:97
-#: src/components/MovementStats.jsx:99
-#: src/components/MovementStats.jsx:219
+#: src/components/MovementStats.jsx:165
+#: src/components/MovementStats.jsx:285
 msgid "Earnings"
 msgstr "Entrate"
 
@@ -141,9 +145,9 @@ msgid "Error"
 msgstr "Errore"
 
 #: src/components/CategoryManager.jsx:98
-#: src/components/Home.jsx:90
-#: src/components/MovementStats.jsx:99
-#: src/components/MovementStats.jsx:222
+#: src/components/Home.jsx:89
+#: src/components/MovementStats.jsx:165
+#: src/components/MovementStats.jsx:288
 msgid "Expenses"
 msgstr "Spese"
 
@@ -168,11 +172,11 @@ msgstr "Home"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:86
+#: src/components/Home.jsx:85
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/MovementModal.jsx:117
+#: src/components/MovementModal.jsx:229
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
@@ -181,8 +185,8 @@ msgstr "Inserisci un nuovo movimento"
 msgid "Languages"
 msgstr "Lingue"
 
-#: src/components/Home.jsx:56
-#: src/components/Home.jsx:81
+#: src/components/Home.jsx:55
+#: src/components/Home.jsx:80
 msgid "Last {monthsBack} months"
 msgstr "Ultimi {monthsBack} mesi"
 
@@ -198,6 +202,10 @@ msgstr "Accedi"
 #: src/components/Settings.jsx:18
 msgid "Manage categories"
 msgstr "Gestione categorie"
+
+#: src/components/MovementModal.jsx:75
+msgid "Microphone access denied or not available"
+msgstr "Microfono non disponibile o non accessibile"
 
 #: src/_lib/format_locale.js:9
 msgid "minutes"
@@ -224,7 +232,7 @@ msgstr "Riepilogo movimenti"
 msgid "No data"
 msgstr "Nessun elemento"
 
-#: src/components/Home.jsx:59
+#: src/components/Home.jsx:58
 msgid "No data available"
 msgstr "Nessun dato disponibile"
 
@@ -241,11 +249,11 @@ msgstr "Operazione"
 msgid "optional"
 msgstr "facoltativo"
 
-#: src/components/MovementStats.jsx:40
+#: src/components/MovementStats.jsx:112
 msgid "Other in."
 msgstr "Altri ricavi"
 
-#: src/components/MovementStats.jsx:41
+#: src/components/MovementStats.jsx:113
 msgid "Other out."
 msgstr "Altre spese"
 
@@ -266,6 +274,10 @@ msgstr "Password"
 msgid "Price"
 msgstr "Prezzo"
 
+#: src/components/MovementModal.jsx:102
+msgid "Processing voice recording..."
+msgstr "Stiamo registrando il movimento..."
+
 #: src/components/Header.jsx:44
 msgid "Profile"
 msgstr "Profilo"
@@ -274,7 +286,7 @@ msgstr "Profilo"
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Home.jsx:22
+#: src/components/Home.jsx:21
 msgid "Recent Movements"
 msgstr "Ultimi movimenti"
 
@@ -285,6 +297,10 @@ msgstr "Registra un nuovo ordine"
 #: src/components/Assets.jsx:148
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
 msgstr "Registra il tuo saldo corrente aggiungendo i valori nel form sopra o copiandoli dalla lista sottostante"
+
+#: src/components/MovementModal.jsx:115
+msgid "Recording... Tap to stop"
+msgstr "In ascolto... Tocca per interrompere"
 
 #: src/components/Assets.jsx:279
 #: src/components/Assets.jsx:285
@@ -309,7 +325,7 @@ msgstr "In caricamento"
 #~ msgid "Saving rate"
 #~ msgstr "Saving rate"
 
-#: src/components/Home.jsx:94
+#: src/components/Home.jsx:93
 msgid "Saving Rate"
 msgstr "Saving Rate"
 
@@ -325,7 +341,7 @@ msgstr "secondi"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: src/components/Home.jsx:31
+#: src/components/Home.jsx:30
 msgid "Show all"
 msgstr "Mostra tutti"
 
@@ -345,12 +361,12 @@ msgstr "Mostra ordini"
 msgid "Showing"
 msgstr "Visualizzati"
 
-#: src/components/Home.jsx:108
+#: src/components/Home.jsx:129
 msgid "Spending by Category"
 msgstr "Categorie di spesa"
 
-#: src/components/Home.jsx:56
-#: src/components/Home.jsx:81
+#: src/components/Home.jsx:55
+#: src/components/Home.jsx:80
 msgid "Statistics"
 msgstr "Statistiche"
 
@@ -372,11 +388,15 @@ msgstr "Sottocategoria"
 msgid "login_form_submit"
 msgstr "Accedi"
 
+#: src/components/MovementModal.jsx:125
+msgid "Tap to start recording"
+msgstr "Tocca per registrare"
+
 #: src/components/Assets.jsx:170
 msgid "TOTAL"
 msgstr "TOTALE"
 
-#: src/components/MovementStats.jsx:225
+#: src/components/MovementStats.jsx:291
 msgid "Totals"
 msgstr "Totali"
 
@@ -388,7 +408,7 @@ msgstr "Trading"
 msgid "Transaction cost"
 msgstr "Costo operazione"
 
-#: src/components/MovementModal.jsx:77
+#: src/components/MovementModal.jsx:185
 msgid "Try again"
 msgstr "Riprova"
 
@@ -396,7 +416,7 @@ msgstr "Riprova"
 msgid "Update"
 msgstr "Aggiorna"
 
-#: src/components/MovementModal.jsx:117
+#: src/components/MovementModal.jsx:229
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
