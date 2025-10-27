@@ -10,6 +10,7 @@ import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
+import MovementsHistory from "./MovementsHistory";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
@@ -94,6 +95,9 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
             <div className="text-muted">{t`Saving Rate`}</div>
             <div className={`${savingRateStrColorClass} fs-1`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
           </div>
+        </div>
+        <div>
+          <MovementsHistory data={data} categories={categories} />
         </div>
       </Card.Body>
     </Card>
