@@ -47,7 +47,7 @@ const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, o
 };
 
 // Stats Widget
-const StatsWidget = ({ data, monthsBack = 3 }) => {
+const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
   if (!data?.filtered?.movements) {
     return (
       <Card className="h-100">
@@ -73,6 +73,7 @@ const StatsWidget = ({ data, monthsBack = 3 }) => {
   }
 
   const savingRate = incomes > 0 ? (incomes - outcomes) / incomes : 0;
+  const savingRateStrColorClass = savingRate > 0 ? "text-earnings" : "text-expenses";
 
   return (
     <Card className="h-100">
@@ -81,17 +82,17 @@ const StatsWidget = ({ data, monthsBack = 3 }) => {
       </Card.Header>
       <Card.Body>
         <div className="row text-center fs-3">
-          <div className="col-6 mb-2">
+          <div className="col-6 mb-2 fw-bold">
             <div className="text-muted">{t`Incomes`}</div>
-            <div className="text-success">+{parseFloat(incomes).toFixed(2)}€</div>
+            <div className="text-earnings">+{parseFloat(incomes).toFixed(2)}€</div>
           </div>
-          <div className="col-6 mb-2">
+          <div className="col-6 mb-2 fw-bold">
             <div className="text-muted">{t`Expenses`}</div>
-            <div className="text-danger">-{parseFloat(outcomes).toFixed(2)}€</div>
+            <div className="text-expenses">-{parseFloat(outcomes).toFixed(2)}€</div>
           </div>
           <div className="col-12 mb-2 fw-bold">
             <div className="text-muted">{t`Saving Rate`}</div>
-            <div className="text-primary fs-1">{parseFloat(savingRate * 100).toFixed(1)}%</div>
+            <div className={`${savingRateStrColorClass} fs-1`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
           </div>
         </div>
       </Card.Body>
