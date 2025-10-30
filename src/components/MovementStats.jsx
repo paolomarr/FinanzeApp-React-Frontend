@@ -294,4 +294,4 @@ const MovementsStats = ({data, categories}) => {
     )
 };
 
-export default MovementStats2
+export default MovementsStats

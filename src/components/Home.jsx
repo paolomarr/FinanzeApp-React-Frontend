@@ -11,6 +11,7 @@ import LoadingDiv from "./LoadingDiv";
 import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
 import MovementsHistory from "./MovementsHistory";
+import MovementsStats  from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
@@ -83,11 +84,11 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
       </Card.Header>
       <Card.Body>
         <div className="row text-center fs-3">
-          <div className="col-6 mb-2 fw-bold">
+          <div className="col-12 col-md-6 mb-2 fw-bold">
             <div className="text-muted">{t`Incomes`}</div>
             <div className="text-earnings">+{parseFloat(incomes).toFixed(2)}€</div>
           </div>
-          <div className="col-6 mb-2 fw-bold">
+          <div className="col-12 col-md-6 mb-2 fw-bold">
             <div className="text-muted">{t`Expenses`}</div>
             <div className="text-expenses">-{parseFloat(outcomes).toFixed(2)}€</div>
           </div>
@@ -98,6 +99,9 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
         </div>
         <div>
           <MovementsHistory data={data} categories={categories} />
+        </div>
+        <div>
+          <MovementsStats data={data} categories={categories}/>
         </div>
       </Card.Body>
     </Card>
@@ -286,15 +290,15 @@ const Home = () => {
         </Col>
       </Row>
 
-      <Row className="g-3 mt-3">
-        {/* Categories Chart Widget */}
+      {/* Categories Chart Widget */}
+      {/* <Row className="g-3 mt-3">
         <Col xs={12}>
           <SpendingCategoriesWidget 
             data={movementResults.data} 
             categories={categoryResults.data}
           />
         </Col>
-      </Row>
+      </Row> */}
 
       <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
       <MovementModal 
