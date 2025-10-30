@@ -1,10 +1,8 @@
+name: finanzeapp-frontend
 services:
-
-  frontend:
+  react:
     build:
       dockerfile: ./Dockerfile
-      tags:
-      - finanzeapp-frontend:$VITE_VERSION_INFO
     ports:
       - 127.0.0.1:3300:3000
     env_file:
