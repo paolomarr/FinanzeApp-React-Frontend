@@ -49,7 +49,7 @@ const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, o
 };
 
 // Stats Widget
-const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
+const StatsWidget = ({ data, categories, monthsBack = 3, onMonthsBackChange }) => {
   if (!data?.filtered?.movements) {
     return (
       <Card className="h-100">
@@ -85,7 +85,20 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
   return (
     <Card className="h-100">
       <Card.Header>
-        <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
+        <Card.Title className="mb-0">
+            <div className="d-flex align-items-center">
+              <div className="flex-grow-1">{t`Statistics`}</div> 
+              <div>
+                <DropdownButton variant="secondary" title={t`Last ${monthsBack} months`} size="sm">
+                  <Dropdown.Item onClick={() => onMonthsBackChange(0)}>{t`Current month`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(3)}>{t`Last 3 months`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(6)}>{t`Last 6 months`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(12)}>{t`Last year`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(12)}>{t`Past year`}</Dropdown.Item>
+                </DropdownButton>
+              </div>
+            </div>
+          </Card.Title>
       </Card.Header>
       <Card.Body>
         <div className="row text-center fs-3">
@@ -169,10 +182,10 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
 const Home = () => {
   const queryclient = useQueryClient();
   const navigate = useNavigate();
-  const monthsBack = 3;
+  const [monthsBack, setMonthsBack] = useState(3);
 
-  const [dataSlice] = useState({
-    minDate: sub(new Date(), {months: monthsBack}),
+  const [dataSlice, setDataSlice] = useState({
+    minDate: sub(new Date(), {months: 3}),
     maxDate: new Date(),
   });
 
@@ -181,6 +194,14 @@ const Home = () => {
     show: false,
     errors: null,
   });
+
+  const handleMonthsBackChange = (newMonthsBack) => {
+    setMonthsBack(newMonthsBack);
+    setDataSlice({
+      minDate: newMonthsBack === 0 ? new Date(new Date().getFullYear(), new Date().getMonth(), 1) : sub(new Date(), {months: newMonthsBack}),
+      maxDate: new Date(),
+    });
+  };
 
   const toggleModal = () => {
     const show = !showModal.show;
@@ -280,6 +301,7 @@ const Home = () => {
             data={movementResults.data} 
             categories={categoryResults.data}
             monthsBack={monthsBack}
+            onMonthsBackChange={handleMonthsBackChange}
           />
         </Col>
         
