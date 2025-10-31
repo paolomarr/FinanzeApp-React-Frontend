@@ -8,7 +8,7 @@ import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import LoadingDiv from "./LoadingDiv";
-import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
 import MovementsHistory from "./MovementsHistory";
 import MovementsStats  from "./MovementStats";
