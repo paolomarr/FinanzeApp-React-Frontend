@@ -90,6 +90,10 @@ msgstr "Copia valori"
 msgid "Could not parse the receipt content."
 msgstr "Lettura della ricevuta non riuscita."
 
+#: src/components/Home.jsx:93
+msgid "Current month"
+msgstr "Questo mese"
+
 #: src/components/MovementForm.jsx:239
 msgid "Data has been saved"
 msgstr "Dati salvati"
@@ -145,7 +149,7 @@ msgid "Error"
 msgstr "Errore"
 
 #: src/components/CategoryManager.jsx:98
-#: src/components/Home.jsx:89
+#: src/components/Home.jsx:110
 #: src/components/MovementStats.jsx:165
 #: src/components/MovementStats.jsx:288
 msgid "Expenses"
@@ -172,7 +176,7 @@ msgstr "Home"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:85
+#: src/components/Home.jsx:106
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -185,10 +189,22 @@ msgstr "Inserisci un nuovo movimento"
 msgid "Languages"
 msgstr "Lingue"
 
-#: src/components/Home.jsx:55
-#: src/components/Home.jsx:80
+#: src/components/Home.jsx:60
+#: src/components/Home.jsx:92
 msgid "Last {monthsBack} months"
 msgstr "Ultimi {monthsBack} mesi"
+
+#: src/components/Home.jsx:94
+msgid "Last 3 months"
+msgstr "Ultimi 3 mesi"
+
+#: src/components/Home.jsx:95
+msgid "Last 6 months"
+msgstr "Ultimi 6 mesi"
+
+#: src/components/Home.jsx:96
+msgid "Last year"
+msgstr "Ultimo anno"
 
 #: src/index.js:60
 #: src/index.js:61
@@ -232,7 +248,7 @@ msgstr "Riepilogo movimenti"
 msgid "No data"
 msgstr "Nessun elemento"
 
-#: src/components/Home.jsx:58
+#: src/components/Home.jsx:65
 msgid "No data available"
 msgstr "Nessun dato disponibile"
 
@@ -270,6 +286,10 @@ msgstr "Dim. pagina"
 msgid "Password"
 msgstr "Password"
 
+#: src/components/Home.jsx:97
+msgid "Past year"
+msgstr "Anno scorso"
+
 #: src/components/Trading.jsx:143
 msgid "Price"
 msgstr "Prezzo"
@@ -286,7 +306,7 @@ msgstr "Profilo"
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Home.jsx:21
+#: src/components/Home.jsx:23
 msgid "Recent Movements"
 msgstr "Ultimi movimenti"
 
@@ -325,7 +345,7 @@ msgstr "In caricamento"
 #~ msgid "Saving rate"
 #~ msgstr "Saving rate"
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:114
 msgid "Saving Rate"
 msgstr "Saving Rate"
 
@@ -341,11 +361,11 @@ msgstr "secondi"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: src/components/Home.jsx:30
+#: src/components/Home.jsx:32
 msgid "Show all"
 msgstr "Mostra tutti"
 
-#: src/components/MovementsHistory.jsx:60
+#: src/components/MovementsHistory.jsx:63
 msgid "Show assets"
 msgstr "Mostra saldo"
 
@@ -361,12 +381,12 @@ msgstr "Mostra ordini"
 msgid "Showing"
 msgstr "Visualizzati"
 
-#: src/components/Home.jsx:129
+#: src/components/Home.jsx:156
 msgid "Spending by Category"
 msgstr "Categorie di spesa"
 
-#: src/components/Home.jsx:55
-#: src/components/Home.jsx:80
+#: src/components/Home.jsx:59
+#: src/components/Home.jsx:90
 msgid "Statistics"
 msgstr "Statistiche"
 
