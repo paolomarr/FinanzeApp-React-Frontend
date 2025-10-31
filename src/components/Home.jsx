@@ -54,7 +54,12 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
     return (
       <Card className="h-100">
         <Card.Header>
-          <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
+          <Card.Title className="mb-0">
+            <div className="d-flex">
+              <div className="flex-grow-1">{t`Statistics`}</div> 
+              <div>({t`Last ${monthsBack} months`})</div>
+            </div>
+          </Card.Title>
         </Card.Header>
         <Card.Body className="text-center align-content-center">
           <p>{t`No data available`}</p>
