@@ -94,7 +94,6 @@ const StatsWidget = ({ data, categories, monthsBack = 3, onMonthsBackChange }) =
                   <Dropdown.Item onClick={() => onMonthsBackChange(3)}>{t`Last 3 months`}</Dropdown.Item>
                   <Dropdown.Item onClick={() => onMonthsBackChange(6)}>{t`Last 6 months`}</Dropdown.Item>
                   <Dropdown.Item onClick={() => onMonthsBackChange(12)}>{t`Last year`}</Dropdown.Item>
-                  <Dropdown.Item onClick={() => onMonthsBackChange(12)}>{t`Past year`}</Dropdown.Item>
                 </DropdownButton>
               </div>
             </div>
