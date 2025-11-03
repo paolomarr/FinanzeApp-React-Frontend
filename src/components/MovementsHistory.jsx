@@ -68,12 +68,15 @@ const MovementsHistory = ({data, categories}) => {
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart>
-                    <Line type="bump" dataKey="cumulative" data={non_balance_movements} className='history-movements-chartline' dot={false} />
+                    <Line type="bump" dataKey="cumulative" data={non_balance_movements} 
+                        className='history-movements-chartline' dot={false} 
+                        animationDuration={400}/>
                     { showAssets?
                         <Line type="linear" dataKey="balance" 
                             data={balance_movements.timeSeries()} 
                             className='history-assets-chartline' 
-                            dot={true} strokeDasharray="5 5">
+                            dot={true} strokeDasharray="5 5"
+                            animationDuration={400}>
                                 <LabelList formatter={(value)=>parseFloat(value).toFixed(0)} position="insideBottomLeft" />
                             </Line>
                         : null
