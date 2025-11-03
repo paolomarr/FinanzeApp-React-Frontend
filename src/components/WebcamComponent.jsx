@@ -1,9 +1,9 @@
 import { useRef, useState, useCallback, useMutation } from 'react';
 import Webcam from "react-webcam";
-import { FontAwesomeIcon, FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload, faSpinner, faCircle, faCameraRotate } from "@fortawesome/free-solid-svg-icons";
 import Button from "react-bootstrap/Button";
-import Trans from "@lingui/macro";
+import {Trans} from "@lingui/macro";
 
 export const WebcamComponent = ({ onScanResultReady }) => {
   const webcamRef = useRef(null);

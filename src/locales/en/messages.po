@@ -55,6 +55,10 @@ msgstr "Account no."
 msgid "Add"
 msgstr "Add"
 
+#: src/components/VoiceInsertionModal.jsx:141
+msgid "Add Movement with Voice"
+msgstr "Add Movement with Voice"
+
 #: src/components/Trading.jsx:122
 msgid "Add new stock"
 msgstr "Add new stock"
@@ -134,11 +138,11 @@ msgstr "Confirm"
 msgid "Copy items"
 msgstr "Copy items"
 
-#: src/components/MovementModal.jsx:182
+#: src/components/WebcamComponent.jsx:56
 msgid "Could not parse the receipt content."
 msgstr "Could not parse the receipt content."
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:94
 msgid "Current month"
 msgstr "Current month"
 
@@ -194,7 +198,7 @@ msgstr "Description"
 msgid "Description cannot be empty"
 msgstr "Description cannot be empty"
 
-#: src/components/MovementModal.jsx:94
+#: src/components/VoiceInsertionModal.jsx:92
 msgid "Dismiss"
 msgstr "Dismiss"
 
@@ -248,7 +252,11 @@ msgstr "hours"
 msgid "Incomes"
 msgstr "Earnings"
 
-#: src/components/MovementModal.jsx:229
+#: src/components/VoiceInsertionModal.jsx:150
+msgid "Insert manually"
+msgstr "Insert manually"
+
+#: src/components/MovementModal.jsx:11
 msgid "Insert new movement"
 msgstr "Insert new movement"
 
@@ -257,20 +265,20 @@ msgstr "Insert new movement"
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:60
-#: src/components/Home.jsx:92
+#: src/components/Home.jsx:61
+#: src/components/Home.jsx:93
 msgid "Last {monthsBack} months"
 msgstr "Last {monthsBack} months"
 
-#: src/components/Home.jsx:94
+#: src/components/Home.jsx:95
 msgid "Last 3 months"
 msgstr "Last 3 months"
 
-#: src/components/Home.jsx:95
+#: src/components/Home.jsx:96
 msgid "Last 6 months"
 msgstr "Last 6 months"
 
-#: src/components/Home.jsx:96
+#: src/components/Home.jsx:97
 msgid "Last year"
 msgstr "Last year"
 
@@ -287,7 +295,7 @@ msgstr "Login"
 msgid "Manage categories"
 msgstr "Manage categories"
 
-#: src/components/MovementModal.jsx:75
+#: src/components/VoiceInsertionModal.jsx:73
 msgid "Microphone access denied or not available"
 msgstr "Microphone access denied or not available"
 
@@ -320,7 +328,7 @@ msgstr "Movements overview"
 msgid "No data"
 msgstr "No data"
 
-#: src/components/Home.jsx:65
+#: src/components/Home.jsx:66
 msgid "No data available"
 msgstr "No data available"
 
@@ -367,8 +375,8 @@ msgid "Password"
 msgstr "Password"
 
 #: src/components/Home.jsx:97
-msgid "Past year"
-msgstr "Past year"
+#~ msgid "Past year"
+#~ msgstr "Past year"
 
 #: src/components/Trading.jsx:50
 #~ msgid "Portfolio History"
@@ -382,7 +390,7 @@ msgstr "Past year"
 msgid "Price"
 msgstr "Price"
 
-#: src/components/MovementModal.jsx:102
+#: src/components/VoiceInsertionModal.jsx:100
 msgid "Processing voice recording..."
 msgstr "Processing voice recording..."
 
@@ -394,7 +402,7 @@ msgstr "Profile"
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Home.jsx:23
+#: src/components/Home.jsx:24
 msgid "Recent Movements"
 msgstr "Recent Movements"
 
@@ -406,7 +414,7 @@ msgstr "Record a new order"
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
 msgstr "Record your current net worth using the form above or by copying one group of past entries from the list below"
 
-#: src/components/MovementModal.jsx:115
+#: src/components/VoiceInsertionModal.jsx:113
 msgid "Recording... Tap to stop"
 msgstr "Recording... Tap to stop"
 
@@ -466,7 +474,7 @@ msgstr "Settings"
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/Home.jsx:32
+#: src/components/Home.jsx:33
 msgid "Show all"
 msgstr "Show all"
 
@@ -490,8 +498,8 @@ msgstr "Showing"
 msgid "Spending by Category"
 msgstr "Spending by Category"
 
-#: src/components/Home.jsx:59
-#: src/components/Home.jsx:90
+#: src/components/Home.jsx:60
+#: src/components/Home.jsx:91
 msgid "Statistics"
 msgstr "Statistics"
 
@@ -517,7 +525,7 @@ msgstr "Submit"
 #~ msgid "Submit"
 #~ msgstr "Submit"
 
-#: src/components/MovementModal.jsx:125
+#: src/components/VoiceInsertionModal.jsx:123
 msgid "Tap to start recording"
 msgstr "Tap to start recording"
 
@@ -541,7 +549,7 @@ msgstr "Trading"
 msgid "Transaction cost"
 msgstr "Transaction cost"
 
-#: src/components/MovementModal.jsx:185
+#: src/components/WebcamComponent.jsx:59
 msgid "Try again"
 msgstr "Try again"
 
@@ -549,7 +557,7 @@ msgstr "Try again"
 msgid "Update"
 msgstr "Update"
 
-#: src/components/MovementModal.jsx:229
+#: src/components/MovementModal.jsx:11
 msgid "Update movement data"
 msgstr "Update movement data"
 

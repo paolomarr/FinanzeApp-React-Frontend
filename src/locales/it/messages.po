@@ -23,6 +23,10 @@ msgstr "Conto num."
 msgid "Add"
 msgstr "Aggiungi"
 
+#: src/components/VoiceInsertionModal.jsx:141
+msgid "Add Movement with Voice"
+msgstr "Manda un vocale così fai prima"
+
 #: src/components/Trading.jsx:122
 msgid "Add new stock"
 msgstr "Aggiungi titolo"
@@ -40,7 +44,7 @@ msgstr "Importo"
 
 #: src/components/Assets.jsx:92
 msgid "Amount cannot be zero"
-msgstr "L'import non può essere zero"
+msgstr "L'importo non può essere zero"
 
 #: src/components/MovementForm.jsx:246
 msgid "An error occurred while saving data."
@@ -86,11 +90,11 @@ msgstr "Conferma"
 msgid "Copy items"
 msgstr "Copia valori"
 
-#: src/components/MovementModal.jsx:182
+#: src/components/WebcamComponent.jsx:56
 msgid "Could not parse the receipt content."
 msgstr "Lettura della ricevuta non riuscita."
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:94
 msgid "Current month"
 msgstr "Questo mese"
 
@@ -134,7 +138,7 @@ msgstr "Descrizione"
 msgid "Description cannot be empty"
 msgstr "La descrizione non può essere vuota"
 
-#: src/components/MovementModal.jsx:94
+#: src/components/VoiceInsertionModal.jsx:92
 msgid "Dismiss"
 msgstr "Chiudi"
 
@@ -180,7 +184,11 @@ msgstr "ore"
 msgid "Incomes"
 msgstr "Entrate"
 
-#: src/components/MovementModal.jsx:229
+#: src/components/VoiceInsertionModal.jsx:150
+msgid "Insert manually"
+msgstr "Inserisci a mano"
+
+#: src/components/MovementModal.jsx:11
 msgid "Insert new movement"
 msgstr "Inserisci un nuovo movimento"
 
@@ -189,20 +197,20 @@ msgstr "Inserisci un nuovo movimento"
 msgid "Languages"
 msgstr "Lingue"
 
-#: src/components/Home.jsx:60
-#: src/components/Home.jsx:92
+#: src/components/Home.jsx:61
+#: src/components/Home.jsx:93
 msgid "Last {monthsBack} months"
 msgstr "Ultimi {monthsBack} mesi"
 
-#: src/components/Home.jsx:94
+#: src/components/Home.jsx:95
 msgid "Last 3 months"
 msgstr "Ultimi 3 mesi"
 
-#: src/components/Home.jsx:95
+#: src/components/Home.jsx:96
 msgid "Last 6 months"
 msgstr "Ultimi 6 mesi"
 
-#: src/components/Home.jsx:96
+#: src/components/Home.jsx:97
 msgid "Last year"
 msgstr "Ultimo anno"
 
@@ -219,7 +227,7 @@ msgstr "Accedi"
 msgid "Manage categories"
 msgstr "Gestione categorie"
 
-#: src/components/MovementModal.jsx:75
+#: src/components/VoiceInsertionModal.jsx:73
 msgid "Microphone access denied or not available"
 msgstr "Microfono non disponibile o non accessibile"
 
@@ -248,7 +256,7 @@ msgstr "Riepilogo movimenti"
 msgid "No data"
 msgstr "Nessun elemento"
 
-#: src/components/Home.jsx:65
+#: src/components/Home.jsx:66
 msgid "No data available"
 msgstr "Nessun dato disponibile"
 
@@ -287,14 +295,14 @@ msgid "Password"
 msgstr "Password"
 
 #: src/components/Home.jsx:97
-msgid "Past year"
-msgstr "Anno scorso"
+#~ msgid "Past year"
+#~ msgstr "Anno scorso"
 
 #: src/components/Trading.jsx:143
 msgid "Price"
 msgstr "Prezzo"
 
-#: src/components/MovementModal.jsx:102
+#: src/components/VoiceInsertionModal.jsx:100
 msgid "Processing voice recording..."
 msgstr "Stiamo registrando il movimento..."
 
@@ -306,7 +314,7 @@ msgstr "Profilo"
 msgid "Quantity"
 msgstr "Quantità"
 
-#: src/components/Home.jsx:23
+#: src/components/Home.jsx:24
 msgid "Recent Movements"
 msgstr "Ultimi movimenti"
 
@@ -318,7 +326,7 @@ msgstr "Registra un nuovo ordine"
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
 msgstr "Registra il tuo saldo corrente aggiungendo i valori nel form sopra o copiandoli dalla lista sottostante"
 
-#: src/components/MovementModal.jsx:115
+#: src/components/VoiceInsertionModal.jsx:113
 msgid "Recording... Tap to stop"
 msgstr "In ascolto... Tocca per interrompere"
 
@@ -361,7 +369,7 @@ msgstr "secondi"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: src/components/Home.jsx:32
+#: src/components/Home.jsx:33
 msgid "Show all"
 msgstr "Mostra tutti"
 
@@ -385,8 +393,8 @@ msgstr "Visualizzati"
 msgid "Spending by Category"
 msgstr "Categorie di spesa"
 
-#: src/components/Home.jsx:59
-#: src/components/Home.jsx:90
+#: src/components/Home.jsx:60
+#: src/components/Home.jsx:91
 msgid "Statistics"
 msgstr "Statistiche"
 
@@ -408,7 +416,7 @@ msgstr "Sottocategoria"
 msgid "login_form_submit"
 msgstr "Accedi"
 
-#: src/components/MovementModal.jsx:125
+#: src/components/VoiceInsertionModal.jsx:123
 msgid "Tap to start recording"
 msgstr "Tocca per registrare"
 
@@ -428,7 +436,7 @@ msgstr "Trading"
 msgid "Transaction cost"
 msgstr "Costo operazione"
 
-#: src/components/MovementModal.jsx:185
+#: src/components/WebcamComponent.jsx:59
 msgid "Try again"
 msgstr "Riprova"
 
@@ -436,7 +444,7 @@ msgstr "Riprova"
 msgid "Update"
 msgstr "Aggiorna"
 
-#: src/components/MovementModal.jsx:229
+#: src/components/MovementModal.jsx:11
 msgid "Update movement data"
 msgstr "Modifica movimento"
 
