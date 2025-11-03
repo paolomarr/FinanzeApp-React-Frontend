@@ -15,6 +15,12 @@ import { useMutation } from '@tanstack/react-query';
 import mutateReceipt from '../queries/mutateReceipt';
 import mutateVoice from '../queries/mutateVoice';
 
+/**
+ * VoiceRecorder is a React component which allows users to record voice messages.
+ *
+ * @param {function} onVoiceResultReady - Called when the voice recording is finished and the result is ready.
+ * @returns A React component which displays a button to start recording and a button to stop recording.
+ */
 const VoiceRecorder = ({ onVoiceResultReady }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
