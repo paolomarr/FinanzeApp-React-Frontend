@@ -7,6 +7,7 @@ import { t } from "@lingui/macro"
 import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
+import VoiceInsertionModal from "./VoiceInsertionModal"
 import LoadingDiv from "./LoadingDiv";
 import { Container, Row, Col, Card, ListGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
@@ -194,6 +195,8 @@ const Home = () => {
     errors: null,
   });
 
+  const [showVoiceModal, setShowVoiceModal] = useState(false);
+
   const handleMonthsBackChange = (newMonthsBack) => {
     setMonthsBack(newMonthsBack);
     setDataSlice({
@@ -271,6 +274,16 @@ const Home = () => {
       setShowModal({...showModal, errors: error.cause})
     }
   });
+
+  const handleVoiceMovementCreated = (movement) => {
+    // Only invalidate the movements query to refresh the data
+    queryclient.invalidateQueries(["movements"]);
+  };
+
+  const handleManualInsert = () => {
+    setShowVoiceModal(false);
+    setShowModal({show: true, movement: null, errors: null});
+  };
   
   if (movementResults.isLoading) {
     return <LoadingDiv />
@@ -326,7 +339,15 @@ const Home = () => {
         </Col>
       </Row> */}
 
-      <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
+      <FixedBottomRightButton onClick={() => setShowVoiceModal(true)} />
+      
+      <VoiceInsertionModal 
+        show={showVoiceModal}
+        onHide={() => setShowVoiceModal(false)}
+        onMovementCreated={handleVoiceMovementCreated}
+        onManualInsert={handleManualInsert}
+      />
+      
       <MovementModal 
         showModal={showModal}
         onMovementUpdate={(newMovement)=>setShowModal({...showModal, movement:newMovement})}
