@@ -138,9 +138,9 @@ msgstr "Copy items"
 msgid "Could not parse the receipt content."
 msgstr "Could not parse the receipt content."
 
-#: src/components/Home.jsx:41
-#~ msgid "Current month"
-#~ msgstr "Current month"
+#: src/components/Home.jsx:93
+msgid "Current month"
+msgstr "Current month"
 
 #: src/components/Home.jsx:217
 #~ msgid "Dashboard"
@@ -209,7 +209,7 @@ msgid "Error"
 msgstr "Error"
 
 #: src/components/CategoryManager.jsx:98
-#: src/components/Home.jsx:89
+#: src/components/Home.jsx:110
 #: src/components/MovementStats.jsx:165
 #: src/components/MovementStats.jsx:288
 msgid "Expenses"
@@ -244,7 +244,7 @@ msgstr "Home"
 msgid "hours"
 msgstr "hours"
 
-#: src/components/Home.jsx:85
+#: src/components/Home.jsx:106
 msgid "Incomes"
 msgstr "Earnings"
 
@@ -257,22 +257,22 @@ msgstr "Insert new movement"
 msgid "Languages"
 msgstr "Languages"
 
-#: src/components/Home.jsx:55
-#: src/components/Home.jsx:80
+#: src/components/Home.jsx:60
+#: src/components/Home.jsx:92
 msgid "Last {monthsBack} months"
 msgstr "Last {monthsBack} months"
 
-#: src/components/Home.jsx:42
-#~ msgid "Last 3 months"
-#~ msgstr "Last 3 months"
+#: src/components/Home.jsx:94
+msgid "Last 3 months"
+msgstr "Last 3 months"
 
-#: src/components/Home.jsx:43
-#~ msgid "Last 6 months"
-#~ msgstr "Last 6 months"
+#: src/components/Home.jsx:95
+msgid "Last 6 months"
+msgstr "Last 6 months"
 
-#: src/components/Home.jsx:44
-#~ msgid "Last year"
-#~ msgstr "Last year"
+#: src/components/Home.jsx:96
+msgid "Last year"
+msgstr "Last year"
 
 #: src/index.js:60
 #: src/index.js:61
@@ -320,7 +320,7 @@ msgstr "Movements overview"
 msgid "No data"
 msgstr "No data"
 
-#: src/components/Home.jsx:58
+#: src/components/Home.jsx:65
 msgid "No data available"
 msgstr "No data available"
 
@@ -366,9 +366,9 @@ msgstr "Page size"
 msgid "Password"
 msgstr "Password"
 
-#: src/components/Home.jsx:45
-#~ msgid "Past year"
-#~ msgstr "Past year"
+#: src/components/Home.jsx:97
+msgid "Past year"
+msgstr "Past year"
 
 #: src/components/Trading.jsx:50
 #~ msgid "Portfolio History"
@@ -394,7 +394,7 @@ msgstr "Profile"
 msgid "Quantity"
 msgstr "Quantity"
 
-#: src/components/Home.jsx:21
+#: src/components/Home.jsx:23
 msgid "Recent Movements"
 msgstr "Recent Movements"
 
@@ -433,7 +433,7 @@ msgstr "Saving"
 #~ msgid "Saving rate"
 #~ msgstr "Saving rate"
 
-#: src/components/Home.jsx:93
+#: src/components/Home.jsx:114
 msgid "Saving Rate"
 msgstr "Saving Rate"
 
@@ -466,11 +466,11 @@ msgstr "Settings"
 #~ msgid "Show"
 #~ msgstr "Show"
 
-#: src/components/Home.jsx:30
+#: src/components/Home.jsx:32
 msgid "Show all"
 msgstr "Show all"
 
-#: src/components/MovementsHistory.jsx:60
+#: src/components/MovementsHistory.jsx:63
 msgid "Show assets"
 msgstr "Show assets"
 
@@ -486,12 +486,12 @@ msgstr "Show orders"
 msgid "Showing"
 msgstr "Showing"
 
-#: src/components/Home.jsx:129
+#: src/components/Home.jsx:156
 msgid "Spending by Category"
 msgstr "Spending by Category"
 
-#: src/components/Home.jsx:55
-#: src/components/Home.jsx:80
+#: src/components/Home.jsx:59
+#: src/components/Home.jsx:90
 msgid "Statistics"
 msgstr "Statistics"
 

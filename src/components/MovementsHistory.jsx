@@ -40,18 +40,21 @@ const MovementsHistory = ({data, categories}) => {
 
     if(data?.filtered.movements) {
         const _movements = data.filtered.movements;
-
-        for (const movement of _movements) {
+        const MAX_SHOWN_MOVEMENTS = 5; // the max number of chart points
+        const reduce_factor = Math.floor(_movements.length/MAX_SHOWN_MOVEMENTS); // use floor, even though it will result in more points than MAX_SHOWN_MOVEMENTS
+        for (var i = 0; i < _movements.length; i++) {
+            const movement = _movements[i]; 
             let ret = isBalanceMovement(movement);
             if(ret){
                 balance_movements.addMovement(movement);
             }else{
                 const mDate = new Date(movement.date);
                 cumulative += movement.amount
-                non_balance_movements.push({"date": (mDate).getTime(), "cumulative": cumulative});
+                if(i % reduce_factor === 0){
+                    non_balance_movements.push({"date": (mDate).getTime(), "cumulative": cumulative});
+                }
             }
-        }
-        
+        }  
     }
     return (
         <div className='movements-history-container mt-2'>
@@ -65,12 +68,15 @@ const MovementsHistory = ({data, categories}) => {
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart>
-                    <Line type="bump" dataKey="cumulative" data={non_balance_movements} className='history-movements-chartline' dot={false} />
+                    <Line type="bump" dataKey="cumulative" data={non_balance_movements} 
+                        className='history-movements-chartline' dot={false} 
+                        animationDuration={400}/>
                     { showAssets?
-                        <Line type="stepAfter" dataKey="balance" 
+                        <Line type="linear" dataKey="balance" 
                             data={balance_movements.timeSeries()} 
                             className='history-assets-chartline' 
-                            dot={true} strokeDasharray="5 5">
+                            dot={true} strokeDasharray="5 5"
+                            animationDuration={400}>
                                 <LabelList formatter={(value)=>parseFloat(value).toFixed(0)} position="insideBottomLeft" />
                             </Line>
                         : null

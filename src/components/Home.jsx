@@ -7,9 +7,12 @@ import { t } from "@lingui/macro"
 import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
+import VoiceInsertionModal from "./VoiceInsertionModal"
 import LoadingDiv from "./LoadingDiv";
-import { Container, Row, Col, Card, ListGroup } from 'react-bootstrap';
+import { Container, Row, Col, Card, ListGroup, Dropdown, DropdownButton } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
+import MovementsHistory from "./MovementsHistory";
+import MovementsStats  from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
@@ -47,12 +50,17 @@ const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, o
 };
 
 // Stats Widget
-const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
+const StatsWidget = ({ data, categories, monthsBack = 3, onMonthsBackChange }) => {
   if (!data?.filtered?.movements) {
     return (
       <Card className="h-100">
         <Card.Header>
-          <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
+          <Card.Title className="mb-0">
+            <div className="d-flex">
+              <div className="flex-grow-1">{t`Statistics`}</div> 
+              <div>({t`Last ${monthsBack} months`})</div>
+            </div>
+          </Card.Title>
         </Card.Header>
         <Card.Body className="text-center align-content-center">
           <p>{t`No data available`}</p>
@@ -78,15 +86,27 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
   return (
     <Card className="h-100">
       <Card.Header>
-        <Card.Title className="mb-0">{t`Statistics`} ({t`Last ${monthsBack} months`})</Card.Title>
+        <Card.Title className="mb-0">
+            <div className="d-flex align-items-center">
+              <div className="flex-grow-1">{t`Statistics`}</div> 
+              <div>
+                <DropdownButton variant="secondary" title={t`Last ${monthsBack} months`} size="sm">
+                  <Dropdown.Item onClick={() => onMonthsBackChange(0)}>{t`Current month`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(3)}>{t`Last 3 months`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(6)}>{t`Last 6 months`}</Dropdown.Item>
+                  <Dropdown.Item onClick={() => onMonthsBackChange(12)}>{t`Last year`}</Dropdown.Item>
+                </DropdownButton>
+              </div>
+            </div>
+          </Card.Title>
       </Card.Header>
       <Card.Body>
         <div className="row text-center fs-3">
-          <div className="col-6 mb-2 fw-bold">
+          <div className="col-12 col-md-6 mb-2 fw-bold">
             <div className="text-muted">{t`Incomes`}</div>
             <div className="text-earnings">+{parseFloat(incomes).toFixed(2)}€</div>
           </div>
-          <div className="col-6 mb-2 fw-bold">
+          <div className="col-12 col-md-6 mb-2 fw-bold">
             <div className="text-muted">{t`Expenses`}</div>
             <div className="text-expenses">-{parseFloat(outcomes).toFixed(2)}€</div>
           </div>
@@ -94,6 +114,12 @@ const StatsWidget = ({ data, categories, monthsBack = 3 }) => {
             <div className="text-muted">{t`Saving Rate`}</div>
             <div className={`${savingRateStrColorClass} fs-1`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
           </div>
+        </div>
+        <div>
+          <MovementsHistory data={data} categories={categories} />
+        </div>
+        <div>
+          <MovementsStats data={data} categories={categories}/>
         </div>
       </Card.Body>
     </Card>
@@ -156,10 +182,10 @@ const SpendingCategoriesWidget = ({ data, categories }) => {
 const Home = () => {
   const queryclient = useQueryClient();
   const navigate = useNavigate();
-  const monthsBack = 3;
+  const [monthsBack, setMonthsBack] = useState(3);
 
-  const [dataSlice] = useState({
-    minDate: sub(new Date(), {months: monthsBack}),
+  const [dataSlice, setDataSlice] = useState({
+    minDate: sub(new Date(), {months: 3}),
     maxDate: new Date(),
   });
 
@@ -168,6 +194,16 @@ const Home = () => {
     show: false,
     errors: null,
   });
+
+  const [showVoiceModal, setShowVoiceModal] = useState(false);
+
+  const handleMonthsBackChange = (newMonthsBack) => {
+    setMonthsBack(newMonthsBack);
+    setDataSlice({
+      minDate: newMonthsBack === 0 ? new Date(new Date().getFullYear(), new Date().getMonth(), 1) : sub(new Date(), {months: newMonthsBack}),
+      maxDate: new Date(),
+    });
+  };
 
   const toggleModal = () => {
     const show = !showModal.show;
@@ -238,6 +274,16 @@ const Home = () => {
       setShowModal({...showModal, errors: error.cause})
     }
   });
+
+  const handleVoiceMovementCreated = (movement) => {
+    // Only invalidate the movements query to refresh the data
+    queryclient.invalidateQueries(["movements"]);
+  };
+
+  const handleManualInsert = () => {
+    setShowVoiceModal(false);
+    setShowModal({show: true, movement: null, errors: null});
+  };
   
   if (movementResults.isLoading) {
     return <LoadingDiv />
@@ -267,6 +313,7 @@ const Home = () => {
             data={movementResults.data} 
             categories={categoryResults.data}
             monthsBack={monthsBack}
+            onMonthsBackChange={handleMonthsBackChange}
           />
         </Col>
         
@@ -282,17 +329,25 @@ const Home = () => {
         </Col>
       </Row>
 
-      <Row className="g-3 mt-3">
-        {/* Categories Chart Widget */}
+      {/* Categories Chart Widget */}
+      {/* <Row className="g-3 mt-3">
         <Col xs={12}>
           <SpendingCategoriesWidget 
             data={movementResults.data} 
             categories={categoryResults.data}
           />
         </Col>
-      </Row>
+      </Row> */}
 
-      <FixedBottomRightButton onClick={() => setShowModal({show:true, movement: null})} />
+      <FixedBottomRightButton onClick={() => setShowVoiceModal(true)} />
+      
+      <VoiceInsertionModal 
+        show={showVoiceModal}
+        onHide={() => setShowVoiceModal(false)}
+        onMovementCreated={handleVoiceMovementCreated}
+        onManualInsert={handleManualInsert}
+      />
+      
       <MovementModal 
         showModal={showModal}
         onMovementUpdate={(newMovement)=>setShowModal({...showModal, movement:newMovement})}
