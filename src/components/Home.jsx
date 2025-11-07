@@ -320,7 +320,7 @@ const Home = () => {
       
       <Row className="g-3">
         {/* Stats Widget */}
-        <Col xs={12} xl={5}>
+        <Col xs={12}>
           <StatsWidget 
             data={movementResults.data} 
             categories={categoryResults.data}
@@ -330,7 +330,7 @@ const Home = () => {
         </Col>
         
         {/* Recent Movements Widget */}
-        <Col xs={12} xl={7}>
+        <Col xs={12}>
           <RecentMovementsWidget 
             movements={movementResults.data?.filtered?.movements}
             categories={categoryResults.data}
@@ -340,16 +340,6 @@ const Home = () => {
           />
         </Col>
       </Row>
-
-      {/* Categories Chart Widget */}
-      {/* <Row className="g-3 mt-3">
-        <Col xs={12}>
-          <SpendingCategoriesWidget 
-            data={movementResults.data} 
-            categories={categoryResults.data}
-          />
-        </Col>
-      </Row> */}
 
       <FixedBottomRightButton onClick={() => setShowVoiceModal(true)} />
       

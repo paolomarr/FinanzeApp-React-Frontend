@@ -57,7 +57,7 @@ const MovementsHistory = ({data, categories}) => {
         }  
     }
     return (
-        <div className='movements-history-container mt-2'>
+        <div className='movements-history-container mt-2 py-4'>
             <div className='movements-history-showassetsblock text-end'>
                 <Form>
                     <Form.Switch label={t`Show assets`} reverse 
@@ -67,7 +67,8 @@ const MovementsHistory = ({data, categories}) => {
                 </Form>
             </div>
             <ResponsiveContainer width="100%" height={400}>
-                <LineChart>
+                <LineChart
+                    margin={{left:0, right:0, top:5, bottom:5}}>
                     <Line type="bump" dataKey="cumulative" data={non_balance_movements} 
                         className='history-movements-chartline' dot={false} 
                         animationDuration={400}/>
@@ -87,8 +88,12 @@ const MovementsHistory = ({data, categories}) => {
                         domain={[(new Date(data.filtered.minDate)).getTime(), data?.filtered.maxDate]} 
                         // domain={["auto", "auto"]} 
                         tickFormatter={tick => (format(new Date(tick), i18n))}
+                        tick={{fontSize: 8}}
                         tickCount="10" />
-                    <YAxis domain={["auto", "auto"]}/> 
+                    <YAxis domain={["auto", "auto"]}
+                      /* reduce font size of axis tick labels */
+                        tick={{fontSize: 8}}
+                    /> 
                     <Tooltip 
                         active={true} 
                         formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
