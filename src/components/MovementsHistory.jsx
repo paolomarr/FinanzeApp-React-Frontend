@@ -36,11 +36,12 @@ const MovementsHistory = ({data, categories}) => {
     let cumulative = balance_to_date.value; /* baseline */
     const non_balance_movements = [];
     const balance_movements = new BalanceManager();
+    const [showTooltip, setShowTooltip] = useState(false);
     balance_movements.addMovement({"date": data.filtered.minDate, "abs_amount": balance_to_date.value})
 
     if(data?.filtered.movements) {
         const _movements = data.filtered.movements;
-        const MAX_SHOWN_MOVEMENTS = 5; // the max number of chart points
+        const MAX_SHOWN_MOVEMENTS = 10; // the max number of chart points
         const reduce_factor = Math.floor(_movements.length/MAX_SHOWN_MOVEMENTS); // use floor, even though it will result in more points than MAX_SHOWN_MOVEMENTS
         for (var i = 0; i < _movements.length; i++) {
             const movement = _movements[i]; 
@@ -56,6 +57,16 @@ const MovementsHistory = ({data, categories}) => {
             }
         }  
     }
+    const xAxisDateFormatter = (tick) => {
+        // if the date domain spans over multiple years, show dd/mm/yy, otherwise dd/mm
+        const minDate = new Date(data.filtered.minDate);
+        const maxDate = new Date(data.filtered.maxDate);
+        if(minDate.getFullYear() !== maxDate.getFullYear()){
+            return format(new Date(tick), i18n, {"month": "numeric", "day": "numeric", "year": "2-digit"});
+        }else{
+            return format(new Date(tick), i18n, {"month": "numeric", "day": "numeric"});
+        }
+    }
     return (
         <div className='movements-history-container mt-2 py-4'>
             <div className='movements-history-showassetsblock text-end'>
@@ -68,7 +79,8 @@ const MovementsHistory = ({data, categories}) => {
             </div>
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart
-                    margin={{left:0, right:0, top:5, bottom:5}}>
+                    margin={{left:0, right:0, top:5, bottom:5}}
+                    onClick={() => setShowTooltip(!showTooltip)}>
                     <Line type="bump" dataKey="cumulative" data={non_balance_movements} 
                         className='history-movements-chartline' dot={false} 
                         animationDuration={400}/>
@@ -77,7 +89,8 @@ const MovementsHistory = ({data, categories}) => {
                             data={balance_movements.timeSeries()} 
                             className='history-assets-chartline' 
                             dot={true} strokeDasharray="5 5"
-                            animationDuration={400}>
+                            animationDuration={400}
+                            label={{ fontSize: 12 }}>
                                 <LabelList formatter={(value)=>parseFloat(value).toFixed(0)} position="insideBottomLeft" />
                             </Line>
                         : null
@@ -87,15 +100,15 @@ const MovementsHistory = ({data, categories}) => {
                         dataKey="date"  
                         domain={[(new Date(data.filtered.minDate)).getTime(), data?.filtered.maxDate]} 
                         // domain={["auto", "auto"]} 
-                        tickFormatter={tick => (format(new Date(tick), i18n))}
-                        tick={{fontSize: 8}}
+                        tickFormatter={xAxisDateFormatter}
+                        tick={{fontSize: 12}}
                         tickCount="10" />
                     <YAxis domain={["auto", "auto"]}
                       /* reduce font size of axis tick labels */
-                        tick={{fontSize: 8}}
+                        tick={{fontSize: 12}}
                     /> 
                     <Tooltip 
-                        active={true} 
+                        active={showTooltip} 
                         formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
                         // LabelStyle={{color: colors.primary}}
                         labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
