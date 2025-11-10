@@ -4,6 +4,8 @@ import { format } from '../_lib/format_locale';
 import { useLingui } from '@lingui/react';
 import { useState } from 'react';
 import { t } from '@lingui/macro';
+import { colors } from '../constants';
+import {intervalToDuration} from 'date-fns';
 
 function BalanceManager() {
     this.groupedMovements = {};
@@ -66,7 +68,23 @@ const MovementsHistory = ({data, categories}) => {
         }else{
             return format(new Date(tick), i18n, {"month": "numeric", "day": "numeric"});
         }
+    };
+    const xAxisTicksGenerator = (min, max, tickCount) => {
+        const minDate = new Date(min);
+        const maxDate = new Date(max);
+        const sanitizedTickCount = Math.min(parseInt(tickCount), 10);
+        const timespanDuration = intervalToDuration({start: minDate, end: maxDate});
+        const daysInterval = Math.ceil(timespanDuration.days / sanitizedTickCount);
+        const retarr = Array.from({length: sanitizedTickCount}, (_, i) => minDate.getTime() + i * daysInterval * 86400000);
+        return retarr;
     }
+    const CustomizedLabel = ({ x, y, stroke, value }) => {
+        return (
+            <text x={x} y={y} dy={-4} fill={colors.secondary} fontSize={12} textAnchor="middle" color=''>
+            {parseFloat(value).toFixed(0)}
+            </text>
+        );
+    };
     return (
         <div className='movements-history-container mt-2 py-4'>
             <div className='movements-history-showassetsblock text-end'>
@@ -90,8 +108,7 @@ const MovementsHistory = ({data, categories}) => {
                             className='history-assets-chartline' 
                             dot={true} strokeDasharray="5 5"
                             animationDuration={400}
-                            label={{ fontSize: 12 }}>
-                                <LabelList formatter={(value)=>parseFloat(value).toFixed(0)} position="insideBottomLeft" />
+                            label={CustomizedLabel}>
                             </Line>
                         : null
                     }
@@ -106,6 +123,7 @@ const MovementsHistory = ({data, categories}) => {
                     <YAxis domain={["auto", "auto"]}
                       /* reduce font size of axis tick labels */
                         tick={{fontSize: 12}}
+                        width={50}
                     /> 
                     <Tooltip 
                         active={showTooltip} 
