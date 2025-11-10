@@ -133,16 +133,16 @@ const MovementsStats = ({data, categories}) => {
       for (const catName in statsCategories) {
         const cat = statsCategories[catName];
         let percent = 0.;
-        if(cat.direction === 1) {
+        if(cat.direction === 1 && incomes > 0){
           percent = cat.sum/incomes;
           const newitem = {...cat, "percent": percent};
           if(percent>=percent_cutin){
             earningData.earnings.push(newitem);
           }else{
             outliers.incomes.sum += newitem.sum;
-            outliers.incomes.percent += newitem.sum;
+            outliers.incomes.percent += newitem.percent;
           }
-        }else if(cat.direction === -1){
+        }else if(cat.direction === -1 && outcomes > 0){
           percent = cat.sum/outcomes;
           const newitem = {...cat, "percent": percent};
           if(percent>=percent_cutin){
