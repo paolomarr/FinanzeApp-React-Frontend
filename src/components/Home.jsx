@@ -101,19 +101,31 @@ const StatsWidget = ({ data, categories, monthsBack = 3, onMonthsBackChange }) =
           </Card.Title>
       </Card.Header>
       <Card.Body>
-        <div className="row text-center fs-3">
-          <div className="col-12 col-md-6 mb-2 fw-bold">
+        {/* <div className="row text-center fs-5">
+          <div className="col-6 mb-2 fw-bold">
             <div className="text-muted">{t`Incomes`}</div>
             <div className="text-earnings">+{parseFloat(incomes).toFixed(2)}€</div>
           </div>
-          <div className="col-12 col-md-6 mb-2 fw-bold">
+          <div className="col-6 mb-2 fw-bold">
             <div className="text-muted">{t`Expenses`}</div>
             <div className="text-expenses">-{parseFloat(outcomes).toFixed(2)}€</div>
           </div>
           <div className="col-12 mb-2 fw-bold">
             <div className="text-muted">{t`Saving Rate`}</div>
-            <div className={`${savingRateStrColorClass} fs-1`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
+            <div className={`${savingRateStrColorClass}`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
           </div>
+        </div> */}
+        <div className="d-flex">
+          <div className="text-muted flex-fill">{t`Incomes`}</div>
+          <div className="text-earnings">+{parseFloat(incomes).toFixed(2)}€</div>
+        </div>
+        <div className="d-flex">
+          <div className="text-muted flex-fill">{t`Expenses`}</div>
+          <div className="text-expenses">+{parseFloat(outcomes).toFixed(2)}€</div>
+        </div>
+        <div className="d-flex fw-bold">
+          <div className="text-muted flex-fill">{t`Saving rate`}</div>
+          <div className={`${savingRateStrColorClass}`}>{parseFloat(savingRate * 100).toFixed(1)}%</div>
         </div>
         <div>
           <MovementsHistory data={data} categories={categories} />
