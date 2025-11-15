@@ -121,7 +121,7 @@ const StatsWidget = ({ data, categories, monthsBack = 3, onMonthsBackChange }) =
         </div>
         <div className="d-flex">
           <div className="text-muted flex-fill">{t`Expenses`}</div>
-          <div className="text-expenses">+{parseFloat(outcomes).toFixed(2)}€</div>
+          <div className="text-expenses">-{parseFloat(outcomes).toFixed(2)}€</div>
         </div>
         <div className="d-flex fw-bold">
           <div className="text-muted flex-fill">{t`Saving rate`}</div>
