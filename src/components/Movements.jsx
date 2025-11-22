@@ -29,6 +29,7 @@ const Movements = () => {
   });
 
   const [showVoiceModal, setShowVoiceModal] = useState(false);
+  const [advancedSearchParams, setAdvancedSearchParams] = useState({});
 
   const toggleModal = () => {
     const show = !showModal.show;
@@ -69,6 +70,7 @@ const Movements = () => {
       datefrom: dataSlice.minDate, 
       // dateto: add(dataSlice.maxDate, {days: 1}),
       sort_field: "date",
+      ...advancedSearchParams
     }],
     queryFn: fetchMovements,
     retry: (failureCount, error) => {
@@ -110,6 +112,42 @@ const Movements = () => {
     setShowModal({show: true, movement: null, errors: null});
   };
 
+  const handleAdvancedSearch = (searchParams) => {
+    // Convert form data to API parameters
+    const apiParams = {};
+    
+    if (searchParams.categories && searchParams.categories.length > 0) {
+      apiParams.category = searchParams.categories;
+    }
+    
+    if (searchParams.subcategories && searchParams.subcategories.length > 0) {
+      apiParams.subcategory = searchParams.subcategories;
+    }
+    
+    if (searchParams.description) {
+      apiParams.description = searchParams.description;
+    }
+    
+    if (searchParams.minDate) {
+      apiParams.datefrom = searchParams.minDate;
+    }
+    
+    if (searchParams.maxDate) {
+      apiParams.dateto = searchParams.maxDate;
+    }
+    
+    if (searchParams.minAmount) {
+      apiParams.minamount = parseFloat(searchParams.minAmount);
+    }
+    
+    if (searchParams.maxAmount) {
+      apiParams.maxamount = parseFloat(searchParams.maxAmount);
+    }
+    
+    setAdvancedSearchParams(apiParams);
+    queryclient.invalidateQueries(["movements"]);
+  };
+
   if (movementResults.isLoading) {
     return <LoadingDiv />
   }
@@ -135,6 +173,7 @@ const Movements = () => {
         onEdit={(movement) => setShowModal({show: true, movement: movement})}
         isWidget={false}
         compact={false}
+        onAdvancedSearch={handleAdvancedSearch}
       />
 
       <FixedBottomRightButton onClick={() => setShowVoiceModal(true)} />

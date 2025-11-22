@@ -31,14 +31,18 @@ msgstr "Manda un vocale così fai prima"
 msgid "Add new stock"
 msgstr "Aggiungi titolo"
 
+#: src/components/MovementsList.jsx:309
+msgid "Advanced Search"
+msgstr "Ricerca avanzata"
+
 #: src/index.js:58
 msgid "All Movements"
 msgstr "Tutti i movimenti"
 
 #: src/components/Assets.jsx:115
 #: src/components/MovementForm.jsx:173
-#: src/components/MovementsList.jsx:195
-#: src/components/MovementsList.jsx:207
+#: src/components/MovementsList.jsx:218
+#: src/components/MovementsList.jsx:230
 msgid "Amount"
 msgstr "Importo"
 
@@ -70,13 +74,18 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #: src/components/CategoryManager.jsx:206
+#: src/components/MovementsList.jsx:324
 msgid "Categories"
 msgstr "Categorie"
 
 #: src/components/MovementForm.jsx:199
-#: src/components/MovementsList.jsx:210
+#: src/components/MovementsList.jsx:233
 msgid "Category"
 msgstr "Categoria"
+
+#: src/components/MovementsList.jsx:435
+msgid "Clear"
+msgstr "Pulisci"
 
 #: src/components/Trading.jsx:65
 msgid "Code"
@@ -104,8 +113,8 @@ msgstr "Dati salvati"
 
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:159
-#: src/components/MovementsList.jsx:189
-#: src/components/MovementsList.jsx:201
+#: src/components/MovementsList.jsx:212
+#: src/components/MovementsList.jsx:224
 #: src/components/Trading.jsx:78
 msgid "Date"
 msgstr "Data"
@@ -129,8 +138,9 @@ msgstr "Eliminazione in corso"
 
 #: src/components/Assets.jsx:128
 #: src/components/MovementForm.jsx:186
-#: src/components/MovementsList.jsx:194
-#: src/components/MovementsList.jsx:206
+#: src/components/MovementsList.jsx:217
+#: src/components/MovementsList.jsx:229
+#: src/components/MovementsList.jsx:356
 msgid "Description"
 msgstr "Descrizione"
 
@@ -153,13 +163,13 @@ msgid "Error"
 msgstr "Errore"
 
 #: src/components/CategoryManager.jsx:98
-#: src/components/Home.jsx:110
+#: src/components/Home.jsx:123
 #: src/components/MovementStats.jsx:165
 #: src/components/MovementStats.jsx:288
 msgid "Expenses"
 msgstr "Spese"
 
-#: src/components/MovementsList.jsx:270
+#: src/components/MovementsList.jsx:452
 msgid "filtered out of"
 msgstr "filtrati da"
 
@@ -180,7 +190,7 @@ msgstr "Home"
 msgid "hours"
 msgstr "ore"
 
-#: src/components/Home.jsx:106
+#: src/components/Home.jsx:119
 msgid "Incomes"
 msgstr "Entrate"
 
@@ -227,9 +237,25 @@ msgstr "Accedi"
 msgid "Manage categories"
 msgstr "Gestione categorie"
 
+#: src/components/MovementsList.jsx:399
+msgid "Max Amount"
+msgstr "Importo massimo"
+
+#: src/components/MovementsList.jsx:376
+msgid "Max Date"
+msgstr "Fino al"
+
 #: src/components/VoiceInsertionModal.jsx:73
 msgid "Microphone access denied or not available"
 msgstr "Microfono non disponibile o non accessibile"
+
+#: src/components/MovementsList.jsx:389
+msgid "Min Amount"
+msgstr "Importo minimo"
+
+#: src/components/MovementsList.jsx:368
+msgid "Min Date"
+msgstr "A partire dal"
 
 #: src/_lib/format_locale.js:9
 msgid "minutes"
@@ -261,7 +287,7 @@ msgid "No data available"
 msgstr "Nessun dato disponibile"
 
 #. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:270
+#: src/components/MovementsList.jsx:452
 msgid "movementsListFilterStats.of"
 msgstr "di"
 
@@ -285,7 +311,7 @@ msgstr "Altre spese"
 #~ msgid "Outcomes"
 #~ msgstr "Uscite"
 
-#: src/components/MovementsList.jsx:98
+#: src/components/MovementsList.jsx:103
 msgid "Page size"
 msgstr "Dim. pagina"
 
@@ -349,15 +375,23 @@ msgstr "Salvato"
 msgid "Saving"
 msgstr "In caricamento"
 
-#: src/components/Home.jsx:92
-#~ msgid "Saving rate"
-#~ msgstr "Saving rate"
+#: src/components/Home.jsx:127
+msgid "Saving rate"
+msgstr "Saving rate"
 
 #: src/components/Home.jsx:114
-msgid "Saving Rate"
-msgstr "Saving Rate"
+#~ msgid "Saving Rate"
+#~ msgstr "Saving Rate"
 
-#: src/components/MovementsList.jsx:247
+#: src/components/MovementsList.jsx:415
+msgid "Search"
+msgstr "Ricerca"
+
+#: src/components/MovementsList.jsx:361
+msgid "Search in description"
+msgstr "Cerca nella descrizione"
+
+#: src/components/MovementsList.jsx:280
 msgid "Search movements"
 msgstr "Cerca movimenti"
 
@@ -373,7 +407,7 @@ msgstr "Impostazioni"
 msgid "Show all"
 msgstr "Mostra tutti"
 
-#: src/components/MovementsHistory.jsx:63
+#: src/components/MovementsHistory.jsx:92
 msgid "Show assets"
 msgstr "Mostra saldo"
 
@@ -381,15 +415,19 @@ msgstr "Mostra saldo"
 msgid "Show details"
 msgstr "Mostra dettagli"
 
+#: src/components/MovementsList.jsx:271
+msgid "Show future movements"
+msgstr "Mostra movimenti futuri"
+
 #: src/components/Trading.jsx:382
 msgid "Show orders"
 msgstr "Mostra ordini"
 
-#: src/components/MovementsList.jsx:270
+#: src/components/MovementsList.jsx:452
 msgid "Showing"
 msgstr "Visualizzati"
 
-#: src/components/Home.jsx:156
+#: src/components/Home.jsx:168
 msgid "Spending by Category"
 msgstr "Categorie di spesa"
 
@@ -403,11 +441,12 @@ msgid "Stock"
 msgstr "Titolo"
 
 #: src/components/CategoryManager.jsx:213
+#: src/components/MovementsList.jsx:340
 msgid "Subcategories"
 msgstr "Sottocategorie"
 
 #: src/components/MovementForm.jsx:216
-#: src/components/MovementsList.jsx:217
+#: src/components/MovementsList.jsx:240
 msgid "Subcategory"
 msgstr "Sottocategoria"
 
