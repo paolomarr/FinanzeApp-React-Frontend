@@ -43,8 +43,11 @@ function MovementsListTableHeader({fields, sort, onSort, compact = false}) {
 }
 
 const MovementsListTableItem = ({movement, fields, edit, compact = false}) => {
+    const isFutureMovement = new Date(movement.date) > new Date();
+    const futureClass = isFutureMovement ? "future-movement" : "";
+    
     return (
-      <tr key={movement.id} data-id={movement.id}>
+      <tr key={movement.id} data-id={movement.id} className={futureClass}>
           {!compact && (
             <td className="list-item-edit">
               <FontAwesomeIcon icon={faPenToSquare} onClick={edit} className="mt-1"/>
@@ -137,7 +140,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false, compact = false}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false, compact = false, showFutureMovements = false}) => {
     const {i18n} = useLingui();
     const [sort, setSort] = useState({
       field: "date",
