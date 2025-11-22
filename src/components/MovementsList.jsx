@@ -294,8 +294,11 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
             </tbody>
           </Table> : slicedMovements.filter((movement, index) => index>=paginationStartIdx && index<paginationEndIdx).map((movement) => {
             const direction_color_class = (movement.amount >= 0 ? " earnings" : " expenses");
+            const isFutureMovement = new Date(movement.date) > new Date();
+            const futureClass = isFutureMovement ? " future-movement" : "";
+            
             return <ListGroup key={`movement_${movement.id}`} variant='flush' className='movement-list'>
-              <ListGroup.Item className='border-bottom item' onClick={() => onEdit(movement)}>
+              <ListGroup.Item className={`border-bottom item${futureClass}`} onClick={() => onEdit(movement)}>
                 <div className='d-flex'>
                   <div className={`me-auto category ${direction_color_class} fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
                   <div className='date small text-secondary'>{format(movement.date, i18n)}</div>
