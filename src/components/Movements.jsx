@@ -8,8 +8,9 @@ import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
 import VoiceInsertionModal from "./VoiceInsertionModal"
 import LoadingDiv from "./LoadingDiv";
-import { Container } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import MovementsList from "./MovementsList";
+import { t } from "@lingui/macro";
 
 const Movements = () => {
   const queryclient = useQueryClient();
@@ -66,7 +67,7 @@ const Movements = () => {
     queryKey: ["movements", {
       all: true, 
       datefrom: dataSlice.minDate, 
-      dateto: add(dataSlice.maxDate, {days: 1}),
+      // dateto: add(dataSlice.maxDate, {days: 1}),
       sort_field: "date",
     }],
     queryFn: fetchMovements,
@@ -108,7 +109,7 @@ const Movements = () => {
     setShowVoiceModal(false);
     setShowModal({show: true, movement: null, errors: null});
   };
-  
+
   if (movementResults.isLoading) {
     return <LoadingDiv />
   }
@@ -127,30 +128,29 @@ const Movements = () => {
 
   return (
     <Container fluid>
-      <MovementsList 
+      <MovementsList
         movements={movementResults.data?.filtered?.movements}
         categories={categoryResults.data}
         subcategories={subcategoryResults.data}
         onEdit={(movement) => setShowModal({show: true, movement: movement})}
-        slice={dataSlice}
         isWidget={false}
         compact={false}
       />
 
       <FixedBottomRightButton onClick={() => setShowVoiceModal(true)} />
-      
-      <VoiceInsertionModal 
+
+      <VoiceInsertionModal
         show={showVoiceModal}
         onHide={() => setShowVoiceModal(false)}
         onMovementCreated={handleVoiceMovementCreated}
         onManualInsert={handleManualInsert}
       />
-      
-      <MovementModal 
+
+      <MovementModal
         showModal={showModal}
         onMovementUpdate={(newMovement)=>setShowModal({...showModal, movement:newMovement})}
-        toggleModal={toggleModal} 
-        onDataReady={(movement, todelete, tocontinue) => mutation.mutate({movement: movement, _delete: todelete, _continue: tocontinue})} 
+        toggleModal={toggleModal}
+        onDataReady={(movement, todelete, tocontinue) => mutation.mutate({movement: movement, _delete: todelete, _continue: tocontinue})}
       />
     </Container>
   )

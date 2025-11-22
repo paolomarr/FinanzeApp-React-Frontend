@@ -16,7 +16,7 @@ import MovementsStats  from "./MovementStats";
 
 // Recent Movements Widget
 const RecentMovementsWidget = ({ movements, categories, subcategories, onEdit, onNavigate }) => {
-  const recentMovements = movements?.slice(-5) || [];
+  const recentMovements = movements?.filter((mov) => new Date(mov.date) <= new Date()).slice(-5) || [];
   
   return (
     <Card className="h-100">
@@ -254,7 +254,7 @@ const Home = () => {
     queryKey: ["movements", {
       all: true, 
       datefrom: dataSlice.minDate, 
-      dateto: add(dataSlice.maxDate, {days: 1}),
+      // dateto: add(dataSlice.maxDate, {days: 1}),
       sort_field: "date",
     }],
     queryFn: fetchMovements,

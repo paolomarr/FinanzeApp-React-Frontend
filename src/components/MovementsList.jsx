@@ -45,7 +45,7 @@ function MovementsListTableHeader({fields, sort, onSort, compact = false}) {
 const MovementsListTableItem = ({movement, fields, edit, compact = false}) => {
     const isFutureMovement = new Date(movement.date) > new Date();
     const futureClass = isFutureMovement ? "future-movement" : "";
-    
+
     return (
       <tr key={movement.id} data-id={movement.id} className={futureClass}>
           {!compact && (
@@ -140,7 +140,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   )
 };
 
-const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false, compact = false, showFutureMovements = false}) => {
+const MovementsList = ({movements, categories, subcategories, onEdit, slice, isWidget = false, compact = false}) => {
     const {i18n} = useLingui();
     const [sort, setSort] = useState({
       field: "date",
@@ -151,6 +151,8 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
       page: 0
     });
     const [movementFilter, setMovementFilter] = useState("");
+    const [showFutureMovements, setShowFutureMovements] = useState(false);
+
     const compareMovements = (movA, movB) => {
       const reverseFactor = -sort.direction;
       const valA = movA[sort.field];
@@ -171,12 +173,18 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
       }
     };
     const movementsFilterFunction = (movement) => {
+
+      // if showFutureMovements is not set, filter out future movements
+      if(!showFutureMovements && new Date(movement.date) > new Date()) return false;
+
       // for now, skip balance movements
       // const balanceCategory = categories.find((cat)=> cat.category === "BALANCE");
       // if(movement.category == balanceCategory.id) return false;
       if(!movementFilter || movementFilter.length === 0) return true;
       const cat_name = categories.find((cat) => cat.id === movement.category)?.category.toLocaleLowerCase() ?? "";
       const subcat_name = subcategories.find((subcat) => subcat.id === movement.subcategory)?.subcategory.toLocaleLowerCase() ?? "";
+      
+      
       let ret = false;
       // Text filter on multiple columns
       ret |= movement.description.toLocaleLowerCase().indexOf(movementFilter) >= 0;
@@ -244,6 +252,15 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
 
     return (
       <>
+        <div className="mb-3">
+          <Form.Check
+            type="checkbox"
+            id="show-future-movements"
+            label={t`Show future movements`}
+            checked={showFutureMovements}
+            onChange={(e) => setShowFutureMovements(e.target.checked)}
+          />
+        </div>
         {!isWidget && (
           <Row className="align-items-end mt-4">
             <Col xs={12} md={6} className="position-relative">
@@ -292,20 +309,23 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
                   )
               )}
             </tbody>
-          </Table> : slicedMovements.filter((movement, index) => index>=paginationStartIdx && index<paginationEndIdx).map((movement) => {
+          </Table> : slicedMovements.filter((movement, index) => index>=paginationStartIdx &&
+index<paginationEndIdx).map((movement) => {
             const direction_color_class = (movement.amount >= 0 ? " earnings" : " expenses");
             const isFutureMovement = new Date(movement.date) > new Date();
             const futureClass = isFutureMovement ? " future-movement" : "";
-            
+
             return <ListGroup key={`movement_${movement.id}`} variant='flush' className='movement-list'>
               <ListGroup.Item className={`border-bottom item${futureClass}`} onClick={() => onEdit(movement)}>
                 <div className='d-flex'>
-                  <div className={`me-auto category ${direction_color_class} fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
+                  <div className={`me-auto category ${direction_color_class}
+fw-bold`}>{categories.find((cat)=>cat.id===movement.category)?.category}</div>
                   <div className='date small text-secondary'>{format(movement.date, i18n)}</div>
                 </div>
                 <div className='d-flex'>
                   <div className='description small me-auto'>{movement.description}</div>
-                  <div className={`amount ${direction_color_class}`}>{parseFloat(movement.amount).toFixed(2)}&nbsp;€</div>
+                  <div className={`amount
+${direction_color_class}`}>{parseFloat(movement.amount).toFixed(2)}&nbsp;€</div>
                 </div>
               </ListGroup.Item>
             </ListGroup>

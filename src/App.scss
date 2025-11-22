@@ -133,3 +133,12 @@ $expenses_color: $pink-600;
     transform: scale(1);
   }
 }
+
+.future-movement {
+  opacity: 0.6;
+//   font-style: italic;
+}
+
+.future-movement td {
+  color: $secondary !important;
+}
