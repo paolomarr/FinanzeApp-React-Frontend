@@ -24,7 +24,7 @@ const LoginForm = ({logout}) => {
         const password = event.target.elements.password.value;
         const results = await authenticate(username, password);
         results.json().then((jres) => {
-            sessionStorage.setItem("authToken", jres.token); 
+            localStorage.setItem("authToken", jres.token); 
             setUser(username);
         });
     } catch (error) {
@@ -32,7 +32,7 @@ const LoginForm = ({logout}) => {
     }
   };
   if(logout){
-    sessionStorage.removeItem("authToken");
+    localStorage.removeItem("authToken");
     // setUser(null);
     // setError(null);
   }
