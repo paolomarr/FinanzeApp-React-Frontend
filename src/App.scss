@@ -59,6 +59,11 @@ $expenses_color: $pink-600;
 .text-expenses {
     color: $expenses_color;
 }
+.currency {
+	&::after {
+		content: "€";
+	}
+}
 .recharts-line.history-movements-chartline path {
     stroke: $primary;
 }

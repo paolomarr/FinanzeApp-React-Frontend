@@ -95,10 +95,9 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   };
   
   return (
-    <div className="mt-2">
       <Form>
-        <div className='d-flex'>
-          <div className='px-2'>
+        <div className='d-flex align-items-end'>
+          <div className='pe-4'>
             <Form.Label htmlFor='itemsPerPage' className='small'>
               <Trans>Page size</Trans>
             </Form.Label>
@@ -111,7 +110,7 @@ const PaginationControls = ({pagination, setPagination, total}) => {
             {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
             </Form.Select>
           </div>
-          <div className='px-2'>
+          <div>
             { numPages > pageCarouselWidth ?
             <>
             <ButtonGroup id="paginationScrollBack" size='sm'>
@@ -138,7 +137,6 @@ const PaginationControls = ({pagination, setPagination, total}) => {
           </div>
         </div>
       </Form>
-    </div>
   )
 };
 
@@ -256,6 +254,15 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
     }
     const nMovementsInDateRange = slicedMovements.length;
     slicedMovements = slicedMovements.filter(movementsFilterFunction).toSorted(compareMovements);
+
+    var expenses = 0, earnings = 0;
+    slicedMovements.forEach((mov) => {
+      if(mov.amount < 0){
+        expenses += mov.amount;
+      }else{
+        earnings += mov.amount;
+      }
+    });
     
     const paginationStartIdx = pagination.page * pagination.size;
     const paginationEndIdx = paginationStartIdx + pagination.size;
@@ -264,23 +271,19 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
 
     return (
       <>
-        <div className="mb-3">
-          <Form.Check
-            type="checkbox"
-            id="show-future-movements"
-            label={t`Show future movements`}
-            checked={showFutureMovements}
-            onChange={(e) => setShowFutureMovements(e.target.checked)}
-          />
-        </div>
         {!isWidget && (
           <>
-            <Row className="justify-content-start mt-4">
-              <Col xs={12} md={6}>
-                <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
+            <Row className="mt-3">
+              <Col xs={12} md="auto">
+                <Form.Check
+                  type="checkbox"
+                  id="show-future-movements"
+                  label={t`Show future movements`}
+                  checked={showFutureMovements}
+                  onChange={(e) => setShowFutureMovements(e.target.checked)}
+                  />
               </Col>
             </Row>
-            
             <Row className="mt-2">
               <Col xs={12}>
                 <Button
@@ -428,14 +431,25 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
                 </Collapse>
               </Col>
             </Row>
+            <Row className='small mt-2'>
+              <Col xs={12} lg={"auto"}>
+                <Trans>Total expenses</Trans>{': '}<span className='fw-bold text-expenses currency'>{parseFloat(expenses).toFixed(2)}</span>
+              </Col>
+              <Col xs={12} lg={"auto"}>
+                <Trans>Total earnings</Trans>{': '}<span className='fw-bold text-earnings currency'>{parseFloat(earnings).toFixed(2)}</span>
+              </Col>
+            </Row>
+            <div className="mt-2">
+              <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
+            </div>
+            <Row className='filter-stats'>
+              <Col className='text-center small'>
+                <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}
+                <Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}
+                <Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
+              </Col>
+            </Row>
           </>
-        )}
-        {!isWidget && (
-          <Row className='filter-stats'>
-            <Col className='text-center small'>
-              <Trans>Showing</Trans>{' '}{paginationStartIdx+1}{' - '}{Math.min(paginationEndIdx, slicedMovements.length)}{' '}<Trans id='movementsListFilterStats.of'>of</Trans>{' '}{slicedMovements.length}{' '}<Trans>filtered out of</Trans>{' '}{nMovementsInDateRange}
-            </Col>
-          </Row>
         )}
         { !isMobile ?
           <Table responsive="sm">
