@@ -60,6 +60,6 @@ else
     fi
 fi
 
-docker compose up -d --build
-imagename=`docker compose images | tail -1 | awk  '{print $2}'`
-docker tag $imagename $imagename:$version_info
+export GIT_HASH=`git rev-parse --short HEAD`; docker compose up -d --build
+# imagename=`docker compose images | tail -1 | awk  '{print $2}'`
+# docker tag $imagename $imagename:$version_info

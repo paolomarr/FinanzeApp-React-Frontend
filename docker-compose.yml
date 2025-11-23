@@ -3,6 +3,8 @@ services:
   react:
     build:
       dockerfile: ./Dockerfile
+      labels:
+        - "app.finanze.build=${GIT_HASH}"
     ports:
       - 127.0.0.1:3300:3000
     env_file:
