@@ -97,8 +97,8 @@ const PaginationControls = ({pagination, setPagination, total}) => {
   return (
     <div className="mt-2">
       <Form>
-        <Row className="row-cols-lg-auto g-3 align-items-end justify-content-lg-end">
-          <Col xs={3}>
+        <div className='d-flex'>
+          <div className='px-2'>
             <Form.Label htmlFor='itemsPerPage' className='small'>
               <Trans>Page size</Trans>
             </Form.Label>
@@ -110,8 +110,8 @@ const PaginationControls = ({pagination, setPagination, total}) => {
             >
             {[20,50,100].map((el) => {return <option key={`items_${el}`} value={el}>{el}</option>})}  
             </Form.Select>
-          </Col>
-          <Col xs={9} className='text-end'>
+          </div>
+          <div className='px-2'>
             { numPages > pageCarouselWidth ?
             <>
             <ButtonGroup id="paginationScrollBack" size='sm'>
@@ -135,8 +135,8 @@ const PaginationControls = ({pagination, setPagination, total}) => {
               })}
             </ButtonGroup>
             }
-          </Col>
-        </Row>
+          </div>
+        </div>
       </Form>
     </div>
   )
@@ -275,23 +275,7 @@ const MovementsList = ({movements, categories, subcategories, onEdit, slice, isW
         </div>
         {!isWidget && (
           <>
-            <Row className="align-items-end mt-4">
-              <Col xs={12} md={6} className="position-relative">
-                <Form.Control type="text" size='sm' placeholder={t`Search movements`} value={movementFilter} id="movementFilter" onChange={(e) => setMovementFilter(e.target.value.toLocaleLowerCase())} />
-                  {movementFilter && (
-                <FontAwesomeIcon icon={faXmark}
-                  onClick={()=> setMovementFilter("")}
-                  style={{
-                    position: 'absolute',
-                    right: '5%',
-                    top: '50%',
-                    transform: 'translateY(-50%)',
-                    cursor: 'pointer',
-                    color: '#888'
-                  }}
-                />
-          )}
-              </Col>
+            <Row className="justify-content-start mt-4">
               <Col xs={12} md={6}>
                 <PaginationControls setPagination={setPagination} pagination={pagination} total={slicedMovements.length}></PaginationControls>
               </Col>
