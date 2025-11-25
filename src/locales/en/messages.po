@@ -71,7 +71,7 @@ msgstr "Add new stock"
 #~ msgid "Add your balances using the form above or by copying one group of entries from the list below"
 #~ msgstr "Add your balances using the form above or by copying one group of entries from the list below"
 
-#: src/components/MovementsList.jsx:309
+#: src/components/MovementsList.jsx:296
 msgid "Advanced Search"
 msgstr "Advanced Search"
 
@@ -81,8 +81,8 @@ msgstr "All Movements"
 
 #: src/components/Assets.jsx:115
 #: src/components/MovementForm.jsx:173
-#: src/components/MovementsList.jsx:218
-#: src/components/MovementsList.jsx:230
+#: src/components/MovementsList.jsx:216
+#: src/components/MovementsList.jsx:228
 msgid "Amount"
 msgstr "Amount"
 
@@ -122,16 +122,16 @@ msgid "Cancel"
 msgstr "Cancel"
 
 #: src/components/CategoryManager.jsx:206
-#: src/components/MovementsList.jsx:324
+#: src/components/MovementsList.jsx:311
 msgid "Categories"
 msgstr "Categories"
 
 #: src/components/MovementForm.jsx:199
-#: src/components/MovementsList.jsx:233
+#: src/components/MovementsList.jsx:231
 msgid "Category"
 msgstr "Category"
 
-#: src/components/MovementsList.jsx:435
+#: src/components/MovementsList.jsx:422
 msgid "Clear"
 msgstr "Clear"
 
@@ -169,8 +169,8 @@ msgstr "Data has been saved"
 
 #: src/components/Assets.jsx:111
 #: src/components/MovementForm.jsx:159
-#: src/components/MovementsList.jsx:212
-#: src/components/MovementsList.jsx:224
+#: src/components/MovementsList.jsx:210
+#: src/components/MovementsList.jsx:222
 #: src/components/Trading.jsx:78
 msgid "Date"
 msgstr "Date"
@@ -198,9 +198,9 @@ msgstr "Deleting"
 
 #: src/components/Assets.jsx:128
 #: src/components/MovementForm.jsx:186
-#: src/components/MovementsList.jsx:217
-#: src/components/MovementsList.jsx:229
-#: src/components/MovementsList.jsx:356
+#: src/components/MovementsList.jsx:215
+#: src/components/MovementsList.jsx:227
+#: src/components/MovementsList.jsx:343
 msgid "Description"
 msgstr "Description"
 
@@ -229,7 +229,7 @@ msgstr "Error"
 msgid "Expenses"
 msgstr "Expenses"
 
-#: src/components/MovementsList.jsx:452
+#: src/components/MovementsList.jsx:449
 msgid "filtered out of"
 msgstr "filtered out of"
 
@@ -305,11 +305,11 @@ msgstr "Login"
 msgid "Manage categories"
 msgstr "Manage categories"
 
-#: src/components/MovementsList.jsx:399
+#: src/components/MovementsList.jsx:386
 msgid "Max Amount"
 msgstr "Max Amount"
 
-#: src/components/MovementsList.jsx:376
+#: src/components/MovementsList.jsx:363
 msgid "Max Date"
 msgstr "Max Date"
 
@@ -317,11 +317,11 @@ msgstr "Max Date"
 msgid "Microphone access denied or not available"
 msgstr "Microphone access denied or not available"
 
-#: src/components/MovementsList.jsx:389
+#: src/components/MovementsList.jsx:376
 msgid "Min Amount"
 msgstr "Min Amount"
 
-#: src/components/MovementsList.jsx:368
+#: src/components/MovementsList.jsx:355
 msgid "Min Date"
 msgstr "Min Date"
 
@@ -363,7 +363,7 @@ msgstr "No data available"
 #~ msgstr "No historical data available"
 
 #. js-lingui-explicit-id
-#: src/components/MovementsList.jsx:452
+#: src/components/MovementsList.jsx:448
 msgid "movementsListFilterStats.of"
 msgstr "of"
 
@@ -391,7 +391,7 @@ msgstr "Other out."
 #~ msgid "Outcomes"
 #~ msgstr "Expenses"
 
-#: src/components/MovementsList.jsx:103
+#: src/components/MovementsList.jsx:102
 msgid "Page size"
 msgstr "Page size"
 
@@ -471,17 +471,17 @@ msgstr "Saving rate"
 #~ msgid "Saving Rate"
 #~ msgstr "Saving Rate"
 
-#: src/components/MovementsList.jsx:415
+#: src/components/MovementsList.jsx:402
 msgid "Search"
 msgstr "Search"
 
-#: src/components/MovementsList.jsx:361
+#: src/components/MovementsList.jsx:348
 msgid "Search in description"
 msgstr "Search in description"
 
 #: src/components/MovementsList.jsx:280
-msgid "Search movements"
-msgstr "Search movements"
+#~ msgid "Search movements"
+#~ msgstr "Search movements"
 
 #: src/_lib/format_locale.js:10
 msgid "seconds"
@@ -520,7 +520,7 @@ msgstr "Show assets"
 msgid "Show details"
 msgstr "Show details"
 
-#: src/components/MovementsList.jsx:271
+#: src/components/MovementsList.jsx:281
 msgid "Show future movements"
 msgstr "Show future movements"
 
@@ -528,7 +528,7 @@ msgstr "Show future movements"
 msgid "Show orders"
 msgstr "Show orders"
 
-#: src/components/MovementsList.jsx:452
+#: src/components/MovementsList.jsx:447
 msgid "Showing"
 msgstr "Showing"
 
@@ -546,12 +546,12 @@ msgid "Stock"
 msgstr "Stock"
 
 #: src/components/CategoryManager.jsx:213
-#: src/components/MovementsList.jsx:340
+#: src/components/MovementsList.jsx:327
 msgid "Subcategories"
 msgstr "Subcategories"
 
 #: src/components/MovementForm.jsx:216
-#: src/components/MovementsList.jsx:240
+#: src/components/MovementsList.jsx:238
 msgid "Subcategory"
 msgstr "Subcategory"
 
@@ -575,6 +575,14 @@ msgstr "Tap to start recording"
 #: src/components/Assets.jsx:170
 msgid "TOTAL"
 msgstr "TOTAL"
+
+#: src/components/MovementsList.jsx:439
+msgid "Total earnings"
+msgstr "Total earnings"
+
+#: src/components/MovementsList.jsx:436
+msgid "Total expenses"
+msgstr "Total expenses"
 
 #: src/components/MovementStats.jsx:291
 msgid "Totals"
