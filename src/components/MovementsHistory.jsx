@@ -43,7 +43,7 @@ const MovementsHistory = ({data, categories}) => {
 
     if(data?.filtered.movements) {
         const _movements = data.filtered.movements;
-        const MAX_SHOWN_MOVEMENTS = 10; // the max number of chart points
+        const MAX_SHOWN_MOVEMENTS = 50; // the max number of chart points
         const reduce_factor = Math.floor(_movements.length/MAX_SHOWN_MOVEMENTS); // use floor, even though it will result in more points than MAX_SHOWN_MOVEMENTS
         for (var i = 0; i < _movements.length; i++) {
             const movement = _movements[i]; 
@@ -129,7 +129,7 @@ const MovementsHistory = ({data, categories}) => {
                         active={showTooltip} 
                         formatter={(value) => `${parseFloat(value).toFixed(2)} €`}
                         // LabelStyle={{color: colors.primary}}
-                        labelFormatter={(timestamp) => (new Date(timestamp)).toLocaleDateString()} />
+                        labelFormatter={(timestamp) => format(new Date(timestamp), i18n)} />
                 </LineChart>
             </ResponsiveContainer>
         </div>
