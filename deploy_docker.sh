@@ -60,6 +60,9 @@ else
     fi
 fi
 
-export GIT_HASH=$commit; docker compose up -d --build
-# imagename=`docker compose images | tail -1 | awk  '{print $2}'`
-# docker tag $imagename $imagename:$version_info
+
+# tag current image, so we can remove it after a successful deployment
+export GIT_HASH=`git rev-parse --short HEAD`
+docker tag finanzeapp-backend-django:latest finanzeapp-backend-django:$GIT_HASH
+docker compose up -d --build && \
+    docker rmi finanzeapp-backend-django:$GIT_HASH
