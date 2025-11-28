@@ -1,6 +1,6 @@
 # FinanzeApp React
 
-React.js web frontend for the [finanzeapp](github.com/paolomarr/finanze-django) Django backend.
+React.js web frontend for the [finanzeapp](https://github.com/paolomarr/finanze-django) Django backend.
 
 ## Quick start
 
