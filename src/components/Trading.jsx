@@ -10,6 +10,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
 import { useState } from "react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
 import FixedBottomRightButton from "./FixedBottomRightButton";
@@ -25,7 +26,123 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
     }
 };
 
-const TradingStats = ({orders, stocks, operations, update}) => {
+const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
+    const {i18n} = useLingui();
+    
+    // Process data to create time series
+    const processPortfolioData = () => {
+        if (!quotes || !orders || !stocks || !operations) return [];
+
+        const portfolioData = [];
+        // Quotes come date-descending sorted by default
+        const sortedQuotes = quotes.sort((a, b) => new Date(a.close_timestamp) - new Date(b.close_timestamp));
+        const allSymbols = [...new Set(stocks.map(s => s.symbol))];
+        const counterValueData = {};
+        allSymbols.forEach(symbol => {
+            counterValueData[symbol] = 0;
+        })
+        let currentDate = null;
+        sortedQuotes.forEach(quote => {
+            const stock = stocks.find(s => s.id === quote.stock);
+            // find all orders up to quote's date
+            const quoteDate = new Date(quote.close_timestamp);
+            const relevantOrders = orders.filter(order => 
+                order.stock === stock.id && 
+                new Date(order.date) <= quoteDate
+            );
+            // calculate net quantity owned
+            let netQuantity = 0;
+            relevantOrders.forEach(order => {
+                const operation = operations.find(op => op.id === order.operation);
+                const multiplier = operation?.operation === "SELL" ? -1 : 1;
+                netQuantity += order.quantity * multiplier;
+            });
+            // if we own shares, get the price as of this date
+            counterValueData[stock.symbol] = netQuantity * quote.close_val;
+            
+            if(!currentDate){
+                currentDate = quoteDate;
+            }
+            if(currentDate != quoteDate){
+                portfolioData.push({
+                    date: currentDate,
+                    ...counterValueData
+                });
+                currentDate = quoteDate;
+            }
+        });
+        
+        return portfolioData;
+    };
+    
+    const chartData = processPortfolioData();
+    
+    // Generate colors for each stock
+    const colors = [
+        '#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00',
+        '#ff00ff', '#00ffff', '#ff0000', '#0000ff', '#ffff00'
+    ];
+    
+    const formatTooltip = (value, name) => {
+        return [format_currency(value), name];
+    };
+    
+    const formatXAxisLabel = (tickItem) => {
+        return format(new Date(tickItem), i18n, {dateStyle: 'short'});
+    };
+    
+    if (chartData.length === 0) {
+        return (
+            <Card className="shadow-lg">
+                <Card.Body>
+                    <Card.Title><Trans>Portfolio Value Over Time</Trans></Card.Title>
+                    <div className="text-center text-muted p-4">
+                        <Trans>No portfolio data available</Trans>
+                    </div>
+                </Card.Body>
+            </Card>
+        );
+    }
+    // Get unique stock symbols that appear in the data
+    const stockSymbols = Object.keys(chartData[0]).filter(key => 
+        key !== 'date' && key !== 'total'
+    );
+    
+    
+    return (
+        <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                    dataKey="date" 
+                    tick={{fontSize: 12}}
+                    tickFormatter={formatXAxisLabel}
+                />
+                <YAxis 
+                    tick={{fontSize: 12}}
+                    tickFormatter={(value) => format_currency(value, '')} 
+                />
+                <Tooltip 
+                    formatter={formatTooltip}
+                    labelFormatter={(label) => format(new Date(label), i18n)}
+                />
+                {stockSymbols.map((symbol, index) => (
+                    <Area
+                        key={symbol}
+                        type="monotone"
+                        dataKey={symbol}
+                        stackId="1"
+                        stroke={colors[index % colors.length]}
+                        fill={colors[index % colors.length]}
+                        fillOpacity={0.6}
+                    />
+                ))}
+            </AreaChart>
+        </ResponsiveContainer>
+    );
+};
+
+const TradingStats = ({orders, stocks, operations, quotes, update}) => {
     const {i18n} = useLingui();
     const TAX_RATE = 0.21;
     const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
@@ -105,6 +222,16 @@ const TradingStats = ({orders, stocks, operations, update}) => {
                         <FontAwesomeIcon icon={faScaleUnbalanced} /> {statsGainSign}{stats.netPercent()}%
                     </div>
                 </div>                
+            </div>
+            <div className="row align-items-center justify-content-center">
+                <div className="col-md-6">
+                    <PortfolioTimeSeriesChart 
+                        orders={orders} 
+                        stocks={stocks} 
+                        quotes={quotes} 
+                        operations={operations}
+                    />
+                </div>
             </div>
             <div className="row">
                 <div className="col text-center">
@@ -290,16 +417,12 @@ const Trading = () => {
                 <TradingStats 
                     key={statsKey}
                     orders={orderQuery.data} 
-                    stocks={stockQuery.data} 
+                    stocks={stockQuery.data}
                     operations={operationsQuery.data}
+                    quotes={quotesQuery.data}
                     update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
                     />
                 : null}
-            </div>
-        </div>
-        <div className="row justify-content-center">
-            <div className="col-md-8">
-                {/* <TradingHistory orders={orderQuery.data.toReversed()} stocks={stockQuery.data} quotes={quotesQuery.data} /> */}
             </div>
         </div>
         <div className="row justify-content-center">
