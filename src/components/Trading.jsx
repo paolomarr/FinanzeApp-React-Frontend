@@ -9,12 +9,7 @@ import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDolla
 import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
-import Form from "react-bootstrap/Form";
-import Button from 'react-bootstrap/Button';
-import Feedback from 'react-bootstrap/Feedback';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { useRef, useState } from "react";
+import { useState } from "react";
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
 import FixedBottomRightButton from "./FixedBottomRightButton";
@@ -29,171 +24,7 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
         return failureCount-1;
     }
 };
-const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
-    const insertOrder = () => {
-        onMutateOrder(neworder, false);
-    };
-    const [neworder, setNeworder] = useState(editOrder || {
-        operation: 1,
-        code: 0,
-        account: "",
-        price: 0,
-        transaction_cost: 2,
-        quantity: 0,
-    });
-    const orderCodeRef = useRef(null);
-    const orderDateRef = useRef(null);
-    const orderAccountRef = useRef(null);
-    const orderStockRef = useRef(null);
-    const orderOperationRef = useRef(null);
-    const orderPriceRef = useRef(null);
-    const orderQuantityRef = useRef(null);
-    const orderTransactionCostRef = useRef(null);
-    return <Form>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="code">
-                {t`Code`}
-            </Form.Label>
-            <Form.Control
-                id="code"
-                name="code"
-                className={`${errors?.code? "is-invalid" : ""}`}
-                ref={orderCodeRef}
-                // onChange={(e) => setNeworder({...neworder, code: e.target.value})}
-                />
-            <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
-        </Form.Group>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="date">
-                {t`Date`}
-            </Form.Label>
-            <Form.Control
-                id="date"
-                name="date"
-                type="date"
-                ref={orderDateRef}
-                className={`form-control ${errors?.date? "is-invalid" : ""}`}
-                // value={neworder.date ?? new Date()}
-                onChange={(e) => setNeworder({...neworder, date: e.target.value})}
-            />
-            <Feedback type='invalid'>{errors?.date}</Feedback>
-        </Form.Group>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="account">
-                {t`Account no.`}
-            </Form.Label>
-            <Form.Control 
-                id="account"
-                name="account"
-                ref={orderAccountRef}
-                className={`form-control ${errors?.account? "is-invalid" : ""}`}
-                // value={neworder.account}
-                onChange={(e) => setNeworder({...neworder, account: e.target.value})}
-            />
-        </Form.Group>
-        <Row className="mb-1">
-            <Col xs="8" className="mb-1">
-                <Form.Label htmlFor="stock">
-                    {t`Stock`}
-                </Form.Label>
-                <Form.Select
-                    id="stock"
-                    name="stock"
-                    ref={orderStockRef}
-                    type="select"
-                    className={`${errors?.stock? "is-invalid" : ""}`}
-                    onChange={(e) => setNeworder({...neworder, stock: e.target.value})}
-                    // value={neworder.stock}
-                    >
-                        <option value={0}></option>
-                    {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
-                        return <option key={stock.id} value={stock.id}>{`${stock.symbol} - ${stock.name}`}</option>
-                    }))}
-                        <option value={-2}>{t`Add new stock`}</option>
-                </Form.Select>
-            </Col>
-            <Col xs="4">
-                <Form.Label htmlFor="operation">
-                    {t`Operation`}
-                </Form.Label>
-                <Form.Select
-                    id="operation"
-                    name="operation"
-                    ref={orderOperationRef}
-                    >
-                    <option value={0}></option>
-                    {!operations || operations.length <= 0 ? (null) : (operations.map((operation) => {
-                    return <option key={operation.id} value={operation.id}>{operation.operation}</option>
-                    }))}
-                    </Form.Select>
-            </Col>
-        </Row>
-        <Row className="mb-1">
-            <Col xs="8">
-                <Form.Label htmlFor="price">{t`Price`}</Form.Label>
-                <Form.Control
-                    id="price"
-                    name="price"
-                    ref={orderPriceRef}
-                    type="number"
-                    className={`${errors?.price? "is-invalid" : ""}`}
-                    // value={neworder.price}
-                    onChange={(e) => setNeworder({...neworder, price: e.target.value})}
-                />
-            </Col>
-            <Col>
-                <Form.Label htmlFor="quantity">{t`Quantity`}</Form.Label>
-                <Form.Control
-                    id="quantity"
-                    name="quantity"
-                    ref={orderQuantityRef}
-                    type="number"
-                    className={`${errors?.quantity? "is-invalid" : ""}`}
-                    // value={neworder.quantity}
-                    onChange={(e) => setNeworder({...neworder, quantity: e.target.value})}
-                />
-            </Col>
-        </Row>
-        <Row className="mb-1">
-            <Col xs="8">
-                <Form.Label htmlFor="transaction_cost">
-                    {t`Transaction cost`}
-                </Form.Label>
-                <Form.Control 
-                    id="transaction_cost"
-                    name="transaction_cost"
-                    ref={orderTransactionCostRef}
-                    type="number"
-                    className={`form-control ${errors?.transaction_cost? "is-invalid" : ""}`}
-                    // value={neworder.transaction_cost}
-                    onChange={(e) => setNeworder({...neworder, transaction_cost: e.target.value})}
-                />
-            </Col>
-        </Row>
-        <Button className="mt-2" variant="secondary" type="button" onClick={()=>insertOrder()}>
-            <Trans>Add</Trans>
-        </Button>
-    </Form>
-}
-// const TradingHistory = ({orders, stocks, quotes}) => {
-//     // merge orders and quotes
-//     const tot_orders = orders.length;
-//     let chartData = [];
-//     for(let ordIdx = 0; ordIdx<tot_orders; ordIdx++){
-//         let chartDataPoint = {};
-//         if(ordIdx<tot_orders-1){
-//             const curOrder = orders[ordIdx];
-//             chartDataPoint.date = new Date()
-//             let nextOrder = orders[ordIdx+1];
-//             while(order.date == nextOrder.date){
 
-//                 nextOrder = orders[++ordIdx];
-//             }
-
-//         }
-//     };
-//     return <></>
-// };
 const TradingStats = ({orders, stocks, operations, update}) => {
     const {i18n} = useLingui();
     const TAX_RATE = 0.21;
@@ -435,19 +266,6 @@ const Trading = () => {
         onSuccess: ({errors}) => {
             if(!errors){
                 queryClient.invalidateQueries(["stocks", "quotes"]);
-                // queryClient.setQueryData(["quotes"], (oldQuotes)=>{
-                //     oldQuotes += quotes;
-                //     return oldQuotes;
-                // });
-                // queryClient.setQueryData(["stocks"], (oldStocks)=>{
-                //     stocks.map((newStock)=> {
-                //         const oldStockToUpdateIndex = oldStocks.findIndex((s)=> newStock.id === s.id);
-                //         if(oldStockToUpdateIndex>=0){
-                //             oldStocks.splice(oldStockToUpdateIndex, 1, oldStocks[oldStockToUpdateIndex]);
-                //         }
-                //     });
-                //     return oldStocks;
-                // })
             }// else ??
             setStatsKey(1+statsKey); // this stops the rotate icon spinning
         },
@@ -468,6 +286,7 @@ const Trading = () => {
     return <div className="container-sm">
         <div className="row justify-content-center">
             <div className="col-md-8">
+                { orderQuery.data.length > 0 ?
                 <TradingStats 
                     key={statsKey}
                     orders={orderQuery.data} 
@@ -475,6 +294,7 @@ const Trading = () => {
                     operations={operationsQuery.data}
                     update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
                     />
+                : null}
             </div>
         </div>
         <div className="row justify-content-center">

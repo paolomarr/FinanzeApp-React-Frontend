@@ -1,4 +1,5 @@
 import Modal from 'react-bootstrap/Modal';
+import OrderForm from "./OrderForm";
 import { t } from "@lingui/macro";
 
 const OrderModal = ({ showModal, onOrderUpdate, toggleModal, onDataReady, operations, stocks, editOrder }) => {
@@ -9,7 +10,7 @@ const OrderModal = ({ showModal, onOrderUpdate, toggleModal, onDataReady, operat
     <Modal show={show} onHide={toggleModal}>
       <Modal.Header closeButton><Modal.Title>{title}</Modal.Title></Modal.Header>
       <Modal.Body>
-        <OrderInsertionForm 
+        <OrderForm 
           operations={operations} 
           stocks={stocks} 
           onMutateOrder={onDataReady}
