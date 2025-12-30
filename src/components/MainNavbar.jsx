@@ -75,6 +75,13 @@ const OffcanvasNavbar = () => {
                                 <Trans>Balance records</Trans>
                             </NavLink>
                         </Nav.Item>
+                        <Nav.Item>
+                            <NavLink to="/trading" end
+                            className={({isActive}) => "nav-link" + (isActive ? " active" : "")}
+                            onClick={() => setShow(false)}>
+                                <Trans>Trading</Trans>
+                            </NavLink>
+                        </Nav.Item>
                     </Nav>
                 </Offcanvas.Body>
             </Offcanvas>
@@ -102,6 +109,13 @@ const StandardNavbar = () => {
                     <NavLink to="/assets" end
                     className={({isActive}) => "nav-link" + (isActive ? " active" : "")}>
                         <Trans>Balance records</Trans>
+                    </NavLink>
+                </Nav.Item>
+                <Nav.Item>
+                    <NavLink to="/trading" end
+                    className={({isActive}) => "nav-link" + (isActive ? " active" : "")}
+                    onClick={() => setShow(false)}>
+                        <Trans>Trading</Trans>
                     </NavLink>
                 </Nav.Item>
             </Nav>
