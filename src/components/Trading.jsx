@@ -5,7 +5,7 @@ import LoadingDiv from "./LoadingDiv";
 import { format, format_currency } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faPenSquare, faQuestion, faRotate, faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faPenSquare, faQuestion, faRotate, faScaleUnbalanced, faBuildingColumns } from "@fortawesome/free-solid-svg-icons";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
@@ -212,14 +212,21 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                 </div>
             </Card.Title>
             <div className="row stats-summary align-items-center justify-content-center">
-                <div className="col-5 col-md-3 text-center">
-                    <div className="fs-4 bold"><FontAwesomeIcon icon={faCashRegister} /> {format_currency(stats.totalTransactions)}</div>
-                    <div className="small text-secondary">Commissions {format_currency(stats.totalCosts)}</div>
-                    <div className="fs-4 bold"><FontAwesomeIcon icon={faMoneyBillTrendUp}/> {format_currency(stats.totalCurrent)}</div>
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 bold"><FontAwesomeIcon icon={faCashRegister} />{' '}<Trans>Purchased:</Trans> </div>
+                    <div>{format_currency(stats.totalTransactions)}</div>
                 </div>
-                <div className="col-5 col-md-3 text-center">
-                    <div className={`fs-1 bold ${statsGainClass}`}>
-                        <FontAwesomeIcon icon={faScaleUnbalanced} /> {statsGainSign}{stats.netPercent()}%
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 text-secondary"><FontAwesomeIcon icon={faBuildingColumns} />{' '}<Trans>Commissions:</Trans> </div>
+                    <div>{format_currency(stats.totalCosts)}</div>
+                </div>
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 bold"><FontAwesomeIcon icon={faMoneyBillTrendUp}/>{' '}<Trans>Current value:</Trans> </div>
+                    <div>{format_currency(stats.totalCurrent)}</div>
+                </div>
+                <div className="col-12 col-md-3 ">
+                    <div className={`fw-bold ${statsGainClass} text-center`}>
+                        <FontAwesomeIcon icon={faScaleUnbalanced} />{' '}<Trans>Net gain</Trans> {statsGainSign}{stats.netPercent()}%
                     </div>
                 </div>                
             </div>
