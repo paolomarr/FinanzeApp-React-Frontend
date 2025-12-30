@@ -17,6 +17,8 @@ import Col from 'react-bootstrap/Col';
 import { useRef, useState } from "react";
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
+import FixedBottomRightButton from "./FixedBottomRightButton";
+import OrderModal from "./OrderModal";
 
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
     if(error.message === "forbidden"){
@@ -27,12 +29,11 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
         return failureCount-1;
     }
 };
-const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
-    const [errors] = useState(null);
+const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
     const insertOrder = () => {
         onMutateOrder(neworder, false);
     };
-    const [neworder, setNeworder] = useState({
+    const [neworder, setNeworder] = useState(editOrder || {
         operation: 1,
         code: 0,
         account: "",
@@ -48,17 +49,6 @@ const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
     const orderPriceRef = useRef(null);
     const orderQuantityRef = useRef(null);
     const orderTransactionCostRef = useRef(null);
-    if(editOrder && neworder != editOrder){
-        setNeworder(editOrder);
-        orderCodeRef.current.value = editOrder.code;
-        orderDateRef.current.value = editOrder.date;
-        orderAccountRef.current.value = editOrder.account;
-        orderStockRef.current.value = editOrder.stock;
-        orderOperationRef.current.value = editOrder.operation;
-        orderPriceRef.current.value = editOrder.price;
-        orderQuantityRef.current.value = editOrder.quantity;
-        orderTransactionCostRef.current.value = editOrder.transaction_cost;
-    }
     return <Form>
         <Form.Group className="mb-1">
             <Form.Label htmlFor="code">
@@ -380,6 +370,10 @@ const Trading = () => {
     const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
     const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
+    const [showModal, setShowModal] = useState({
+        show: false,
+        errors: null,
+    });
     const [stockQuery, orderQuery, quotesQuery, operationsQuery] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
@@ -391,11 +385,22 @@ const Trading = () => {
     const [editOrder, setEditOrder] = useState(null);
     const [statsKey, setStatsKey] = useState(0);
     const queryClient = useQueryClient();
+    
+    const toggleModal = () => {
+        const show = !showModal.show;
+        setShowModal({...showModal, show: show});
+        if (!show) {
+            setEditOrder(null); // Clear edit order when closing modal
+        }
+    };
     const orderMutation = useMutation({
         mutationFn: ({order, _delete}) => {
+            setShowModal({...showModal, errors: null});
             return mutateOrder({order:order, _delete: _delete});
         },
         onSuccess: (result, {order, _delete}) => {
+            setShowModal({...showModal, show: false, errors: {}});
+            setEditOrder(null);
             let mutandumIndex;
             if(order.id && result.id){ // DELETE or PUT
                 mutandumIndex = orderQuery.data.findIndex((order)=> order.id === result.id);
@@ -416,6 +421,11 @@ const Trading = () => {
                     return oldOrders;
                 });
             }
+        },
+        onError: (error, variables, context) => {
+            console.log(variables);
+            console.log(context);
+            setShowModal({...showModal, errors: error.cause});
         }
     });
     const quoteMutation = useMutation({
@@ -445,13 +455,9 @@ const Trading = () => {
             setStatsKey(1+statsKey);
         },
     })
-    const orderInsertionFormRef = useRef(null);
     const handleOrderEditClicked = (order) => {
-        // Scroll to the top of the Form
-        if (orderInsertionFormRef.current) {
-            orderInsertionFormRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
         setEditOrder(order);
+        setShowModal({show: true, errors: null});
     };
     if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operationsQuery.isLoading){
         return <LoadingDiv />
@@ -460,22 +466,6 @@ const Trading = () => {
         return <div>Error</div>
     }
     return <div className="container-sm">
-        <div className="my-2" ref={orderInsertionFormRef}>
-            <Row className="justify-content-center" md={2}>
-                <Col>
-                    <Card className="shadow-lg" bg="primary">
-                        <Card.Body>
-                            <Card.Title><Trans>Record a new order</Trans></Card.Title>
-                            <OrderInsertionForm operations={operationsQuery.data} stocks={stockQuery.data} 
-                                onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete}
-                                )}
-                                editOrder={editOrder}
-                                />
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </div>
         <div className="row justify-content-center">
             <div className="col-md-8">
                 <TradingStats 
@@ -510,6 +500,17 @@ const Trading = () => {
             }
             </div>
         </div>
+        
+        <FixedBottomRightButton onClick={() => setShowModal({show: true, errors: null})} />
+        
+        <OrderModal 
+            showModal={showModal}
+            toggleModal={toggleModal} 
+            onDataReady={(order, _delete) => orderMutation.mutate({order: order, _delete: _delete})}
+            operations={operationsQuery.data}
+            stocks={stockQuery.data}
+            editOrder={editOrder}
+        />
     </div>
 };
 
