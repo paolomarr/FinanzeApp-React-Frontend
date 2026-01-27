@@ -50,7 +50,7 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                 this.countervalues[symbol] = value;
             };
             gain = function () {
-                return (this.countervalueTotal() - this.investedTotal) * 100 / this.investedTotal;
+                return (this.countervalueTotal() - this.investedTotal) / this.investedTotal;
             };
             setInvestedTotalFromOrders = function (orders) {
                 this.investedTotal = 0;
@@ -130,6 +130,7 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     const formatXAxisLabel = (tickItem) => {
         return format(new Date(tickItem), i18n, {dateStyle: 'short'});
     };
+    const toPercent = (decimal) => `${(decimal * 100).toFixed(0)}%`;
     
     if (chartData.length === 0) {
         return (
@@ -168,6 +169,8 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                     yAxisId="right"
                     tick={{fontSize: 8}}
                     orientation="right"
+                    label={{value: "Net % Gain", angle: -90, position: "insideRight", offset: 20, fontSize: 8}}
+                    tickFormatter={toPercent}
                 />
                 <Tooltip 
                     formatter={formatTooltip}
