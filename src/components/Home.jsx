@@ -231,7 +231,7 @@ const Home = () => {
         navigate("/login");
         return false;
       } else{ 
-        return failureCount-1;
+        return failureCount<3;
       }
     }, 
   });
@@ -245,7 +245,7 @@ const Home = () => {
         navigate("/login");
         return false;
       } else{ 
-        return failureCount-1;
+        return failureCount<3;
       }
     }, 
   });
@@ -265,7 +265,7 @@ const Home = () => {
         return false;
       } else{ 
         console.log(`'movements query error: ${error.message}`);
-        return failureCount-1;
+        return failureCount<3;
       }
     },
     enabled: !!categoryResults.data && !!subcategoryResults.data,
@@ -297,24 +297,16 @@ const Home = () => {
     setShowModal({show: true, movement: null, errors: null});
   };
   
-  if (movementResults.isLoading) {
+  if (movementResults.isError || categoryResults.isError || subcategoryResults.isError) {
+    return (
+      <div className="text-center">{t`The server cannot be reached`}<br/>{t`Try again later`}</div>
+    )
+  }
+  if (movementResults.isLoading || categoryResults.isLoading || subcategoryResults.isLoading) {
     return <LoadingDiv />
   }
 
-  if (movementResults.isError) {
-    switch (movementResults.error.message) {
-      case "forbidden":
-        console.log("Unable to fetch: unauthenticated");
-        break;
-      default:
-        console.log("Unable to fetch: unknown error");
-        break;
-    }
-    return (
-      <Navigate to="/login" />
-    )
-  }
-
+  
   return (
     <Container fluid>
       
