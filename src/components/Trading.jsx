@@ -10,7 +10,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
 import { useState } from "react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ComposedChart } from 'recharts';
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
 import FixedBottomRightButton from "./FixedBottomRightButton";
@@ -37,42 +37,82 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
         // Quotes come date-descending sorted by default
         const sortedQuotes = quotes.sort((a, b) => new Date(a.close_timestamp) - new Date(b.close_timestamp));
         const allSymbols = [...new Set(stocks.map(s => s.symbol))];
-        const counterValueData = {};
-        allSymbols.forEach(symbol => {
-            counterValueData[symbol] = 0;
-        })
-        let currentDate = null;
+        class CounterValueData {
+            constructor(date, symbols=[]) {
+                this.date = date;
+                this.countervalues = {};
+                symbols.forEach(symbol => {
+                    this.countervalues[symbol] = 0;
+                });
+                this.investedTotal = 1; // to avoid division by zero
+            }
+            setCountervalueForStock = function (symbol, value) {
+                this.countervalues[symbol] = value;
+            };
+            gain = function () {
+                return (this.countervalueTotal() - this.investedTotal) * 100 / this.investedTotal;
+            };
+            setInvestedTotalFromOrders = function (orders) {
+                this.investedTotal = 0;
+                orders
+                    .filter(order => new Date(order.date).getTime() <= this.date.getTime())
+                    .forEach(order => {
+                        const operation = operations.find(op => op.id === order.operation);
+                        const multiplier = operation?.operation === "SELL" ? -1 : 1;
+                        this.investedTotal += order.quantity * order.price * multiplier;
+                });
+            };
+            countervalueTotal = function () {
+                let _cvtotal = 0;
+                for (let symbol in this.countervalues) {
+                    _cvtotal += this.countervalues[symbol];
+                }
+                return _cvtotal;
+            }
+            dump = function () {
+                return {
+                    date: this.date,
+                    ...this.countervalues,
+                    countervalue: this.countervalueTotal(),
+                    invested: this.investedTotal,
+                    gain: this.gain()
+                };
+            };
+        };
+        let counterValueData = new CounterValueData(null, allSymbols);
         sortedQuotes.forEach(quote => {
-            const stock = stocks.find(s => s.id === quote.stock);
-            // find all orders up to quote's date
             const quoteDate = new Date(quote.close_timestamp);
+
+            if(!counterValueData.date){
+                counterValueData.date = quoteDate;
+            }
+            if(counterValueData.date.getTime() != quoteDate.getTime()){
+                counterValueData.setInvestedTotalFromOrders(orders);
+                portfolioData.push(counterValueData.dump());
+                counterValueData.date = quoteDate;
+                counterValueData.investedTotal = 0;
+            }
+
+            const stock = stocks.find(s => s.id === quote.stock);
+            // find all orders up to quote's date, for the current stock
             const relevantOrders = orders.filter(order => 
                 order.stock === stock.id && 
-                new Date(order.date) <= quoteDate
+                new Date(order.date).getTime() <= quoteDate.getTime()
             );
-            // calculate net quantity owned
-            let netQuantity = 0;
+            // calculate quantity owned of the current stock
+            let ownedQuantity = 0;
             relevantOrders.forEach(order => {
                 const operation = operations.find(op => op.id === order.operation);
                 const multiplier = operation?.operation === "SELL" ? -1 : 1;
-                netQuantity += order.quantity * multiplier;
+                ownedQuantity += order.quantity * multiplier;
             });
             // if we own shares, get the price as of this date
-            counterValueData[stock.symbol] = netQuantity * quote.close_val;
+            const counterValueForStock = ownedQuantity * quote.close_val;
+            counterValueData.setCountervalueForStock(stock.symbol, counterValueForStock);
             
-            if(!currentDate){
-                currentDate = quoteDate;
-            }
-            if(currentDate != quoteDate){
-                portfolioData.push({
-                    date: currentDate,
-                    ...counterValueData
-                });
-                currentDate = quoteDate;
-            }
         });
         
-        return portfolioData;
+        return portfolioData
     };
     
     const chartData = processPortfolioData();
@@ -104,14 +144,15 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
         );
     }
     // Get unique stock symbols that appear in the data
-    const stockSymbols = Object.keys(chartData[0]).filter(key => 
-        key !== 'date' && key !== 'total'
-    );
-    
+    const stockSymbols = [];
+    // stockSymbols.push(["invested"]);
+    Object.keys(chartData[0]).filter(key => 
+        key !== 'date' && key !== 'invested' && key != 'countervalue' && key !== 'gain'
+    ).forEach(key => stockSymbols.push(key));
     
     return (
         <ResponsiveContainer width="100%" height={300}>
-            <AreaChart data={chartData}>
+            <ComposedChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                     dataKey="date" 
@@ -119,8 +160,14 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                     tickFormatter={formatXAxisLabel}
                 />
                 <YAxis 
-                    tick={{fontSize: 12}}
+                    yAxisId="left"
+                    tick={{fontSize: 8}}
                     tickFormatter={(value) => format_currency(value, '')} 
+                />
+                <YAxis
+                    yAxisId="right"
+                    tick={{fontSize: 8}}
+                    orientation="right"
                 />
                 <Tooltip 
                     formatter={formatTooltip}
@@ -135,9 +182,12 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                         stroke={colors[index % colors.length]}
                         fill={colors[index % colors.length]}
                         fillOpacity={0.6}
+                        yAxisId="left"
                     />
                 ))}
-            </AreaChart>
+                <Line type="step" dataKey="gain" yAxisId="right" dot={false} strokeWidth={2} />
+
+            </ComposedChart>
         </ResponsiveContainer>
     );
 };
