@@ -157,19 +157,20 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                     dataKey="date" 
-                    tick={{fontSize: 12}}
+                    tick={{fontSize: 8}}
                     tickFormatter={formatXAxisLabel}
                 />
                 <YAxis 
                     yAxisId="left"
                     tick={{fontSize: 8}}
-                    tickFormatter={(value) => format_currency(value, '')} 
+                    label={{value: "Countervalue [€]", angle: -90, position: "insideLeft", offset: 20, fontSize: 10}}
+                    tickFormatter={(value) => format_currency(value, '', 0)} 
                 />
                 <YAxis
                     yAxisId="right"
                     tick={{fontSize: 8}}
                     orientation="right"
-                    label={{value: "Net % Gain", angle: -90, position: "insideRight", offset: 20, fontSize: 8}}
+                    label={{value: "Net % Gain", angle: -90, position: "insideRight", offset: 20, fontSize: 10}}
                     tickFormatter={toPercent}
                 />
                 <Tooltip 
@@ -284,7 +285,7 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                 </div>                
             </div>
             <div className="row align-items-center justify-content-center">
-                <div className="col-md-6">
+                <div className="col-md-12 mx-0">
                     <PortfolioTimeSeriesChart 
                         orders={orders} 
                         stocks={stocks} 
