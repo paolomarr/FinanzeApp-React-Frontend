@@ -153,7 +153,7 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     
     return (
         <ResponsiveContainer width="100%" height={300}>
-            <ComposedChart data={chartData}>
+            <ComposedChart data={chartData} margin={{left:0, right:0}}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                     dataKey="date" 
