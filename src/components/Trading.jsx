@@ -254,9 +254,7 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
     const [rotateSpinning, setRotateSpinning] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const showDetailsLinkStr = showDetails ? t`Hide details` : t`Show details`;
-    return <Card className="shadow-lg">
-        <Card.Body>
-            <Card.Title>
+    return <>
                 <div className="row align-items-center text-center">
                     <div className="col-12 col-md-auto">
                         <Trans>Your current trading stats</Trans>{' '}
@@ -269,7 +267,6 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                             onClick={()=>{setRotateSpinning(true); update(); } }/>
                     </div>
                 </div>
-            </Card.Title>
             <div className="row stats-summary align-items-center justify-content-center">
                 <div className="col-12 col-md-4 d-flex px-4">
                     <div className="flex-grow-1 flex-md-grow-0 bold"><FontAwesomeIcon icon={faCashRegister} />{' '}<Trans>Purchased:</Trans> </div>
@@ -290,7 +287,7 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                 </div>                
             </div>
             <div className="row align-items-center justify-content-center">
-                <div className="col-md-12 mx-0">
+                <div className="col-md-12 mx-0 px-0 mt-3">
                     <PortfolioTimeSeriesChart 
                         orders={orders} 
                         stocks={stocks} 
@@ -339,8 +336,7 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                 </ListGroup>
             :null}
             </div>
-        </Card.Body>
-    </Card>
+            </>
 };
 const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClicked}) => {
     const {i18n} = useLingui();
