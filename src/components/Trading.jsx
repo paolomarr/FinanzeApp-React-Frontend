@@ -16,6 +16,9 @@ import mutateQuotes from "../queries/mutateQuotes";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import OrderModal from "./OrderModal";
 
+const TAX_RATE = 0.26;
+const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
+
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
     if(error.message === "forbidden"){
         queryclient.cancelQueries();
@@ -52,6 +55,9 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
             gain = function () {
                 return (this.countervalueTotal() - this.investedTotal) / this.investedTotal;
             };
+            netGain = function () {
+                return getValueAfterTax(this.gain());
+            }
             setInvestedTotalFromOrders = function (orders) {
                 this.investedTotal = 0;
                 orders
@@ -75,7 +81,8 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                     ...this.countervalues,
                     countervalue: this.countervalueTotal(),
                     invested: this.investedTotal,
-                    gain: this.gain()
+                    gain: this.gain(),
+                    netGain: this.netGain()
                 };
             };
         };
@@ -148,7 +155,7 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     const stockSymbols = [];
     // stockSymbols.push(["invested"]);
     Object.keys(chartData[0]).filter(key => 
-        key !== 'date' && key !== 'invested' && key != 'countervalue' && key !== 'gain'
+        key !== 'date' && key !== 'invested' && key != 'countervalue' && key !== 'gain' && key !== 'netGain'
     ).forEach(key => stockSymbols.push(key));
     
     return (
@@ -189,7 +196,7 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                         yAxisId="left"
                     />
                 ))}
-                <Line type="step" dataKey="gain" yAxisId="right" dot={false} strokeWidth={2} />
+                <Line type="step" dataKey="netGain" yAxisId="right" dot={false} strokeWidth={2} />
 
             </ComposedChart>
         </ResponsiveContainer>
@@ -198,8 +205,6 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
 
 const TradingStats = ({orders, stocks, operations, quotes, update}) => {
     const {i18n} = useLingui();
-    const TAX_RATE = 0.21;
-    const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
     let stats = {
         stocks: {},
         totalTransactions: 0.0,
