@@ -133,6 +133,37 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     const formatTooltip = (value, name) => {
         return [format_currency(value), name];
     };
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            // label is the long date string
+            const dateValue = new Date(label);
+            const dateLabel = format(dateValue, i18n, {dateStyle: 'short'});
+            return (
+                <div className="custom-tooltip">
+                    <div className="tooltip-header text-center fw-semibold">{dateLabel}<hr className="my-1"></hr></div>
+                { payload.filter(item => item.value > 0).map((item, index) => {
+                    if(item.name == "netGain"){
+                        return (
+                            <div key={`label_item_${index}`}>
+                                <p className="small my-0 fw-semibold text-end">{t`Net gain`}&nbsp;{parseFloat(item.value).toFixed(3) * 100}{item.unit}</p>
+                            </div>
+                        );
+                    }else{
+                        return (
+                            <div key={`label_item_${index}`}>
+                                <p className="small my-0 fw-semibold text-end">{`${item.name}`}&nbsp;{format_currency(item.value)}</p>
+                            </div>
+                        );
+                    }
+
+                    })
+                }
+                </div>
+            );
+        }
+    
+        return null;
+    }
     
     const formatXAxisLabel = (tickItem) => {
         return format(new Date(tickItem), i18n, {dateStyle: 'short'});
@@ -175,13 +206,15 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                 />
                 <YAxis
                     yAxisId="right"
+                    unit="%"
                     tick={{fontSize: 8}}
                     orientation="right"
                     label={{value: "Net % Gain", angle: -90, position: "insideRight", offset: 20, fontSize: 10}}
-                    tickFormatter={toPercent}
+                    tickFormatter={(value)=> value*100}
                 />
                 <Tooltip 
-                    formatter={formatTooltip}
+                    // formatter={formatTooltip}
+                    content={CustomTooltip}
                     labelFormatter={(label) => format(new Date(label), i18n)}
                 />
                 {stockSymbols.map((symbol, index) => (
@@ -194,9 +227,10 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
                         fill={colors[index % colors.length]}
                         fillOpacity={0.6}
                         yAxisId="left"
+                        unit="€"
                     />
                 ))}
-                <Line type="step" dataKey="netGain" yAxisId="right" dot={false} strokeWidth={2} />
+                <Line type="step" dataKey="netGain" yAxisId="right" dot={false} strokeWidth={2} unit={"%"}/>
 
             </ComposedChart>
         </ResponsiveContainer>
