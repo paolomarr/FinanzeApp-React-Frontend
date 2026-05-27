@@ -97,6 +97,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                     id="operation"
                     name="operation"
                     ref={orderOperationRef}
+                    onChange={(e) => setNeworder({...neworder, operation: e.target.value})}
                     >
                     <option value={0}></option>
                     {!operations || operations.length <= 0 ? (null) : (operations.map((operation) => {
