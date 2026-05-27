@@ -10,10 +10,15 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
     const insertOrder = () => {
         onMutateOrder(neworder, false);
     };
-    const [neworder, setNeworder] = useState(editOrder || {
+    const [neworder, setNeworder] = useState(editOrder ? {
+        ...editOrder,
+        date: editOrder.date ? String(editOrder.date).slice(0, 10) : "",
+    } : {
         operation: 1,
         code: 0,
         account: "",
+        date: "",
+        stock: 0,
         price: 0,
         transaction_cost: 2,
         quantity: 0,
@@ -27,6 +32,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
     const orderQuantityRef = useRef(null);
     const orderTransactionCostRef = useRef(null);
     return <Form>
+        {neworder.id ? <input type="hidden" name="id" value={neworder.id} /> : null}
         <Form.Group className="mb-1">
             <Form.Label htmlFor="code">
                 {t`Code`}
@@ -36,7 +42,8 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                 name="code"
                 className={`${errors?.code? "is-invalid" : ""}`}
                 ref={orderCodeRef}
-                // onChange={(e) => setNeworder({...neworder, code: e.target.value})}
+                onChange={(e) => setNeworder({...neworder, code: e.target.value})}
+                value={neworder.code ?? ""}
                 />
             <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
         </Form.Group>
@@ -50,7 +57,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                 type="date"
                 ref={orderDateRef}
                 className={`form-control ${errors?.date? "is-invalid" : ""}`}
-                // value={neworder.date ?? new Date()}
+                value={neworder.date ?? ""}
                 onChange={(e) => setNeworder({...neworder, date: e.target.value})}
             />
             <Feedback type='invalid'>{errors?.date}</Feedback>
@@ -59,12 +66,12 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
             <Form.Label htmlFor="account">
                 {t`Account no.`}
             </Form.Label>
-            <Form.Control 
+            <Form.Control
                 id="account"
                 name="account"
                 ref={orderAccountRef}
                 className={`form-control ${errors?.account? "is-invalid" : ""}`}
-                // value={neworder.account}
+                value={neworder.account ?? ""}
                 onChange={(e) => setNeworder({...neworder, account: e.target.value})}
             />
         </Form.Group>
@@ -79,8 +86,8 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                     ref={orderStockRef}
                     type="select"
                     className={`${errors?.stock? "is-invalid" : ""}`}
+                    value={neworder.stock ?? 0}
                     onChange={(e) => setNeworder({...neworder, stock: e.target.value})}
-                    // value={neworder.stock}
                     >
                         <option value={0}></option>
                     {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
@@ -97,6 +104,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                     id="operation"
                     name="operation"
                     ref={orderOperationRef}
+                    value={neworder.operation ?? 0}
                     onChange={(e) => setNeworder({...neworder, operation: e.target.value})}
                     >
                     <option value={0}></option>
@@ -115,7 +123,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                     ref={orderPriceRef}
                     type="number"
                     className={`${errors?.price? "is-invalid" : ""}`}
-                    // value={neworder.price}
+                    value={neworder.price ?? 0}
                     onChange={(e) => setNeworder({...neworder, price: e.target.value})}
                 />
             </Col>
@@ -127,7 +135,7 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                     ref={orderQuantityRef}
                     type="number"
                     className={`${errors?.quantity? "is-invalid" : ""}`}
-                    // value={neworder.quantity}
+                    value={neworder.quantity ?? 0}
                     onChange={(e) => setNeworder({...neworder, quantity: e.target.value})}
                 />
             </Col>
@@ -137,19 +145,19 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                 <Form.Label htmlFor="transaction_cost">
                     {t`Transaction cost`}
                 </Form.Label>
-                <Form.Control 
+                <Form.Control
                     id="transaction_cost"
                     name="transaction_cost"
                     ref={orderTransactionCostRef}
                     type="number"
                     className={`form-control ${errors?.transaction_cost? "is-invalid" : ""}`}
-                    // value={neworder.transaction_cost}
+                    value={neworder.transaction_cost ?? 0}
                     onChange={(e) => setNeworder({...neworder, transaction_cost: e.target.value})}
                 />
             </Col>
         </Row>
         <Button className="mt-2" variant="secondary" type="button" onClick={()=>insertOrder()}>
-            <Trans>Add</Trans>
+            {editOrder ? <Trans>Update</Trans> : <Trans>Add</Trans>}
         </Button>
     </Form>
 }
