@@ -5,18 +5,19 @@ import LoadingDiv from "./LoadingDiv";
 import { format, format_currency } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faPenSquare, faQuestion, faRotate, faScaleUnbalanced } from "@fortawesome/free-solid-svg-icons";
+import { faBasketShopping, faCashRegister, faClockRotateLeft, faHandHoldingDollar, faMoneyBillTrendUp, faPenSquare, faQuestion, faRotate, faScaleUnbalanced, faBuildingColumns } from "@fortawesome/free-solid-svg-icons";
 import ListGroup from "react-bootstrap/ListGroup";
 import { Trans, t } from "@lingui/macro";
 import Card from 'react-bootstrap/Card';
-import Form from "react-bootstrap/Form";
-import Button from 'react-bootstrap/Button';
-import Feedback from 'react-bootstrap/Feedback';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import { useRef, useState } from "react";
+import { useState } from "react";
+import { AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ComposedChart } from 'recharts';
 import mutateOrder from "../queries/mutateOrder";
 import mutateQuotes from "../queries/mutateQuotes";
+import FixedBottomRightButton from "./FixedBottomRightButton";
+import OrderModal from "./OrderModal";
+
+const TAX_RATE = 0.26;
+const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
 
 const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
     if(error.message === "forbidden"){
@@ -27,187 +28,217 @@ const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) =
         return failureCount-1;
     }
 };
-const OrderInsertionForm = ({stocks, operations, onMutateOrder, editOrder}) => {
-    const [errors] = useState(null);
-    const insertOrder = () => {
-        onMutateOrder(neworder, false);
-    };
-    const [neworder, setNeworder] = useState({
-        operation: 1,
-        code: 0,
-        account: "",
-        price: 0,
-        transaction_cost: 2,
-        quantity: 0,
-    });
-    const orderCodeRef = useRef(null);
-    const orderDateRef = useRef(null);
-    const orderAccountRef = useRef(null);
-    const orderStockRef = useRef(null);
-    const orderOperationRef = useRef(null);
-    const orderPriceRef = useRef(null);
-    const orderQuantityRef = useRef(null);
-    const orderTransactionCostRef = useRef(null);
-    if(editOrder && neworder != editOrder){
-        setNeworder(editOrder);
-        orderCodeRef.current.value = editOrder.code;
-        orderDateRef.current.value = editOrder.date;
-        orderAccountRef.current.value = editOrder.account;
-        orderStockRef.current.value = editOrder.stock;
-        orderOperationRef.current.value = editOrder.operation;
-        orderPriceRef.current.value = editOrder.price;
-        orderQuantityRef.current.value = editOrder.quantity;
-        orderTransactionCostRef.current.value = editOrder.transaction_cost;
-    }
-    return <Form>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="code">
-                {t`Code`}
-            </Form.Label>
-            <Form.Control
-                id="code"
-                name="code"
-                className={`${errors?.code? "is-invalid" : ""}`}
-                ref={orderCodeRef}
-                // onChange={(e) => setNeworder({...neworder, code: e.target.value})}
-                />
-            <Feedback type='invalid'>{errors?.abs_amount?? ""}</Feedback>
-        </Form.Group>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="date">
-                {t`Date`}
-            </Form.Label>
-            <Form.Control
-                id="date"
-                name="date"
-                type="date"
-                ref={orderDateRef}
-                className={`form-control ${errors?.date? "is-invalid" : ""}`}
-                // value={neworder.date ?? new Date()}
-                onChange={(e) => setNeworder({...neworder, date: e.target.value})}
-            />
-            <Feedback type='invalid'>{errors?.date}</Feedback>
-        </Form.Group>
-        <Form.Group className="mb-1">
-            <Form.Label htmlFor="account">
-                {t`Account no.`}
-            </Form.Label>
-            <Form.Control 
-                id="account"
-                name="account"
-                ref={orderAccountRef}
-                className={`form-control ${errors?.account? "is-invalid" : ""}`}
-                // value={neworder.account}
-                onChange={(e) => setNeworder({...neworder, account: e.target.value})}
-            />
-        </Form.Group>
-        <Row className="mb-1">
-            <Col xs="8" className="mb-1">
-                <Form.Label htmlFor="stock">
-                    {t`Stock`}
-                </Form.Label>
-                <Form.Select
-                    id="stock"
-                    name="stock"
-                    ref={orderStockRef}
-                    type="select"
-                    className={`${errors?.stock? "is-invalid" : ""}`}
-                    onChange={(e) => setNeworder({...neworder, stock: e.target.value})}
-                    // value={neworder.stock}
-                    >
-                        <option value={0}></option>
-                    {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
-                        return <option key={stock.id} value={stock.id}>{`${stock.symbol} - ${stock.name}`}</option>
-                    }))}
-                        <option value={-2}>{t`Add new stock`}</option>
-                </Form.Select>
-            </Col>
-            <Col xs="4">
-                <Form.Label htmlFor="operation">
-                    {t`Operation`}
-                </Form.Label>
-                <Form.Select
-                    id="operation"
-                    name="operation"
-                    ref={orderOperationRef}
-                    >
-                    <option value={0}></option>
-                    {!operations || operations.length <= 0 ? (null) : (operations.map((operation) => {
-                    return <option key={operation.id} value={operation.id}>{operation.operation}</option>
-                    }))}
-                    </Form.Select>
-            </Col>
-        </Row>
-        <Row className="mb-1">
-            <Col xs="8">
-                <Form.Label htmlFor="price">{t`Price`}</Form.Label>
-                <Form.Control
-                    id="price"
-                    name="price"
-                    ref={orderPriceRef}
-                    type="number"
-                    className={`${errors?.price? "is-invalid" : ""}`}
-                    // value={neworder.price}
-                    onChange={(e) => setNeworder({...neworder, price: e.target.value})}
-                />
-            </Col>
-            <Col>
-                <Form.Label htmlFor="quantity">{t`Quantity`}</Form.Label>
-                <Form.Control
-                    id="quantity"
-                    name="quantity"
-                    ref={orderQuantityRef}
-                    type="number"
-                    className={`${errors?.quantity? "is-invalid" : ""}`}
-                    // value={neworder.quantity}
-                    onChange={(e) => setNeworder({...neworder, quantity: e.target.value})}
-                />
-            </Col>
-        </Row>
-        <Row className="mb-1">
-            <Col xs="8">
-                <Form.Label htmlFor="transaction_cost">
-                    {t`Transaction cost`}
-                </Form.Label>
-                <Form.Control 
-                    id="transaction_cost"
-                    name="transaction_cost"
-                    ref={orderTransactionCostRef}
-                    type="number"
-                    className={`form-control ${errors?.transaction_cost? "is-invalid" : ""}`}
-                    // value={neworder.transaction_cost}
-                    onChange={(e) => setNeworder({...neworder, transaction_cost: e.target.value})}
-                />
-            </Col>
-        </Row>
-        <Button className="mt-2" variant="secondary" type="button" onClick={()=>insertOrder()}>
-            <Trans>Add</Trans>
-        </Button>
-    </Form>
-}
-// const TradingHistory = ({orders, stocks, quotes}) => {
-//     // merge orders and quotes
-//     const tot_orders = orders.length;
-//     let chartData = [];
-//     for(let ordIdx = 0; ordIdx<tot_orders; ordIdx++){
-//         let chartDataPoint = {};
-//         if(ordIdx<tot_orders-1){
-//             const curOrder = orders[ordIdx];
-//             chartDataPoint.date = new Date()
-//             let nextOrder = orders[ordIdx+1];
-//             while(order.date == nextOrder.date){
 
-//                 nextOrder = orders[++ordIdx];
-//             }
-
-//         }
-//     };
-//     return <></>
-// };
-const TradingStats = ({orders, stocks, operations, update}) => {
+const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     const {i18n} = useLingui();
-    const TAX_RATE = 0.21;
-    const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
+    
+    // Process data to create time series
+    const processPortfolioData = () => {
+        if (!quotes || !orders || !stocks || !operations) return [];
+
+        const portfolioData = [];
+        // Quotes come date-descending sorted by default
+        const sortedQuotes = quotes.sort((a, b) => new Date(a.close_timestamp) - new Date(b.close_timestamp));
+        const allSymbols = [...new Set(stocks.map(s => s.symbol))];
+        class CounterValueData {
+            constructor(date, symbols=[]) {
+                this.date = date;
+                this.countervalues = {};
+                symbols.forEach(symbol => {
+                    this.countervalues[symbol] = 0;
+                });
+                this.investedTotal = 1; // to avoid division by zero
+            }
+            setCountervalueForStock = function (symbol, value) {
+                this.countervalues[symbol] = value;
+            };
+            gain = function () {
+                return (this.countervalueTotal() - this.investedTotal) / this.investedTotal;
+            };
+            netGain = function () {
+                return getValueAfterTax(this.gain());
+            }
+            setInvestedTotalFromOrders = function (orders) {
+                this.investedTotal = 0;
+                orders
+                    .filter(order => new Date(order.date).getTime() <= this.date.getTime())
+                    .forEach(order => {
+                        const operation = operations.find(op => op.id === order.operation);
+                        const multiplier = operation?.operation === "SELL" ? -1 : 1;
+                        this.investedTotal += order.quantity * order.price * multiplier;
+                });
+            };
+            countervalueTotal = function () {
+                let _cvtotal = 0;
+                for (let symbol in this.countervalues) {
+                    _cvtotal += this.countervalues[symbol];
+                }
+                return _cvtotal;
+            }
+            dump = function () {
+                return {
+                    date: this.date,
+                    ...this.countervalues,
+                    countervalue: this.countervalueTotal(),
+                    invested: this.investedTotal,
+                    gain: this.gain(),
+                    netGain: this.netGain()
+                };
+            };
+        };
+        let counterValueData = new CounterValueData(null, allSymbols);
+        sortedQuotes.forEach(quote => {
+            const quoteDate = new Date(quote.close_timestamp);
+
+            if(!counterValueData.date){
+                counterValueData.date = quoteDate;
+            }
+            if(counterValueData.date.getTime() != quoteDate.getTime()){
+                counterValueData.setInvestedTotalFromOrders(orders);
+                portfolioData.push(counterValueData.dump());
+                counterValueData.date = quoteDate;
+                counterValueData.investedTotal = 0;
+            }
+
+            const stock = stocks.find(s => s.id === quote.stock);
+            // find all orders up to quote's date, for the current stock
+            const relevantOrders = orders.filter(order => 
+                order.stock === stock.id && 
+                new Date(order.date).getTime() <= quoteDate.getTime()
+            );
+            // calculate quantity owned of the current stock
+            let ownedQuantity = 0;
+            relevantOrders.forEach(order => {
+                const operation = operations.find(op => op.id === order.operation);
+                const multiplier = operation?.operation === "SELL" ? -1 : 1;
+                ownedQuantity += order.quantity * multiplier;
+            });
+            // if we own shares, get the price as of this date
+            const counterValueForStock = ownedQuantity * quote.close_val;
+            counterValueData.setCountervalueForStock(stock.symbol, counterValueForStock);
+            
+        });
+        
+        return portfolioData
+    };
+    
+    const chartData = processPortfolioData();
+    
+    // Generate colors for each stock
+    const colors = [
+        '#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#00ff00',
+        '#ff00ff', '#00ffff', '#ff0000', '#0000ff', '#ffff00'
+    ];
+    
+    const formatTooltip = (value, name) => {
+        return [format_currency(value), name];
+    };
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            // label is the long date string
+            const dateValue = new Date(label);
+            const dateLabel = format(dateValue, i18n, {dateStyle: 'short'});
+            return (
+                <div className="custom-tooltip">
+                    <div className="tooltip-header text-center fw-semibold">{dateLabel}<hr className="my-1"></hr></div>
+                { payload.filter(item => item.value > 0).map((item, index) => {
+                    if(item.name == "netGain"){
+                        return (
+                            <div key={`label_item_${index}`}>
+                                <p className="small my-0 fw-semibold text-end">{t`Net gain`}&nbsp;{parseFloat(item.value).toFixed(3) * 100}{item.unit}</p>
+                            </div>
+                        );
+                    }else{
+                        return (
+                            <div key={`label_item_${index}`}>
+                                <p className="small my-0 fw-semibold text-end">{`${item.name}`}&nbsp;{format_currency(item.value)}</p>
+                            </div>
+                        );
+                    }
+
+                    })
+                }
+                </div>
+            );
+        }
+    
+        return null;
+    }
+    
+    const formatXAxisLabel = (tickItem) => {
+        return format(new Date(tickItem), i18n, {dateStyle: 'short'});
+    };
+    const toPercent = (decimal) => `${(decimal * 100).toFixed(0)}%`;
+    
+    if (chartData.length === 0) {
+        return (
+            <Card className="shadow-lg">
+                <Card.Body>
+                    <Card.Title><Trans>Portfolio Value Over Time</Trans></Card.Title>
+                    <div className="text-center text-muted p-4">
+                        <Trans>No portfolio data available</Trans>
+                    </div>
+                </Card.Body>
+            </Card>
+        );
+    }
+    // Get unique stock symbols that appear in the data
+    const stockSymbols = [];
+    // stockSymbols.push(["invested"]);
+    Object.keys(chartData[0]).filter(key => 
+        key !== 'date' && key !== 'invested' && key != 'countervalue' && key !== 'gain' && key !== 'netGain'
+    ).forEach(key => stockSymbols.push(key));
+    
+    return (
+        <ResponsiveContainer width="100%" height={300}>
+            <ComposedChart data={chartData} margin={{left:0, right:0}}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                    dataKey="date" 
+                    tick={{fontSize: 8}}
+                    tickFormatter={formatXAxisLabel}
+                />
+                <YAxis 
+                    yAxisId="left"
+                    tick={{fontSize: 8}}
+                    label={{value: "Countervalue [€]", angle: -90, position: "insideLeft", offset: 20, fontSize: 10}}
+                    tickFormatter={(value) => format_currency(value, '', 0)} 
+                />
+                <YAxis
+                    yAxisId="right"
+                    unit="%"
+                    tick={{fontSize: 8}}
+                    orientation="right"
+                    label={{value: "Net % Gain", angle: -90, position: "insideRight", offset: 20, fontSize: 10}}
+                    tickFormatter={(value)=> value*100}
+                />
+                <Tooltip 
+                    // formatter={formatTooltip}
+                    content={CustomTooltip}
+                    labelFormatter={(label) => format(new Date(label), i18n)}
+                />
+                {stockSymbols.map((symbol, index) => (
+                    <Area
+                        key={symbol}
+                        type="monotone"
+                        dataKey={symbol}
+                        stackId="1"
+                        stroke={colors[index % colors.length]}
+                        fill={colors[index % colors.length]}
+                        fillOpacity={0.6}
+                        yAxisId="left"
+                        unit="€"
+                    />
+                ))}
+                <Line type="step" dataKey="netGain" yAxisId="right" dot={false} strokeWidth={2} unit={"%"}/>
+
+            </ComposedChart>
+        </ResponsiveContainer>
+    );
+};
+
+const TradingStats = ({orders, stocks, operations, quotes, update}) => {
+    const {i18n} = useLingui();
     let stats = {
         stocks: {},
         totalTransactions: 0.0,
@@ -257,9 +288,7 @@ const TradingStats = ({orders, stocks, operations, update}) => {
     const [rotateSpinning, setRotateSpinning] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const showDetailsLinkStr = showDetails ? t`Hide details` : t`Show details`;
-    return <Card className="shadow-lg">
-        <Card.Body>
-            <Card.Title>
+    return <>
                 <div className="row align-items-center text-center">
                     <div className="col-12 col-md-auto">
                         <Trans>Your current trading stats</Trans>{' '}
@@ -272,18 +301,34 @@ const TradingStats = ({orders, stocks, operations, update}) => {
                             onClick={()=>{setRotateSpinning(true); update(); } }/>
                     </div>
                 </div>
-            </Card.Title>
             <div className="row stats-summary align-items-center justify-content-center">
-                <div className="col-5 col-md-3 text-center">
-                    <div className="fs-4 bold"><FontAwesomeIcon icon={faCashRegister} /> {format_currency(stats.totalTransactions)}</div>
-                    <div className="small text-secondary">Commissions {format_currency(stats.totalCosts)}</div>
-                    <div className="fs-4 bold"><FontAwesomeIcon icon={faMoneyBillTrendUp}/> {format_currency(stats.totalCurrent)}</div>
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 bold"><FontAwesomeIcon icon={faCashRegister} />{' '}<Trans>Purchased:</Trans> </div>
+                    <div>{format_currency(stats.totalTransactions)}</div>
                 </div>
-                <div className="col-5 col-md-3 text-center">
-                    <div className={`fs-1 bold ${statsGainClass}`}>
-                        <FontAwesomeIcon icon={faScaleUnbalanced} /> {statsGainSign}{stats.netPercent()}%
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 text-secondary"><FontAwesomeIcon icon={faBuildingColumns} />{' '}<Trans>Commissions:</Trans> </div>
+                    <div>{format_currency(stats.totalCosts)}</div>
+                </div>
+                <div className="col-12 col-md-4 d-flex px-4">
+                    <div className="flex-grow-1 flex-md-grow-0 bold"><FontAwesomeIcon icon={faMoneyBillTrendUp}/>{' '}<Trans>Current value:</Trans> </div>
+                    <div>{format_currency(stats.totalCurrent)}</div>
+                </div>
+                <div className="col-12 col-md-3 ">
+                    <div className={`fw-bold ${statsGainClass} text-center`}>
+                        <FontAwesomeIcon icon={faScaleUnbalanced} />{' '}<Trans>Net gain</Trans> {statsGainSign}{stats.netPercent()}%
                     </div>
                 </div>                
+            </div>
+            <div className="row align-items-center justify-content-center">
+                <div className="col-md-12 mx-0 px-0 mt-3">
+                    <PortfolioTimeSeriesChart 
+                        orders={orders} 
+                        stocks={stocks} 
+                        quotes={quotes} 
+                        operations={operations}
+                    />
+                </div>
             </div>
             <div className="row">
                 <div className="col text-center">
@@ -325,8 +370,7 @@ const TradingStats = ({orders, stocks, operations, update}) => {
                 </ListGroup>
             :null}
             </div>
-        </Card.Body>
-    </Card>
+            </>
 };
 const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClicked}) => {
     const {i18n} = useLingui();
@@ -380,6 +424,10 @@ const Trading = () => {
     const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
     const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
+    const [showModal, setShowModal] = useState({
+        show: false,
+        errors: null,
+    });
     const [stockQuery, orderQuery, quotesQuery, operationsQuery] = useQueries({
         queries: [
             {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
@@ -391,11 +439,22 @@ const Trading = () => {
     const [editOrder, setEditOrder] = useState(null);
     const [statsKey, setStatsKey] = useState(0);
     const queryClient = useQueryClient();
+    
+    const toggleModal = () => {
+        const show = !showModal.show;
+        setShowModal({...showModal, show: show});
+        if (!show) {
+            setEditOrder(null); // Clear edit order when closing modal
+        }
+    };
     const orderMutation = useMutation({
         mutationFn: ({order, _delete}) => {
+            setShowModal({...showModal, errors: null});
             return mutateOrder({order:order, _delete: _delete});
         },
         onSuccess: (result, {order, _delete}) => {
+            setShowModal({...showModal, show: false, errors: {}});
+            setEditOrder(null);
             let mutandumIndex;
             if(order.id && result.id){ // DELETE or PUT
                 mutandumIndex = orderQuery.data.findIndex((order)=> order.id === result.id);
@@ -416,6 +475,11 @@ const Trading = () => {
                     return oldOrders;
                 });
             }
+        },
+        onError: (error, variables, context) => {
+            console.log(variables);
+            console.log(context);
+            setShowModal({...showModal, errors: error.cause});
         }
     });
     const quoteMutation = useMutation({
@@ -425,19 +489,6 @@ const Trading = () => {
         onSuccess: ({errors}) => {
             if(!errors){
                 queryClient.invalidateQueries(["stocks", "quotes"]);
-                // queryClient.setQueryData(["quotes"], (oldQuotes)=>{
-                //     oldQuotes += quotes;
-                //     return oldQuotes;
-                // });
-                // queryClient.setQueryData(["stocks"], (oldStocks)=>{
-                //     stocks.map((newStock)=> {
-                //         const oldStockToUpdateIndex = oldStocks.findIndex((s)=> newStock.id === s.id);
-                //         if(oldStockToUpdateIndex>=0){
-                //             oldStocks.splice(oldStockToUpdateIndex, 1, oldStocks[oldStockToUpdateIndex]);
-                //         }
-                //     });
-                //     return oldStocks;
-                // })
             }// else ??
             setStatsKey(1+statsKey); // this stops the rotate icon spinning
         },
@@ -445,13 +496,9 @@ const Trading = () => {
             setStatsKey(1+statsKey);
         },
     })
-    const orderInsertionFormRef = useRef(null);
     const handleOrderEditClicked = (order) => {
-        // Scroll to the top of the Form
-        if (orderInsertionFormRef.current) {
-            orderInsertionFormRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
         setEditOrder(order);
+        setShowModal({show: true, errors: null});
     };
     if(stockQuery.isLoading || orderQuery.isLoading || quotesQuery.isLoading || operationsQuery.isLoading){
         return <LoadingDiv />
@@ -460,36 +507,18 @@ const Trading = () => {
         return <div>Error</div>
     }
     return <div className="container-sm">
-        <div className="my-2" ref={orderInsertionFormRef}>
-            <Row className="justify-content-center" md={2}>
-                <Col>
-                    <Card className="shadow-lg" bg="primary">
-                        <Card.Body>
-                            <Card.Title><Trans>Record a new order</Trans></Card.Title>
-                            <OrderInsertionForm operations={operationsQuery.data} stocks={stockQuery.data} 
-                                onMutateOrder={(neworder, _delete) => orderMutation.mutate({order:neworder, _delete:_delete}
-                                )}
-                                editOrder={editOrder}
-                                />
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </div>
         <div className="row justify-content-center">
             <div className="col-md-8">
+                { orderQuery.data.length > 0 ?
                 <TradingStats 
                     key={statsKey}
                     orders={orderQuery.data} 
-                    stocks={stockQuery.data} 
+                    stocks={stockQuery.data}
                     operations={operationsQuery.data}
+                    quotes={quotesQuery.data}
                     update={()=>quoteMutation.mutate({stocks:stockQuery.data.map((stock)=>stock.id)})}
                     />
-            </div>
-        </div>
-        <div className="row justify-content-center">
-            <div className="col-md-8">
-                {/* <TradingHistory orders={orderQuery.data.toReversed()} stocks={stockQuery.data} quotes={quotesQuery.data} /> */}
+                : null}
             </div>
         </div>
         <div className="row justify-content-center">
@@ -510,6 +539,17 @@ const Trading = () => {
             }
             </div>
         </div>
+        
+        <FixedBottomRightButton onClick={() => setShowModal({show: true, errors: null})} />
+        
+        <OrderModal 
+            showModal={showModal}
+            toggleModal={toggleModal} 
+            onDataReady={(order, _delete) => orderMutation.mutate({order: order, _delete: _delete})}
+            operations={operationsQuery.data}
+            stocks={stockQuery.data}
+            editOrder={editOrder}
+        />
     </div>
 };
 
