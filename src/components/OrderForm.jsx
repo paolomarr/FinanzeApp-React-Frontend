@@ -5,6 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { useState, useRef } from "react";
 import { t, Trans } from "@lingui/macro";
+import StockSearchInput from "./StockSearchInput";
 
 const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
     const insertOrder = () => {
@@ -26,7 +27,6 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
     const orderCodeRef = useRef(null);
     const orderDateRef = useRef(null);
     const orderAccountRef = useRef(null);
-    const orderStockRef = useRef(null);
     const orderOperationRef = useRef(null);
     const orderPriceRef = useRef(null);
     const orderQuantityRef = useRef(null);
@@ -80,21 +80,13 @@ const OrderForm = ({stocks, operations, onMutateOrder, editOrder, errors}) => {
                 <Form.Label htmlFor="stock">
                     {t`Stock`}
                 </Form.Label>
-                <Form.Select
-                    id="stock"
-                    name="stock"
-                    ref={orderStockRef}
-                    type="select"
-                    className={`${errors?.stock? "is-invalid" : ""}`}
-                    value={neworder.stock ?? 0}
-                    onChange={(e) => setNeworder({...neworder, stock: e.target.value})}
-                    >
-                        <option value={0}></option>
-                    {!stocks || stocks.length <= 0 ? (null) : (stocks.map((stock) => {
-                        return <option key={stock.id} value={stock.id}>{`${stock.symbol} - ${stock.name}`}</option>
-                    }))}
-                        <option value={-2}>{t`Add new stock`}</option>
-                </Form.Select>
+                <StockSearchInput
+                    value={neworder.stock}
+                    existingStocks={stocks}
+                    disabled={!!editOrder}
+                    isInvalid={!!errors?.stock}
+                    onChange={(stockOrNull) => setNeworder({...neworder, stock: stockOrNull})}
+                />
             </Col>
             <Col xs="4">
                 <Form.Label htmlFor="operation">
