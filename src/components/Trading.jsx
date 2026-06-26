@@ -475,6 +475,7 @@ const Trading = () => {
                     return oldOrders;
                 });
             }
+            queryClient.invalidateQueries(["stocks"]);
         },
         onError: (error, variables, context) => {
             console.log(variables);
