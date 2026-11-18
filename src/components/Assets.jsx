@@ -9,7 +9,6 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from '../queries/mutateMovement';
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 import { Trans, t } from "@lingui/macro";
 import { useState } from "react";
 import LoadingDiv from "./LoadingDiv";
@@ -179,32 +178,13 @@ const AssetsStagingList = ({list: assets, itemRemover, itemEditor, uploading}) =
 }
 const AssetsManager = () => {
     const queryclient = useQueryClient();
-    const navigate = useNavigate();
     const {data: catData, status: catStatus} = useQuery({
       queryKey: ["categories"],
       queryFn: fetchMovements,
-      retry: (failureCount, error) => {
-        if(error.message === "forbidden"){
-          queryclient.cancelQueries();
-          navigate("/login");
-          return false
-        } else{ 
-          return failureCount-1
-        }
-      }, 
     });
     const {data: balanceData, status: balanceStatus} = useQuery({
         queryKey: ["balances"],
         queryFn: fetchMovements,
-        retry: (failureCount, error) => {
-            if(error.message === "forbidden"){
-                queryclient.cancelQueries();
-                navigate("/login");
-                return false
-            } else{ 
-                return failureCount-1;
-            }
-        }, 
     });
     const [stagingList, setStagingList] = useState([]);
     const addToStagingList = (movement) => {

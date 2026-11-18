@@ -10,7 +10,9 @@ import authenticate from "../queries/authenticate";
 import { msg, Trans } from "@lingui/macro";
 import { useLingui } from "@lingui/react";
 import UserContext from "../contexts/UserContext";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
+import authenticatedFetch from "../queries/authenticatedFetch";
+import { API_ENDPOINTS } from "../constants";
 
 const LoginForm = ({logout}) => {
   const { _ } = useLingui();
@@ -31,11 +33,16 @@ const LoginForm = ({logout}) => {
       setError(error);
     }
   };
-  if(logout){
-    localStorage.removeItem("authToken");
-    // setUser(null);
-    // setError(null);
-  }
+  useEffect(() => {
+    if(!logout || !localStorage.getItem("authToken")) return;
+    // Revoke the Knox token server-side, then forget it locally
+    authenticatedFetch(API_ENDPOINTS.tokenlogout(), {method: "POST"})
+      .catch(() => {})
+      .finally(() => {
+        localStorage.removeItem("authToken");
+        setUser(null);
+      });
+  }, [logout, setUser]);
 
   return (
     <Container>
