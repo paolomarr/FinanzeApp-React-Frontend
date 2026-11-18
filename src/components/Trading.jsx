@@ -1,6 +1,5 @@
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import fetchTradinglog from "../queries/fetchTradinglog";
-import { useNavigate } from "react-router-dom";
 import LoadingDiv from "./LoadingDiv";
 import { format, format_currency } from "../_lib/format_locale";
 import { useLingui } from "@lingui/react";
@@ -18,16 +17,6 @@ import OrderModal from "./OrderModal";
 
 const TAX_RATE = 0.26;
 const getValueAfterTax = (value) => value < 0 ? value : (1-TAX_RATE)*value;
-
-const defaultQueryRetryFunction = (failureCount, error, queryclient, navigate) => {
-    if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-    } else{ 
-        return failureCount-1;
-    }
-};
 
 const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     const {i18n} = useLingui();
@@ -459,7 +448,6 @@ const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClic
 };
 const Trading = () => {
     const queryclient = useQueryClient();
-    const navigate = useNavigate();
     const [showOrders, setShowOrders] = useState(false);
     const showOrdersLinkStr = showOrders ? t`Hide orders` : t`Show orders`;
     const [showModal, setShowModal] = useState({
@@ -468,10 +456,10 @@ const Trading = () => {
     });
     const [stockQuery, orderQuery, quotesQuery, operationsQuery] = useQueries({
         queries: [
-            {queryKey: ["stocks"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
-            {queryKey: ["orders"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
-            {queryKey: ["quotes"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
-            {queryKey: ["operations"], queryFn: fetchTradinglog, retry: (failureCount, error) => defaultQueryRetryFunction(failureCount, error, queryclient, navigate)},
+            {queryKey: ["stocks"], queryFn: fetchTradinglog},
+            {queryKey: ["orders"], queryFn: fetchTradinglog},
+            {queryKey: ["quotes"], queryFn: fetchTradinglog},
+            {queryKey: ["operations"], queryFn: fetchTradinglog},
         ]
     });
     const [editOrder, setEditOrder] = useState(null);

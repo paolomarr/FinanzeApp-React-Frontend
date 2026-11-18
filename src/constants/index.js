@@ -23,6 +23,7 @@ export const API_ENDPOINTS = {
   movements: () => generateURLAppendingPath("movements"),
   tradinglog: () => generateURLAppendingPath("tradinglog"),
   tokenauth: () => generateURLAppendingPath("api-token-auth/"),
+  tokenlogout: () => generateURLAppendingPath("api-token-logout/"),
   scanreceipt: () => generateURLAppendingPath("scan-receipt"),
   voice: () => generateURLAppendingPath("voice/voice/"), // trailing slash is important as django backend expects it when POSTing
 }

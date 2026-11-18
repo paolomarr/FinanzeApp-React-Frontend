@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from "../queries/mutateMovement";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { t } from "@lingui/macro"
 import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
@@ -225,29 +225,11 @@ const Home = () => {
   const categoryResults = useQuery({
     queryKey: ["categories"],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        return failureCount<3;
-      }
-    }, 
   });
 
   const subcategoryResults = useQuery({
     queryKey: ["subcategories"],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        return failureCount<3;
-      }
-    }, 
   });
 
   const movementResults = useQuery({
@@ -258,16 +240,6 @@ const Home = () => {
       sort_field: "date",
     }],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        console.log(`'movements query error: ${error.message}`);
-        return failureCount<3;
-      }
-    },
     enabled: !!categoryResults.data && !!subcategoryResults.data,
   });
 

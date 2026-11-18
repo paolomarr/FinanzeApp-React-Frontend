@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import fetchMovements from "../queries/fetchMovements";
 import mutateMovement from "../queries/mutateMovement";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { sub, add } from "date-fns";
 import FixedBottomRightButton from "./FixedBottomRightButton";
 import MovementModal from "./MovementModal"
@@ -39,29 +39,11 @@ const Movements = () => {
   const categoryResults = useQuery({
     queryKey: ["categories"],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        return failureCount-1;
-      }
-    }, 
   });
 
   const subcategoryResults = useQuery({
     queryKey: ["subcategories"],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        return failureCount-1;
-      }
-    }, 
   });
 
   const movementResults = useQuery({
@@ -73,16 +55,6 @@ const Movements = () => {
       ...advancedSearchParams
     }],
     queryFn: fetchMovements,
-    retry: (failureCount, error) => {
-      if(error.message === "forbidden"){
-        queryclient.cancelQueries();
-        navigate("/login");
-        return false;
-      } else{ 
-        console.log(`'movements query error: ${error.message}`);
-        return failureCount-1;
-      }
-    },
     enabled: !!categoryResults.data && !!subcategoryResults.data,
   });
 
@@ -153,15 +125,8 @@ const Movements = () => {
   }
 
   if (movementResults.isError) {
-    switch (movementResults.error.message) {
-      case "forbidden":
-        console.log("Unable to fetch: unauthenticated");
-        break;
-      default:
-        console.log("Unable to fetch: unknown error");
-        break;
-    }
-    return <Navigate to="/login" />
+    // 401s are handled globally (redirect to login); anything else is a real error
+    return <p className="text-danger text-center">{t`Error`}: {movementResults.error.message}</p>
   }
 
   return (
