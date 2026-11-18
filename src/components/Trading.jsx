@@ -237,6 +237,41 @@ const PortfolioTimeSeriesChart = ({orders, stocks, quotes, operations}) => {
     );
 };
 
+// Weighted average cost basis: a SELL removes shares from the cost basis at their average cost, and the
+// difference with the sale proceeds is the (after-tax) realized gain of that order.
+const computeCostBasis = (orders, stocks, operations) => {
+    const result = {stocks: {}, totalTransactions: 0.0, totalCosts: 0.0, totalRealizedGain: 0.0, realizedGainByOrder: {}};
+    // Requires processing orders oldest first (backend returns them date-descending)
+    const chronoOrders = [...orders].sort((a, b) => new Date(a.date) - new Date(b.date));
+    for (const order of chronoOrders) {
+        const stock = stocks.find((stock) => stock.id === order.stock);
+        if(stock == null) continue; // raise a flag??
+        if(result.stocks[stock.id] === undefined){
+            result.stocks[stock.id] = {count: 0, purchaseValue: 0, realizedGain: 0, stock: stock};
+        }
+        const stockStats = result.stocks[stock.id];
+        const orderDirection = operations.find((op) => op.id === order.operation)?.operation;
+        if(orderDirection === "SELL"){
+            const avgCost = stockStats.count > 0 ? stockStats.purchaseValue / stockStats.count : 0;
+            const costOfSold = avgCost * order.quantity;
+            const realizedGain = getValueAfterTax(order.quantity * order.price - costOfSold);
+            result.realizedGainByOrder[order.id] = realizedGain;
+            stockStats.realizedGain += realizedGain;
+            result.totalRealizedGain += realizedGain;
+            stockStats.purchaseValue -= costOfSold;
+            stockStats.count -= order.quantity;
+            result.totalTransactions -= costOfSold;
+        }else{
+            const orderAmount = order.quantity * order.price;
+            stockStats.purchaseValue += orderAmount; // TODO: add transaction cost?
+            stockStats.count += order.quantity;
+            result.totalTransactions += orderAmount;
+        }
+        result.totalCosts += order.transaction_cost;
+    }
+    return result;
+};
+
 const TradingStats = ({orders, stocks, operations, quotes, update}) => {
     const {i18n} = useLingui();
     let stats = {
@@ -256,21 +291,11 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
             return parseFloat(100*this.totalNetGain/this.totalTransactions).toFixed(1)
         },
     };
-    for (const order of orders) {
-        const stock = stocks.find((stock) => stock.id === order.stock);
-        if(stock == null) continue; // raise a flag??
-        if(stats.stocks[stock.id] === undefined){
-            stats.stocks[stock.id] = {count: 0, purhcaseValue: 0, stock: stock};
-        }
-        let signedQuantity = order.quantity;
-        const orderDirection = operations.find((op) => op.id === order.operation)?.operation;
-        if(orderDirection === "SELL")   signedQuantity *= -1;
-        const orderAmount = signedQuantity * order.price;
-        stats.stocks[stock.id].count += signedQuantity;
-        stats.stocks[stock.id].purhcaseValue += orderAmount; // TODO: add transaction cost?
-        stats.totalTransactions += orderAmount;
-        stats.totalCosts += order.transaction_cost;
-    }
+    const costBasis = computeCostBasis(orders, stocks, operations);
+    stats.stocks = costBasis.stocks;
+    stats.totalTransactions = costBasis.totalTransactions;
+    stats.totalCosts = costBasis.totalCosts;
+    stats.totalRealizedGain = costBasis.totalRealizedGain;
     for (const iterstock in stats.stocks) { 
         const statItem = stats.stocks[iterstock];
         const stock = stocks.find((stock) => stock.id === parseInt(iterstock));
@@ -281,10 +306,10 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
         stats.stocks[iterstock].lastUpdate = lpu_date;
         stats.lastCurrentPriceUpdate = stats.lastCurrentPriceUpdate ? Math.max(stats.lastCurrentPriceUpdate, lpu_date) : lpu_date;
         stats.totalCurrent += stockCurVal;
-        stats.totalNetGain += getValueAfterTax(stockCurVal-stats.stocks[iterstock].purhcaseValue);
+        stats.totalNetGain += getValueAfterTax(stockCurVal-statItem.purchaseValue);
     }
     const statsGainClass = stats.netGain()>0 ? "text-earnings" : "text-expenses";
-    const statsGainSign = stats.netGain()>=0 ? "+" : "-";
+    const statsGainSign = stats.netGain()>=0 ? "+" : ""; // netPercent() already carries the minus sign
     const [rotateSpinning, setRotateSpinning] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const showDetailsLinkStr = showDetails ? t`Hide details` : t`Show details`;
@@ -318,6 +343,11 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                     <div className={`fw-bold ${statsGainClass} text-center`}>
                         <FontAwesomeIcon icon={faScaleUnbalanced} />{' '}<Trans>Net gain</Trans> {statsGainSign}{stats.netPercent()}%
                     </div>
+                </div>
+                <div className="col-12 col-md-3 ">
+                    <div className={`fw-bold ${stats.totalRealizedGain>=0 ? "text-earnings" : "text-expenses"} text-center`}>
+                        <FontAwesomeIcon icon={faHandHoldingDollar} />{' '}<Trans>Realized:</Trans> {stats.totalRealizedGain>=0 ? "+" : ""}{format_currency(stats.totalRealizedGain)}
+                    </div>
                 </div>                
             </div>
             <div className="row align-items-center justify-content-center">
@@ -345,9 +375,9 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
                         .map((stockid) => {
                             const stockData = stats.stocks[stockid];
                             const curVal = format_currency(stockData.currentValue);
-                            const purVal = format_currency(stockData.purhcaseValue);
-                            const netGain = getValueAfterTax(stockData.currentValue - stockData.purhcaseValue);
-                            const gainVal = parseFloat(100*(netGain)/stockData.purhcaseValue).toFixed(1);
+                            const purVal = format_currency(stockData.purchaseValue);
+                            const netGain = getValueAfterTax(stockData.currentValue - stockData.purchaseValue);
+                            const gainVal = parseFloat(100*(netGain)/stockData.purchaseValue).toFixed(1);
                             const gainClass = gainVal > 0 ? "gain" : "loss";
                             const gainSign = gainVal > 0 ? "+" : "";
                             return <ListGroup.Item key={`tradingStatsItem_${stockid}`}>
@@ -374,6 +404,7 @@ const TradingStats = ({orders, stocks, operations, quotes, update}) => {
 };
 const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClicked}) => {
     const {i18n} = useLingui();
+    const {realizedGainByOrder} = computeCostBasis(orders, stocks, operations);
     return <Card className="shadow-lg">
         <Card.Body>
             <Card.Title>
@@ -412,7 +443,14 @@ const TradingOrdersListComponent = ({orders, stocks, operations, onOrderEditClic
                             <div className="pe-2 small">{' '}{format_currency(order.price)}&times;{order.quantity}</div>
                             <div className="fw-bold trading-gain ms-auto fs-4">{gainSign}{parseFloat(order.quantity * order.price).toFixed(2)}</div>
                         </div>
-                        <div className="small text-secondary">{stockNameStr}</div>
+                        <div className="d-flex align-items-baseline">
+                            <div className="small text-secondary">{stockNameStr}</div>
+                            { order.id in realizedGainByOrder ?
+                                <div className={`small ms-auto ${realizedGainByOrder[order.id]>=0 ? "text-earnings" : "text-expenses"}`}>
+                                    <Trans>Realized:</Trans>{' '}{realizedGainByOrder[order.id]>=0 ? "+" : ""}{format_currency(realizedGainByOrder[order.id])}
+                                </div>
+                            :null}
+                        </div>
                     </ListGroup.Item>
                 })}
             </ListGroup>

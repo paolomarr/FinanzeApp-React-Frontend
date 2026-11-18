@@ -13,13 +13,13 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/OrderForm.jsx:60
+#: src/components/OrderForm.jsx:67
 msgid "Account no."
 msgstr "Conto num."
 
 #: src/components/Assets.jsx:141
 #: src/components/CategoryManager.jsx:67
-#: src/components/OrderForm.jsx:151
+#: src/components/OrderForm.jsx:152
 msgid "Add"
 msgstr "Aggiungi"
 
@@ -28,8 +28,8 @@ msgid "Add Movement with Voice"
 msgstr "Manda un vocale così fai prima"
 
 #: src/components/OrderForm.jsx:89
-msgid "Add new stock"
-msgstr "Aggiungi titolo"
+#~ msgid "Add new stock"
+#~ msgstr "Aggiungi titolo"
 
 #: src/components/MovementsList.jsx:296
 msgid "Advanced Search"
@@ -83,15 +83,19 @@ msgstr "Categorie"
 msgid "Category"
 msgstr "Categoria"
 
+#: src/components/StockSearchInput.jsx:74
+msgid "Change"
+msgstr ""
+
 #: src/components/MovementsList.jsx:422
 msgid "Clear"
 msgstr "Pulisci"
 
-#: src/components/OrderForm.jsx:32
+#: src/components/OrderForm.jsx:38
 msgid "Code"
 msgstr "Codice"
 
-#: src/components/Trading.jsx:274
+#: src/components/Trading.jsx:335
 msgid "Commissions:"
 msgstr "Commissioni:"
 
@@ -111,7 +115,7 @@ msgstr "Lettura della ricevuta non riuscita."
 msgid "Current month"
 msgstr "Questo mese"
 
-#: src/components/Trading.jsx:278
+#: src/components/Trading.jsx:339
 msgid "Current value:"
 msgstr "Controvalore:"
 
@@ -123,7 +127,7 @@ msgstr "Dati salvati"
 #: src/components/MovementForm.jsx:159
 #: src/components/MovementsList.jsx:210
 #: src/components/MovementsList.jsx:222
-#: src/components/OrderForm.jsx:45
+#: src/components/OrderForm.jsx:52
 msgid "Date"
 msgstr "Data"
 
@@ -181,11 +185,11 @@ msgstr "Spese"
 msgid "filtered out of"
 msgstr "filtrati da"
 
-#: src/components/Trading.jsx:251
+#: src/components/Trading.jsx:315
 msgid "Hide details"
 msgstr "Nascondi dettagli"
 
-#: src/components/Trading.jsx:391
+#: src/components/Trading.jsx:464
 msgid "Hide orders"
 msgstr "Nascondi ordini"
 
@@ -290,7 +294,8 @@ msgstr "Movimenti"
 msgid "Movements overview"
 msgstr "Riepilogo movimenti"
 
-#: src/components/Trading.jsx:283
+#: src/components/Trading.jsx:148
+#: src/components/Trading.jsx:344
 msgid "Net gain"
 msgstr "Guadagno netto"
 
@@ -302,7 +307,11 @@ msgstr "Nessun elemento"
 msgid "No data available"
 msgstr "Nessun dato disponibile"
 
-#: src/components/Trading.jsx:141
+#: src/components/StockSearchInput.jsx:103
+msgid "No matches"
+msgstr ""
+
+#: src/components/Trading.jsx:179
 msgid "No portfolio data available"
 msgstr "Nessun dato disponibile"
 
@@ -311,7 +320,7 @@ msgstr "Nessun dato disponibile"
 msgid "movementsListFilterStats.of"
 msgstr "di"
 
-#: src/components/OrderForm.jsx:94
+#: src/components/OrderForm.jsx:93
 msgid "Operation"
 msgstr "Operazione"
 
@@ -344,11 +353,11 @@ msgstr "Password"
 #~ msgid "Past year"
 #~ msgstr "Anno scorso"
 
-#: src/components/Trading.jsx:139
+#: src/components/Trading.jsx:177
 msgid "Portfolio Value Over Time"
 msgstr "Andamento del portfolio"
 
-#: src/components/OrderForm.jsx:110
+#: src/components/OrderForm.jsx:111
 msgid "Price"
 msgstr "Prezzo"
 
@@ -360,13 +369,18 @@ msgstr "Stiamo registrando il movimento..."
 msgid "Profile"
 msgstr "Profilo"
 
-#: src/components/Trading.jsx:270
+#: src/components/Trading.jsx:331
 msgid "Purchased:"
 msgstr "Acquistati:"
 
-#: src/components/OrderForm.jsx:122
+#: src/components/OrderForm.jsx:123
 msgid "Quantity"
 msgstr "Quantità"
+
+#: src/components/Trading.jsx:349
+#: src/components/Trading.jsx:450
+msgid "Realized:"
+msgstr "Realizzato:"
 
 #: src/components/Home.jsx:24
 msgid "Recent Movements"
@@ -423,6 +437,10 @@ msgstr "Cerca nella descrizione"
 #~ msgid "Search movements"
 #~ msgstr "Cerca movimenti"
 
+#: src/components/StockSearchInput.jsx:98
+msgid "Searching…"
+msgstr ""
+
 #: src/_lib/format_locale.js:10
 msgid "seconds"
 msgstr "secondi"
@@ -439,7 +457,7 @@ msgstr "Mostra tutti"
 msgid "Show assets"
 msgstr "Mostra saldo"
 
-#: src/components/Trading.jsx:251
+#: src/components/Trading.jsx:315
 msgid "Show details"
 msgstr "Mostra dettagli"
 
@@ -447,7 +465,7 @@ msgstr "Mostra dettagli"
 msgid "Show future movements"
 msgstr "Mostra movimenti futuri"
 
-#: src/components/Trading.jsx:391
+#: src/components/Trading.jsx:464
 msgid "Show orders"
 msgstr "Mostra ordini"
 
@@ -464,9 +482,13 @@ msgstr "Categorie di spesa"
 msgid "Statistics"
 msgstr "Statistiche"
 
-#: src/components/OrderForm.jsx:74
+#: src/components/OrderForm.jsx:81
 msgid "Stock"
 msgstr "Titolo"
+
+#: src/components/StockSearchInput.jsx:44
+msgid "Stock cannot be changed on an existing order"
+msgstr ""
 
 #: src/components/CategoryManager.jsx:213
 #: src/components/MovementsList.jsx:327
@@ -513,7 +535,7 @@ msgstr "Totali"
 msgid "Trading"
 msgstr "Trading"
 
-#: src/components/OrderForm.jsx:137
+#: src/components/OrderForm.jsx:138
 msgid "Transaction cost"
 msgstr "Costo operazione"
 
@@ -525,7 +547,12 @@ msgstr "Riprova"
 msgid "Try again later"
 msgstr "Prova più tardi"
 
+#: src/components/StockSearchInput.jsx:80
+msgid "Type a symbol or company name"
+msgstr ""
+
 #: src/components/CategoryManager.jsx:67
+#: src/components/OrderForm.jsx:152
 msgid "Update"
 msgstr "Aggiorna"
 
@@ -537,7 +564,7 @@ msgstr "Modifica movimento"
 msgid "Update order data"
 msgstr "Aggiorna ordine"
 
-#: src/components/Trading.jsx:260
+#: src/components/Trading.jsx:322
 msgid "Updated"
 msgstr "Aggiornato"
 
@@ -554,10 +581,10 @@ msgstr "anni"
 #~ msgid "Your current trading assets"
 #~ msgstr "I tuoi asset"
 
-#: src/components/Trading.jsx:257
+#: src/components/Trading.jsx:319
 msgid "Your current trading stats"
 msgstr "Statistiche trading"
 
-#: src/components/Trading.jsx:346
+#: src/components/Trading.jsx:412
 msgid "Your past orders"
 msgstr "Ordini recenti"
