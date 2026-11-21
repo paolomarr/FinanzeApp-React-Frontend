@@ -63,6 +63,6 @@ fi
 
 # tag current image, so we can remove it after a successful deployment
 export GIT_HASH=`git rev-parse --short HEAD`
-docker tag finanzeapp-backend-django:latest finanzeapp-backend-django:$GIT_HASH
+docker tag finanzeapp-frontend-react:latest finanzeapp-frontend-react:$GIT_HASH
 docker compose up -d --build && \
-    docker rmi finanzeapp-backend-django:$GIT_HASH
+    docker rmi finanzeapp-frontend-react:$GIT_HASH
