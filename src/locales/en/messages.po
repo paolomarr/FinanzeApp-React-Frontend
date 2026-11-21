@@ -55,7 +55,7 @@ msgstr "Account no."
 msgid "Add"
 msgstr "Add"
 
-#: src/components/VoiceInsertionModal.jsx:141
+#: src/components/VoiceInsertionModal.jsx:156
 msgid "Add Movement with Voice"
 msgstr "Add Movement with Voice"
 
@@ -110,8 +110,8 @@ msgstr "Assets to be recorded"
 msgid "Balance record history"
 msgstr "Balance record history"
 
-#: src/components/MainNavbar.jsx:75
-#: src/components/MainNavbar.jsx:111
+#: src/components/MainNavbar.jsx:91
+#: src/components/MainNavbar.jsx:127
 #: src/index.js:59
 msgid "Balance records"
 msgstr "Balance records"
@@ -208,6 +208,14 @@ msgstr "Deleting"
 #~ msgid "Deleting..."
 #~ msgstr "Deleting..."
 
+#: src/components/MainNavbar.jsx:26
+msgid "Demo"
+msgstr "Demo"
+
+#: src/components/MainNavbar.jsx:24
+msgid "Demo instance: all data is fictional and generated automatically."
+msgstr "Demo instance: all data is fictional and generated automatically."
+
 #: src/components/Assets.jsx:127
 #: src/components/MovementForm.jsx:186
 #: src/components/MovementsList.jsx:215
@@ -220,7 +228,7 @@ msgstr "Description"
 msgid "Description cannot be empty"
 msgstr "Description cannot be empty"
 
-#: src/components/VoiceInsertionModal.jsx:92
+#: src/components/VoiceInsertionModal.jsx:93
 msgid "Dismiss"
 msgstr "Dismiss"
 
@@ -262,8 +270,8 @@ msgstr "Hide details"
 msgid "Hide orders"
 msgstr "Hide orders"
 
-#: src/components/MainNavbar.jsx:61
-#: src/components/MainNavbar.jsx:99
+#: src/components/MainNavbar.jsx:77
+#: src/components/MainNavbar.jsx:115
 msgid "Home"
 msgstr "Home"
 
@@ -275,7 +283,7 @@ msgstr "hours"
 msgid "Incomes"
 msgstr "Earnings"
 
-#: src/components/VoiceInsertionModal.jsx:150
+#: src/components/VoiceInsertionModal.jsx:167
 msgid "Insert manually"
 msgstr "Insert manually"
 
@@ -288,7 +296,7 @@ msgid "Insert new order"
 msgstr "Insert new order"
 
 #: src/components/Header.jsx:46
-#: src/components/MainNavbar.jsx:30
+#: src/components/MainNavbar.jsx:46
 msgid "Languages"
 msgstr "Languages"
 
@@ -330,7 +338,7 @@ msgstr "Max Amount"
 msgid "Max Date"
 msgstr "Max Date"
 
-#: src/components/VoiceInsertionModal.jsx:73
+#: src/components/VoiceInsertionModal.jsx:74
 msgid "Microphone access denied or not available"
 msgstr "Microphone access denied or not available"
 
@@ -354,8 +362,8 @@ msgstr "months"
 #~ msgid "Movement list"
 #~ msgstr "Movement list"
 
-#: src/components/MainNavbar.jsx:68
-#: src/components/MainNavbar.jsx:105
+#: src/components/MainNavbar.jsx:84
+#: src/components/MainNavbar.jsx:121
 msgid "Movements"
 msgstr "Movements"
 
@@ -425,8 +433,8 @@ msgstr "Other out."
 msgid "Page size"
 msgstr "Page size"
 
-#: src/components/LoginForm.jsx:71
-#: src/components/LoginForm.jsx:76
+#: src/components/LoginForm.jsx:86
+#: src/components/LoginForm.jsx:91
 msgid "Password"
 msgstr "Password"
 
@@ -450,7 +458,7 @@ msgstr "Portfolio Value Over Time"
 msgid "Price"
 msgstr "Price"
 
-#: src/components/VoiceInsertionModal.jsx:100
+#: src/components/VoiceInsertionModal.jsx:101
 msgid "Processing voice recording..."
 msgstr "Processing voice recording..."
 
@@ -483,7 +491,7 @@ msgstr "Recent Movements"
 msgid "Record your current net worth using the form above or by copying one group of past entries from the list below"
 msgstr "Record your current net worth using the form above or by copying one group of past entries from the list below"
 
-#: src/components/VoiceInsertionModal.jsx:113
+#: src/components/VoiceInsertionModal.jsx:114
 msgid "Recording... Tap to stop"
 msgstr "Recording... Tap to stop"
 
@@ -607,7 +615,7 @@ msgid "Subcategory"
 msgstr "Subcategory"
 
 #. js-lingui-explicit-id
-#: src/components/LoginForm.jsx:80
+#: src/components/LoginForm.jsx:96
 msgid "login_form_submit"
 msgstr "Submit"
 
@@ -615,13 +623,17 @@ msgstr "Submit"
 #~ msgid "Submit"
 #~ msgstr "Submit"
 
-#: src/components/VoiceInsertionModal.jsx:123
+#: src/components/VoiceInsertionModal.jsx:124
 msgid "Tap to start recording"
 msgstr "Tap to start recording"
 
 #: src/components/Home.jsx:274
 msgid "The server cannot be reached"
 msgstr "The server cannot be reached"
+
+#: src/components/LoginForm.jsx:62
+msgid "This is a demo instance with generated data. Log in as <0>{0}</0> with password <1>{1}</1>."
+msgstr "This is a demo instance with generated data. Log in as <0>{0}</0> with password <1>{1}</1>."
 
 #: src/components/Home.jsx:51
 #~ msgid "to"
@@ -643,8 +655,8 @@ msgstr "Total expenses"
 msgid "Totals"
 msgstr "Totals"
 
-#: src/components/MainNavbar.jsx:82
-#: src/components/MainNavbar.jsx:118
+#: src/components/MainNavbar.jsx:98
+#: src/components/MainNavbar.jsx:134
 #: src/index.js:62
 msgid "Trading"
 msgstr "Trading"
@@ -682,10 +694,18 @@ msgstr "Update order data"
 msgid "Updated"
 msgstr "Updated"
 
-#: src/components/LoginForm.jsx:60
-#: src/components/LoginForm.jsx:65
+#: src/components/LoginForm.jsx:74
+#: src/components/LoginForm.jsx:79
 msgid "Username"
 msgstr "Username"
+
+#: src/components/VoiceInsertionModal.jsx:140
+msgid "Voice insertion is not available in the demo: it needs a speech-to-text service key."
+msgstr "Voice insertion is not available in the demo: it needs a speech-to-text service key."
+
+#: src/components/VoiceInsertionModal.jsx:141
+msgid "Voice insertion is not available: the server has no speech-to-text service key configured."
+msgstr "Voice insertion is not available: the server has no speech-to-text service key configured."
 
 #: src/_lib/format_locale.js:5
 msgid "years"
