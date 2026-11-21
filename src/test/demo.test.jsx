@@ -9,10 +9,10 @@ import { mockInstance, renderWithProviders } from "./renderWithProviders";
 
 const DEMO = {
   demo: true,
-  features: { voice: false, receipt_scan: false },
+  features: { voice: false },
   demo_credentials: { username: "demo", password: "demo" },
 };
-const REGULAR = { demo: false, features: { voice: true, receipt_scan: true } };
+const REGULAR = { demo: false, features: { voice: true } };
 
 afterEach(() => {
   cleanup();

@@ -5,7 +5,7 @@ import { API_ENDPOINTS } from "../constants";
 // behave as a regular instance with every feature enabled.
 export const DEFAULT_INSTANCE_INFO = {
   demo: false,
-  features: { voice: true, receipt_scan: true },
+  features: { voice: true },
 };
 
 // Public endpoint (no auth token): the login page needs it too.
