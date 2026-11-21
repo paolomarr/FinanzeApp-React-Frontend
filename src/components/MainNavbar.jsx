@@ -11,6 +11,21 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { languages } from "../constants";
 import { useLingui } from "@lingui/react";
 import { NavLink } from "react-router-dom";
+import Badge from "react-bootstrap/Badge";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
+import useInstanceInfo from "../queries/fetchInstance";
+
+const DemoBadge = () => {
+    const { demo } = useInstanceInfo();
+    if (!demo) return null;
+    return <OverlayTrigger placement="bottom" overlay={
+        <Tooltip id="demo-badge-tooltip">
+            <Trans>Demo instance: all data is fictional and generated automatically.</Trans>
+        </Tooltip>}>
+        <Badge bg="info" text="dark" className="me-2 p-1 px-2 rounded-3" data-testid="demo-badge"><Trans>Demo</Trans></Badge>
+    </OverlayTrigger>;
+};
 
 const RightButtonGroup = () => {
     const { i18n } = useLingui();
@@ -18,7 +33,8 @@ const RightButtonGroup = () => {
         localStorage.setItem("user_locale", locale);
         i18n.activate(locale);
     };
-    return <ButtonGroup>
+    return <ButtonGroup className="align-items-center">
+        <DemoBadge />
         <Button variant="transparent" href="/settings">
             <FontAwesomeIcon icon={faSliders} className="text-secondary" size="lg" />
         </Button>

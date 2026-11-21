@@ -9,15 +9,18 @@ export const languages = [
 
 export const API_URL_STRING = import.meta.env.VITE_BACKEND_API_BASE;
 
-const generateURLAppendingPath = (path) => {
+// The API base may be absolute ("http://localhost:8003/api/") or relative to
+// the page ("/api/", used when frontend and API share one origin, as in the
+// demo instance): relative bases are resolved against the page's origin.
+export const generateURLAppendingPath = (path, base = API_URL_STRING) => {
+  const pageOrigin = window.location.origin;
   if (!path) {
-    return new URL(API_URL_STRING);
+    return new URL(base, pageOrigin);
   }
-  const origin = API_URL_STRING.replace(/\/$/, ''); // remove trailing slash if any
+  const origin = base.replace(/\/$/, ''); // remove trailing slash if any
   const noLeadingSlashPath = path.replace(/^\//, ''); // remove leading slash from path, if any
   const finalpath = `${origin}/${noLeadingSlashPath}`;
-  const url = new URL(finalpath);
-  return url;
+  return new URL(finalpath, pageOrigin);
 }
 export const API_ENDPOINTS = {
   movements: () => generateURLAppendingPath("movements"),
@@ -25,6 +28,7 @@ export const API_ENDPOINTS = {
   tokenauth: () => generateURLAppendingPath("api-token-auth/"),
   tokenlogout: () => generateURLAppendingPath("api-token-logout/"),
   scanreceipt: () => generateURLAppendingPath("scan-receipt"),
+  instance: () => generateURLAppendingPath("instance/"),
   voice: () => generateURLAppendingPath("voice/voice/"), // trailing slash is important as django backend expects it when POSTing
 }
 

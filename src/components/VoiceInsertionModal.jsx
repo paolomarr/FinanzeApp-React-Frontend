@@ -2,10 +2,11 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { t, Trans } from "@lingui/macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMicrophone, faStop, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faMicrophone, faMicrophoneSlash, faStop, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import mutateVoice from '../queries/mutateVoice';
+import useInstanceInfo from '../queries/fetchInstance';
 
 /**
  * VoiceRecorder is a React component which allows users to record voice messages.
@@ -129,7 +130,21 @@ const VoiceRecorder = ({ onVoiceResultReady }) => {
   );
 };
 
+// Shown instead of the recorder when the backend has no speech-to-text key
+// (always the case on the demo instance).
+const VoiceUnavailable = ({ demo }) => (
+  <div className="text-center my-4" data-testid="voice-unavailable">
+    <FontAwesomeIcon icon={faMicrophoneSlash} size="3x" className="text-secondary opacity-50" />
+    <p className="mt-2 text-secondary">
+      {demo
+        ? <Trans>Voice insertion is not available in the demo: it needs a speech-to-text service key.</Trans>
+        : <Trans>Voice insertion is not available: the server has no speech-to-text service key configured.</Trans>}
+    </p>
+  </div>
+);
+
 const VoiceInsertionModal = ({ show, onHide, onMovementCreated, onManualInsert }) => {
+  const { demo, features } = useInstanceInfo();
   const handleVoiceResult = (movement) => {
     onMovementCreated(movement);
     onHide();
@@ -141,7 +156,9 @@ const VoiceInsertionModal = ({ show, onHide, onMovementCreated, onManualInsert }
         <Modal.Title>{t`Add Movement with Voice`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <VoiceRecorder onVoiceResultReady={handleVoiceResult} />
+        {features.voice
+          ? <VoiceRecorder onVoiceResultReady={handleVoiceResult} />
+          : <VoiceUnavailable demo={demo} />}
         <div className="text-center mt-3">
           <button 
             onClick={onManualInsert}

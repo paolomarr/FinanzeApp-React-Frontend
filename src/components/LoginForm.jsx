@@ -13,11 +13,14 @@ import UserContext from "../contexts/UserContext";
 import { useContext, useEffect } from "react";
 import authenticatedFetch from "../queries/authenticatedFetch";
 import { API_ENDPOINTS } from "../constants";
+import Alert from "react-bootstrap/Alert";
+import useInstanceInfo from "../queries/fetchInstance";
 
 const LoginForm = ({logout}) => {
   const { _ } = useLingui();
   const [user, setUser] = useContext(UserContext);
   const [error, setError] = useState(null);
+  const { demo, demo_credentials: demoCredentials } = useInstanceInfo();
   
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -52,9 +55,20 @@ const LoginForm = ({logout}) => {
         {error && <p>{error.message}</p>}
         </Col>
       </Row>
+      {demo && demoCredentials && (
+        <Row className="justify-content-center">
+          <Col className="col-md-6 col-lg-4">
+            <Alert variant="info" data-testid="demo-login-hint">
+              <Trans>
+                This is a demo instance with generated data. Log in as <strong>{demoCredentials.username}</strong> with password <strong>{demoCredentials.password}</strong>.
+              </Trans>
+            </Alert>
+          </Col>
+        </Row>
+      )}
       <Row className="justify-content-center">
         <Col className="col-md-6 col-lg-4">
-          <Form onSubmit={(event) => handleSubmit(event)}>
+          <Form key={demoCredentials ? "demo" : "regular"} onSubmit={(event) => handleSubmit(event)}>
             <Form.Group className="mb-3">
               <Form.Label htmlFor="username" hidden>
                 <Trans>Username</Trans>
@@ -64,6 +78,7 @@ const LoginForm = ({logout}) => {
                 name="username"
                 placeholder={_(msg`Username`)}
                 type="username"
+                defaultValue={demoCredentials?.username}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -75,6 +90,7 @@ const LoginForm = ({logout}) => {
                 name="password"
                 placeholder={_(msg`Password`)}
                 type="password"
+                defaultValue={demoCredentials?.password}
               />
             </Form.Group>
             <Button type="submit"><Trans id="login_form_submit">Submit</Trans></Button>

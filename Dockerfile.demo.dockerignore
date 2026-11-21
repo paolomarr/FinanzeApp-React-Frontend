@@ -1,0 +1,8 @@
+# Build context exclusions for Dockerfile.demo only (the regular Dockerfile
+# still needs .env). Keeps local-checkout builds small and reproducible.
+node_modules
+dist
+build
+.env*
+.git
+.aider*
