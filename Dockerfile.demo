@@ -3,7 +3,7 @@
 # Built by the backend's docker-compose.demo.yml, either from this repo's
 # GitHub URL or from a local checkout. It does not read .env (not in git):
 # the API base is the relative "/api/", so the app talks to whatever host
-# serves it, and nginx forwards /api/ and /admin/ to the `django` service.
+# serves it, and nginx forwards /api/, /admin/ and /static/ to the `django` service.
 
 FROM node:22-alpine AS build
 ARG VERSION_INFO=demo
